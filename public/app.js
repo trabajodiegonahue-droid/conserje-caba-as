@@ -1,84 +1,117 @@
-// Textos de la interfaz (los datos de la cabaña vienen del JSON; el chat traduce el contenido).
+// Textos de la interfaz. Los datos de la cabaña vienen del JSON; el chat responde en el idioma del huésped.
 const T = {
   es: {
-    welcome: 'Bienvenidos a', wifi: 'Wi-Fi', network: 'Red', password: 'Clave', copy: 'Copiar clave', copied: '¡Copiada!',
-    times: 'Horarios', rules: 'Reglas de la casa', stove: 'Cómo usar la estufa', safety: 'Seguridad', wood: 'Leña',
-    host: 'Contacto del anfitrión', call: 'Llamar', restaurants: 'Restaurantes', tours: 'Tours y paseos', more: 'Más información',
-    checkinInfo: 'Llegada', checkoutInfo: 'Salida',
-    ask: 'Pregúntale al conserje', concierge: 'Conserje virtual', online: 'Responde en tu idioma 🌍',
+    concierge: 'Conserje', copy: 'Copiar', copied: 'Copiada', network: 'Red',
+    tabs: { casa: 'La casa', estufa: 'Estufa', comer: 'Comer', explorar: 'Explorar', ayuda: 'Ayuda' },
+    titles: { casa: 'La <em>casa</em>', estufa: 'Encender la <em>estufa</em>', comer: 'Dónde <em>comer</em>', explorar: 'Qué <em>explorar</em>', ayuda: 'Estamos para <em>ayudar</em>' },
+    act: { wifi: 'Wi-Fi', whatsapp: 'WhatsApp', map: 'Cómo llegar', sos: 'Emergencia' },
+    arrival: 'Llegada', departure: 'Salida', rules: 'Reglas', safety: 'Seguridad', wood: 'Leña',
+    call: 'Llamar', hostRole: 'Tu anfitriona', sos: ['Ambulancia', 'Bomberos', 'Carabineros'], places: 'lugares',
+    ask: 'Pregúntale a tu conserje…', online: 'Responde en tu idioma', demo: 'Modo demo · sin IA',
     placeholder: 'Escribe tu pregunta…',
-    hello: (n) => `¡Hola! 👋 Soy el conserje virtual de ${n}. Pregúntame lo que necesites sobre la cabaña o la zona.`,
-    chips: ['¿Cuál es la clave del wifi?', '¿Cómo prendo la estufa?', '¿A qué hora es el check-out?', '¿Dónde puedo comer?'],
-    error: 'Hubo un problema. Intenta de nuevo o contacta al anfitrión.',
+    hello: (n) => `Hola, bienvenidos a **${n}**. Soy su conserje: pregúntenme por la casa, la estufa o qué hacer en Puerto Varas, a cualquier hora.`,
+    chips: ['Clave del wifi', '¿Cómo prendo la estufa?', '¿A qué hora es el check-out?', '¿Dónde comer esta noche?'],
+    error: 'No pude responder ahora. Intenta de nuevo o escribe a tu anfitrión.',
     notFound: 'No encontramos esta cabaña. Revisa el enlace.',
-    footer: 'Conserje con IA · Las respuestas se basan en la información de esta cabaña.',
+    footer: 'Conserje digital · respuestas basadas en la información de la cabaña',
   },
   en: {
-    welcome: 'Welcome to', wifi: 'Wi-Fi', network: 'Network', password: 'Password', copy: 'Copy password', copied: 'Copied!',
-    times: 'Times', rules: 'House rules', stove: 'How to use the stove', safety: 'Safety', wood: 'Firewood',
-    host: 'Host contact', call: 'Call', restaurants: 'Restaurants', tours: 'Tours & trips', more: 'More info',
-    checkinInfo: 'Arrival', checkoutInfo: 'Departure',
-    ask: 'Ask the concierge', concierge: 'Virtual concierge', online: 'Replies in your language 🌍',
+    concierge: 'Concierge', copy: 'Copy', copied: 'Copied', network: 'Network',
+    tabs: { casa: 'The house', estufa: 'Stove', comer: 'Eat', explorar: 'Explore', ayuda: 'Help' },
+    titles: { casa: 'The <em>house</em>', estufa: 'Lighting the <em>stove</em>', comer: 'Where to <em>eat</em>', explorar: 'What to <em>explore</em>', ayuda: "We're here to <em>help</em>" },
+    act: { wifi: 'Wi-Fi', whatsapp: 'WhatsApp', map: 'Directions', sos: 'Emergency' },
+    arrival: 'Arrival', departure: 'Departure', rules: 'House rules', safety: 'Safety', wood: 'Firewood',
+    call: 'Call', hostRole: 'Your host', sos: ['Ambulance', 'Fire', 'Police'], places: 'places',
+    ask: 'Ask your concierge…', online: 'Replies in your language', demo: 'Demo mode · no AI',
     placeholder: 'Type your question…',
-    hello: (n) => `Hi! 👋 I'm the virtual concierge of ${n}. Ask me anything about the cabin or the area.`,
-    chips: ["What's the wifi password?", 'How do I light the stove?', 'What time is check-out?', 'Where can we eat?'],
-    error: 'Something went wrong. Try again or contact the host.',
+    hello: (n) => `Hello and welcome to **${n}**. I'm your concierge: ask me about the house, the stove or things to do in Puerto Varas, any time.`,
+    chips: ['Wifi password', 'How do I light the stove?', 'What time is check-out?', 'Where to eat tonight?'],
+    error: "I couldn't answer right now. Try again or message your host.",
     notFound: "We couldn't find this cabin. Please check the link.",
-    footer: 'AI concierge · Answers are based on this cabin’s information.',
+    footer: 'Digital concierge · answers based on this cabin’s information',
   },
   pt: {
-    welcome: 'Bem-vindos à', wifi: 'Wi-Fi', network: 'Rede', password: 'Senha', copy: 'Copiar senha', copied: 'Copiada!',
-    times: 'Horários', rules: 'Regras da casa', stove: 'Como usar a lareira', safety: 'Segurança', wood: 'Lenha',
-    host: 'Contato do anfitrião', call: 'Ligar', restaurants: 'Restaurantes', tours: 'Passeios', more: 'Mais informações',
-    checkinInfo: 'Chegada', checkoutInfo: 'Saída',
-    ask: 'Pergunte ao concierge', concierge: 'Concierge virtual', online: 'Responde no seu idioma 🌍',
+    concierge: 'Concierge', copy: 'Copiar', copied: 'Copiada', network: 'Rede',
+    tabs: { casa: 'A casa', estufa: 'Lareira', comer: 'Comer', explorar: 'Explorar', ayuda: 'Ajuda' },
+    titles: { casa: 'A <em>casa</em>', estufa: 'Acender a <em>lareira</em>', comer: 'Onde <em>comer</em>', explorar: 'O que <em>explorar</em>', ayuda: 'Estamos aqui para <em>ajudar</em>' },
+    act: { wifi: 'Wi-Fi', whatsapp: 'WhatsApp', map: 'Como chegar', sos: 'Emergência' },
+    arrival: 'Chegada', departure: 'Saída', rules: 'Regras', safety: 'Segurança', wood: 'Lenha',
+    call: 'Ligar', hostRole: 'Sua anfitriã', sos: ['Ambulância', 'Bombeiros', 'Polícia'], places: 'lugares',
+    ask: 'Pergunte ao seu concierge…', online: 'Responde no seu idioma', demo: 'Modo demo · sem IA',
     placeholder: 'Escreva sua pergunta…',
-    hello: (n) => `Olá! 👋 Sou o concierge virtual da ${n}. Pergunte o que precisar sobre a cabana ou a região.`,
-    chips: ['Qual é a senha do wifi?', 'Como acendo a lareira?', 'Que horas é o check-out?', 'Onde podemos comer?'],
-    error: 'Houve um problema. Tente novamente ou fale com o anfitrião.',
+    hello: (n) => `Olá, bem-vindos à **${n}**. Sou seu concierge: pergunte sobre a casa, a lareira ou o que fazer em Puerto Varas, a qualquer hora.`,
+    chips: ['Senha do wifi', 'Como acendo a lareira?', 'Que horas é o check-out?', 'Onde jantar hoje?'],
+    error: 'Não consegui responder agora. Tente de novo ou fale com o anfitrião.',
     notFound: 'Não encontramos esta cabana. Verifique o link.',
-    footer: 'Concierge com IA · As respostas se baseiam nas informações desta cabana.',
+    footer: 'Concierge digital · respostas baseadas nas informações da cabana',
   },
   de: {
-    welcome: 'Willkommen in der', wifi: 'WLAN', network: 'Netzwerk', password: 'Passwort', copy: 'Passwort kopieren', copied: 'Kopiert!',
-    times: 'Zeiten', rules: 'Hausregeln', stove: 'So benutzt du den Ofen', safety: 'Sicherheit', wood: 'Brennholz',
-    host: 'Kontakt zum Gastgeber', call: 'Anrufen', restaurants: 'Restaurants', tours: 'Ausflüge & Touren', more: 'Weitere Infos',
-    checkinInfo: 'Ankunft', checkoutInfo: 'Abreise',
-    ask: 'Frag den Concierge', concierge: 'Virtueller Concierge', online: 'Antwortet in deiner Sprache 🌍',
-    placeholder: 'Schreib deine Frage…',
-    hello: (n) => `Hallo! 👋 Ich bin der virtuelle Concierge der ${n}. Frag mich alles über die Hütte oder die Umgebung.`,
-    chips: ['Wie lautet das WLAN-Passwort?', 'Wie zünde ich den Ofen an?', 'Wann ist der Check-out?', 'Wo können wir essen?'],
-    error: 'Etwas ist schiefgelaufen. Versuch es erneut oder kontaktiere den Gastgeber.',
-    notFound: 'Diese Hütte wurde nicht gefunden. Bitte prüfe den Link.',
-    footer: 'KI-Concierge · Die Antworten basieren auf den Informationen dieser Hütte.',
+    concierge: 'Concierge', copy: 'Kopieren', copied: 'Kopiert', network: 'Netzwerk',
+    tabs: { casa: 'Das Haus', estufa: 'Ofen', comer: 'Essen', explorar: 'Entdecken', ayuda: 'Hilfe' },
+    titles: { casa: 'Das <em>Haus</em>', estufa: 'Den <em>Ofen</em> anzünden', comer: 'Wo man <em>isst</em>', explorar: 'Was es zu <em>entdecken</em> gibt', ayuda: 'Wir sind für Sie <em>da</em>' },
+    act: { wifi: 'WLAN', whatsapp: 'WhatsApp', map: 'Anfahrt', sos: 'Notfall' },
+    arrival: 'Ankunft', departure: 'Abreise', rules: 'Hausregeln', safety: 'Sicherheit', wood: 'Brennholz',
+    call: 'Anrufen', hostRole: 'Ihre Gastgeberin', sos: ['Rettung', 'Feuerwehr', 'Polizei'], places: 'Orte',
+    ask: 'Fragen Sie Ihren Concierge…', online: 'Antwortet in Ihrer Sprache', demo: 'Demo-Modus · ohne KI',
+    placeholder: 'Ihre Frage…',
+    hello: (n) => `Hallo und willkommen in der **${n}**. Ich bin Ihr Concierge: Fragen Sie mich zum Haus, zum Ofen oder zu Ausflügen in Puerto Varas, jederzeit.`,
+    chips: ['WLAN-Passwort', 'Wie zünde ich den Ofen an?', 'Wann ist der Check-out?', 'Wo essen wir heute?'],
+    error: 'Ich konnte gerade nicht antworten. Bitte erneut versuchen oder die Gastgeberin kontaktieren.',
+    notFound: 'Diese Hütte wurde nicht gefunden. Bitte prüfen Sie den Link.',
+    footer: 'Digitaler Concierge · Antworten basieren auf den Infos dieser Hütte',
   },
   it: {
-    welcome: 'Benvenuti a', wifi: 'Wi-Fi', network: 'Rete', password: 'Password', copy: 'Copia password', copied: 'Copiata!',
-    times: 'Orari', rules: 'Regole della casa', stove: 'Come usare la stufa', safety: 'Sicurezza', wood: 'Legna',
-    host: "Contatto dell'host", call: 'Chiama', restaurants: 'Ristoranti', tours: 'Tour ed escursioni', more: 'Altre informazioni',
-    checkinInfo: 'Arrivo', checkoutInfo: 'Partenza',
-    ask: 'Chiedi al concierge', concierge: 'Concierge virtuale', online: 'Risponde nella tua lingua 🌍',
+    concierge: 'Concierge', copy: 'Copia', copied: 'Copiata', network: 'Rete',
+    tabs: { casa: 'La casa', estufa: 'Stufa', comer: 'Mangiare', explorar: 'Esplorare', ayuda: 'Aiuto' },
+    titles: { casa: 'La <em>casa</em>', estufa: 'Accendere la <em>stufa</em>', comer: 'Dove <em>mangiare</em>', explorar: 'Cosa <em>esplorare</em>', ayuda: 'Siamo qui per <em>aiutare</em>' },
+    act: { wifi: 'Wi-Fi', whatsapp: 'WhatsApp', map: 'Indicazioni', sos: 'Emergenza' },
+    arrival: 'Arrivo', departure: 'Partenza', rules: 'Regole', safety: 'Sicurezza', wood: 'Legna',
+    call: 'Chiama', hostRole: 'La tua host', sos: ['Ambulanza', 'Pompieri', 'Polizia'], places: 'luoghi',
+    ask: 'Chiedi al tuo concierge…', online: 'Risponde nella tua lingua', demo: 'Modalità demo · senza IA',
     placeholder: 'Scrivi la tua domanda…',
-    hello: (n) => `Ciao! 👋 Sono il concierge virtuale di ${n}. Chiedimi tutto sulla casetta o sulla zona.`,
-    chips: ['Qual è la password del wifi?', 'Come accendo la stufa?', "A che ora è il check-out?", 'Dove possiamo mangiare?'],
-    error: "Si è verificato un problema. Riprova o contatta l'host.",
+    hello: (n) => `Ciao e benvenuti a **${n}**. Sono il vostro concierge: chiedetemi della casa, della stufa o cosa fare a Puerto Varas, a qualsiasi ora.`,
+    chips: ['Password del wifi', 'Come accendo la stufa?', "A che ora è il check-out?", 'Dove cenare stasera?'],
+    error: "Non sono riuscito a rispondere. Riprova o scrivi all'host.",
     notFound: 'Non abbiamo trovato questa casetta. Controlla il link.',
-    footer: 'Concierge con IA · Le risposte si basano sulle informazioni di questa casetta.',
+    footer: 'Concierge digitale · risposte basate sulle informazioni della casetta',
   },
   fr: {
-    welcome: 'Bienvenue à', wifi: 'Wi-Fi', network: 'Réseau', password: 'Mot de passe', copy: 'Copier le mot de passe', copied: 'Copié !',
-    times: 'Horaires', rules: 'Règles de la maison', stove: 'Utiliser le poêle', safety: 'Sécurité', wood: 'Bois',
-    host: "Contact de l'hôte", call: 'Appeler', restaurants: 'Restaurants', tours: 'Excursions', more: "Plus d'infos",
-    checkinInfo: 'Arrivée', checkoutInfo: 'Départ',
-    ask: 'Demandez au concierge', concierge: 'Concierge virtuel', online: 'Répond dans votre langue 🌍',
-    placeholder: 'Écrivez votre question…',
-    hello: (n) => `Bonjour ! 👋 Je suis le concierge virtuel de ${n}. Posez-moi vos questions sur le chalet ou la région.`,
-    chips: ['Quel est le mot de passe wifi ?', 'Comment allumer le poêle ?', "À quelle heure est le check-out ?", 'Où manger ?'],
-    error: "Un problème est survenu. Réessayez ou contactez l'hôte.",
+    concierge: 'Concierge', copy: 'Copier', copied: 'Copié', network: 'Réseau',
+    tabs: { casa: 'La maison', estufa: 'Poêle', comer: 'Manger', explorar: 'Explorer', ayuda: 'Aide' },
+    titles: { casa: 'La <em>maison</em>', estufa: 'Allumer le <em>poêle</em>', comer: 'Où <em>manger</em>', explorar: 'Que <em>explorer</em>', ayuda: 'Nous sommes là pour <em>aider</em>' },
+    act: { wifi: 'Wi-Fi', whatsapp: 'WhatsApp', map: 'Itinéraire', sos: 'Urgence' },
+    arrival: 'Arrivée', departure: 'Départ', rules: 'Règles', safety: 'Sécurité', wood: 'Bois',
+    call: 'Appeler', hostRole: 'Votre hôte', sos: ['Ambulance', 'Pompiers', 'Police'], places: 'lieux',
+    ask: 'Demandez à votre concierge…', online: 'Répond dans votre langue', demo: 'Mode démo · sans IA',
+    placeholder: 'Votre question…',
+    hello: (n) => `Bonjour et bienvenue à **${n}**. Je suis votre concierge : posez-moi vos questions sur la maison, le poêle ou que faire à Puerto Varas, à toute heure.`,
+    chips: ['Mot de passe wifi', 'Comment allumer le poêle ?', 'Heure du check-out ?', 'Où dîner ce soir ?'],
+    error: "Je n'ai pas pu répondre. Réessayez ou écrivez à votre hôte.",
     notFound: "Nous n'avons pas trouvé ce chalet. Vérifiez le lien.",
-    footer: 'Concierge IA · Les réponses se basent sur les informations de ce chalet.',
+    footer: 'Concierge numérique · réponses basées sur les infos du chalet',
   },
 };
+
+// Íconos de línea
+const I = {
+  wifi: '<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 15.8a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19" r="1.2" fill="currentColor" stroke="none"/>',
+  chat: '<path d="M20 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.2A8 8 0 1 1 20 11.5z"/><path d="M9 10.5h6M9 13.5h4"/>',
+  pin: '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  sos: '<path d="M12 3l9 16H3z"/><path d="M12 10v4M12 16.8v.2"/>',
+  key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l8-8m-3 3 2 2m-4 0 2 2"/>',
+  door: '<path d="M5 21V4a1 1 0 0 1 1-1h9l3 2v16"/><path d="M3 21h18M12 12v.5"/>',
+  rule: '<path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r=".6" fill="currentColor"/><circle cx="4" cy="12" r=".6" fill="currentColor"/><circle cx="4" cy="18" r=".6" fill="currentColor"/>',
+  drop: '<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+  car: '<path d="M5 16V11l2-5h10l2 5v5"/><path d="M3 16h18v3H3zM5 11h14"/><circle cx="7.5" cy="13.5" r=".6" fill="currentColor"/><circle cx="16.5" cy="13.5" r=".6" fill="currentColor"/>',
+  trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.2"/>',
+  flame: '<path d="M12 21c-4 0-7-2.7-7-6.5 0-3.6 3-5.5 3.5-9.5 2.5 1.5 3.5 3.5 3.5 5.5 1-1 1.5-2 1.5-3.5C16.5 9 19 11.5 19 14.5c0 3.8-3 6.5-7 6.5z"/>',
+  wood: '<path d="M3 15l14-8 4 3-14 8z"/><path d="M7 18l-4-3"/>',
+  fork: '<path d="M7 3v8a2 2 0 0 0 2 2v8M5 3v5M9 3v5M17 21V3c-2 1.5-3 4-3 8h3"/>',
+  compass: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+  phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/>',
+};
+const ico = (n) => `<svg viewBox="0 0 24 24">${I[n] || I.info}</svg>`;
 
 const $ = (s) => document.querySelector(s);
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -86,6 +119,7 @@ const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<
 const slug = location.pathname.split('/').filter(Boolean).pop() || new URLSearchParams(location.search).get('slug');
 let lang = pickLang();
 let cabana = null;
+let demoMode = false;
 const history = []; // { role: 'user'|'assistant', text }
 
 function pickLang() {
@@ -94,49 +128,118 @@ function pickLang() {
   return T[nav] ? nav : 'es';
 }
 
+const monogram = (name) => name.replace(/^caba[ñn]a\s+/i, '').split(/\s+/).filter((w) => w.length > 2).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+
 function setLang(l) {
   lang = l;
   try { localStorage.setItem('lang', l); } catch {}
   document.documentElement.lang = l;
+  $('#lang').value = l;
   document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = T[l][el.dataset.i18n]; });
-  document.querySelectorAll('.lang button').forEach((b) => b.classList.toggle('active', b.dataset.lang === l));
   $('#chat-input').placeholder = T[l].placeholder;
-  $('#chat-sub').textContent = T[l].online;
-  if (cabana) { renderSections(); renderChips(); }
+  $('#chat-sub').textContent = demoMode ? T[l].demo : T[l].online;
+  if (cabana) render();
 }
 
-function section(icon, title, body, open = false) {
-  return `<details${open ? ' open' : ''}><summary><span>${icon}</span>${esc(title)}</summary><div class="section-body">${body}</div></details>`;
+function row(icon, title, text, chips = []) {
+  return `<div class="row"><span class="ri">${ico(icon)}</span><div class="rt">
+    <strong>${esc(title)}</strong>${text ? `<p>${esc(text)}</p>` : ''}
+    ${chips.length ? `<div class="meta">${chips.filter(Boolean).map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</div>` : ''}
+  </div></div>`;
 }
 
-function renderSections() {
-  const c = cabana, t = T[lang], parts = [];
-  parts.push(section('🔑', `${t.checkinInfo} / ${t.checkoutInfo}`,
-    `<p><strong>Check-in ${esc(c.checkin?.hora)}</strong> — ${esc(c.checkin?.instrucciones)}</p>
-     <p><strong>Check-out ${esc(c.checkout?.hora)}</strong> — ${esc(c.checkout?.instrucciones)}</p>`));
-  if (c.reglas?.length) parts.push(section('📋', t.rules, `<ul>${c.reglas.map((r) => `<li>${esc(r)}</li>`).join('')}</ul>`));
-  if (c.estufa) parts.push(section('🔥', t.stove,
-    `<p><strong>${esc(c.estufa.tipo)}</strong></p>
-     <ol>${(c.estufa.pasos || []).map((p) => `<li>${esc(p)}</li>`).join('')}</ol>
-     ${c.estufa.seguridad ? `<p class="note">⚠️ <strong>${t.safety}:</strong> ${esc(c.estufa.seguridad)}</p>` : ''}
-     ${c.estufa.lena ? `<p>🪵 <strong>${t.wood}:</strong> ${esc(c.estufa.lena)}</p>` : ''}`));
-  if (c.anfitrion) {
-    const a = c.anfitrion;
-    parts.push(section('👋', t.host,
-      `<p><strong>${esc(a.nombre)}</strong><br>${esc(a.telefono)}${a.email ? `<br>${esc(a.email)}` : ''}</p>
-       ${a.horario ? `<p>${esc(a.horario)}</p>` : ''}
-       <div class="contact-actions">
-         ${a.whatsapp ? `<a class="btn" href="https://wa.me/${encodeURIComponent(a.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
-         ${a.telefono ? `<a class="btn alt" href="tel:${esc(a.telefono.replace(/\s/g, ''))}">${t.call}</a>` : ''}
-       </div>`));
+function sec(id, body, note = '') {
+  return `<section class="sec" id="${id}"><div class="sec-head"><h2>${T[lang].titles[id]}</h2>${note ? `<span class="sec-note">${esc(note)}</span>` : ''}</div>${body}</section>`;
+}
+
+function render() {
+  const c = cabana, t = T[lang], a = c.anfitrion || {};
+  const ids = [];
+  const out = [];
+
+  // Accesos rápidos
+  const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.direccion || c.nombre)}`;
+  $('#actions').innerHTML = `
+    <button class="action" id="act-wifi"><span class="i">${ico('wifi')}</span>${t.act.wifi}</button>
+    ${a.whatsapp ? `<a class="action" href="https://wa.me/${encodeURIComponent(a.whatsapp)}" target="_blank" rel="noopener"><span class="i">${ico('chat')}</span>${t.act.whatsapp}</a>` : ''}
+    <a class="action" href="${maps}" target="_blank" rel="noopener"><span class="i">${ico('pin')}</span>${t.act.map}</a>
+    <a class="action sos" href="#ayuda"><span class="i">${ico('sos')}</span>${t.act.sos}</a>`;
+  $('#act-wifi').onclick = copyWifi;
+
+  // La casa
+  const otrosIcons = { agua_caliente: 'drop', estacionamiento: 'car', basura: 'trash' };
+  const casa = [
+    row('key', `${t.arrival} · ${c.checkin?.hora || ''}`, c.checkin?.instrucciones),
+    row('door', `${t.departure} · ${c.checkout?.hora || ''}`, c.checkout?.instrucciones),
+    ...Object.entries(c.otros || {}).filter(([k]) => k !== 'emergencias').map(([k, v]) => row(otrosIcons[k] || 'info', k.replace(/_/g, ' ').replace(/^./, (m) => m.toUpperCase()), v)),
+  ];
+  out.push(sec('casa', `<div class="panel">${casa.join('')}</div>
+    ${c.reglas?.length ? `<div class="panel" style="margin-top:10px">${row('rule', t.rules, '')}<ul style="margin:-6px 0 14px 48px;padding:0;color:#3e4b50;font-size:14px">${c.reglas.map((r) => `<li style="margin-bottom:6px">${esc(r)}</li>`).join('')}</ul></div>` : ''}`));
+  ids.push('casa');
+
+  // Estufa
+  if (c.estufa) {
+    const e = c.estufa;
+    out.push(sec('estufa', `<div class="panel">
+      <div class="stove-type">${ico('flame')}${esc(e.tipo)}</div>
+      <ol class="steps">${(e.pasos || []).map((p) => `<li>${esc(p)}</li>`).join('')}</ol>
+      ${e.lena ? `<div class="tip">${ico('wood')}<span><strong>${t.wood}.</strong> ${esc(e.lena)}</span></div>` : ''}
+    </div>
+    ${e.seguridad ? `<div class="warn">${ico('sos')}<span><strong>${t.safety}.</strong> ${esc(e.seguridad)}</span></div>` : ''}`));
+    ids.push('estufa');
   }
-  const places = (list) => list.map((p) => `<div class="place"><strong>${esc(p.nombre)}</strong>
-     <small>${esc([p.tipo, p.distancia, p.duracion].filter(Boolean).join(' · '))}</small>
-     ${p.nota ? `<div>${esc(p.nota)}</div>` : ''}</div>`).join('');
-  if (c.restaurantes?.length) parts.push(section('🍽️', t.restaurants, places(c.restaurantes)));
-  if (c.tours?.length) parts.push(section('🚣', t.tours, places(c.tours)));
-  if (c.otros) parts.push(section('ℹ️', t.more, `<ul>${Object.values(c.otros).map((v) => `<li>${esc(v)}</li>`).join('')}</ul>`));
-  $('#sections').innerHTML = parts.join('');
+
+  // Comer y explorar
+  if (c.restaurantes?.length) {
+    out.push(sec('comer', `<div class="panel">${c.restaurantes.map((r) => row('fork', r.nombre, r.nota, [r.tipo, r.distancia])).join('')}</div>`, `${c.restaurantes.length} ${t.places}`));
+    ids.push('comer');
+  }
+  if (c.tours?.length) {
+    out.push(sec('explorar', `<div class="panel">${c.tours.map((r) => row('compass', r.nombre, r.nota, [r.duracion])).join('')}</div>`, `${c.tours.length} ${t.places}`));
+    ids.push('explorar');
+  }
+
+  // Ayuda
+  out.push(sec('ayuda', `<div class="host">
+      <div class="host-top"><span class="avatar">${esc((a.nombre || '?')[0])}</span><div><span>${t.hostRole}</span><strong>${esc(a.nombre || '')}</strong></div></div>
+      ${a.horario ? `<p class="host-hours">${esc(a.horario)}</p>` : ''}
+      <div class="host-btns">
+        ${a.whatsapp ? `<a class="btn light" href="https://wa.me/${encodeURIComponent(a.whatsapp)}" target="_blank" rel="noopener">${ico('chat')}WhatsApp</a>` : ''}
+        ${a.telefono ? `<a class="btn ghost" href="tel:${esc(a.telefono.replace(/\s/g, ''))}">${ico('phone')}${t.call}</a>` : ''}
+      </div>
+      <p class="host-hours" style="margin:0">${esc(a.telefono || '')}${a.email ? ` · ${esc(a.email)}` : ''}</p>
+    </div>
+    <div class="sos-grid">${['131', '132', '133'].map((n, i) => `<a href="tel:${n}"><strong>${n}</strong><span>${t.sos[i]}</span></a>`).join('')}</div>`));
+  ids.push('ayuda');
+
+  $('#sections').innerHTML = out.join('');
+  $('#tabs').innerHTML = ids.map((id, i) => `<a href="#${id}" data-id="${id}"${i === 0 ? ' class="active"' : ''}>${t.tabs[id]}</a>`).join('');
+  watchTabs();
+  renderChips();
+}
+
+let observer;
+function watchTabs() {
+  observer?.disconnect();
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      document.querySelectorAll('.tabs a').forEach((a) => {
+        const on = a.dataset.id === en.target.id;
+        a.classList.toggle('active', on);
+        if (on) a.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+      });
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  document.querySelectorAll('.sec').forEach((s) => observer.observe(s));
+}
+
+async function copyWifi() {
+  const btn = $('#copy-wifi');
+  try { await navigator.clipboard.writeText(cabana.wifi?.clave || ''); } catch { return; }
+  btn.classList.add('done');
+  btn.querySelector('span').textContent = T[lang].copied;
+  setTimeout(() => { btn.classList.remove('done'); btn.querySelector('span').textContent = T[lang].copy; }, 1600);
 }
 
 function renderChips() {
@@ -144,7 +247,7 @@ function renderChips() {
   $('#chips').hidden = history.some((m) => m.role === 'user');
 }
 
-// Markdown mínimo y seguro para las respuestas del bot
+// Markdown mínimo y seguro para las respuestas
 function md(text) {
   const lines = esc(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').split('\n');
   let html = '', list = null;
@@ -190,10 +293,10 @@ async function send(text) {
     if (!r.ok) throw new Error(data.error || T[lang].error);
     history.push({ role: 'assistant', text: data.reply });
     addMsg('bot', data.reply);
-    if (data.demo) $('#chat-sub').textContent = '🧪 Modo demo (sin IA)';
+    if (data.demo && !demoMode) { demoMode = true; $('#chat-sub').textContent = T[lang].demo; }
   } catch (err) {
     typing.remove();
-    history.pop(); // permite reintentar sin romper el historial
+    history.pop();
     addMsg('bot', err.message || T[lang].error, 'error');
   } finally {
     $('.send').disabled = false;
@@ -204,11 +307,10 @@ async function send(text) {
 function openChat() {
   $('#chat').hidden = false;
   if (!$('#messages').children.length) addMsg('bot', T[lang].hello(cabana.nombre));
-  setTimeout(() => $('#chat-input').focus(), 50);
+  setTimeout(() => $('#chat-input').focus(), 60);
 }
 
 async function init() {
-  document.querySelectorAll('.lang button').forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
   try {
     const r = await fetch(`/api/cabana?slug=${encodeURIComponent(slug || '')}`);
     if (!r.ok) throw new Error();
@@ -217,22 +319,25 @@ async function init() {
     $('#loading').textContent = T[lang].notFound;
     return;
   }
-  document.title = `${cabana.nombre} · Conserje`;
+  const m = monogram(cabana.nombre);
+  document.title = `${cabana.nombre} · ${T[lang].concierge}`;
   $('#nombre').textContent = cabana.nombre;
-  $('#direccion').textContent = cabana.direccion || '';
-  if (cabana.foto) $('#hero').style.backgroundImage = `url("${encodeURI(cabana.foto)}")`;
-  $('#wifi-red').textContent = cabana.wifi?.red || '—';
+  $('#descripcion').textContent = cabana.descripcion || '';
+  $('#mono').textContent = m;
+  $('#chat-mono').textContent = m;
+  $('#foot-name').textContent = cabana.nombre;
+  if (cabana.lugar) $('#lugar').textContent = cabana.lugar;
+  $('#wifi-red').textContent = `${cabana.wifi?.red || ''}`;
   $('#wifi-clave').textContent = cabana.wifi?.clave || '—';
   $('#checkin').textContent = cabana.checkin?.hora || '—';
   $('#checkout').textContent = cabana.checkout?.hora || '—';
 
-  $('#copy-wifi').addEventListener('click', async (e) => {
-    try { await navigator.clipboard.writeText(cabana.wifi?.clave || ''); e.target.textContent = T[lang].copied; setTimeout(() => (e.target.textContent = T[lang].copy), 1500); } catch {}
-  });
+  $('#lang').addEventListener('change', (e) => setLang(e.target.value));
+  $('#copy-wifi').addEventListener('click', copyWifi);
   $('#open-chat').addEventListener('click', openChat);
   $('#close-chat').addEventListener('click', () => ($('#chat').hidden = true));
   $('#chat-form').addEventListener('submit', (e) => { e.preventDefault(); send($('#chat-input').value); });
-  $('#chips').addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON') send(e.target.textContent); });
+  $('#chips').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) send(b.textContent); });
 
   setLang(lang);
   $('#loading').hidden = true;

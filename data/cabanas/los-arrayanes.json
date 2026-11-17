@@ -1,7 +1,8 @@
 {
   "slug": "los-arrayanes",
   "nombre": "Cabaña Los Arrayanes",
-  "descripcion": "Cabaña de madera nativa para 4 personas, con vista al lago Llanquihue y al volcán Osorno. (Cabaña ficticia para demostración.)",
+  "lugar": "Puerto Varas · Lago Llanquihue",
+  "descripcion": "Madera nativa, cuatro huéspedes y el volcán Osorno en la ventana. Cabaña ficticia de demostración.",
   "direccion": "Camino a Ensenada km 4, Puerto Varas, Región de Los Lagos",
   "foto": "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?auto=format&fit=crop&w=1200&q=70",
   "wifi": {
