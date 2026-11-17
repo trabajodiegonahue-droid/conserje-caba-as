@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#101c22" />
+  <meta name="robots" content="noindex" />
+  <title>Panel del anfitrión</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/admin.css" />
+</head>
+<body class="adm">
+  <!-- Ingreso -->
+  <section id="login" class="login">
+    <form id="login-form" class="login-card">
+      <span class="mono big">✦</span>
+      <p class="eyebrow">Panel del anfitrión</p>
+      <h1>Edita tu <em>cabaña</em></h1>
+      <p class="login-sub">Cambia el wifi, los horarios, los extras o las recomendaciones. Tus huéspedes verán los cambios en un par de minutos.</p>
+      <label class="fld"><span>Cabaña</span>
+        <select id="login-slug"></select>
+      </label>
+      <label class="fld" id="new-slug-wrap" hidden><span>Dirección de la nueva cabaña</span>
+        <input id="new-slug" placeholder="el-mirador" autocomplete="off" pattern="[a-z0-9-]+" />
+        <small>Quedará en /cabana/<b id="new-slug-preview">el-mirador</b>. Solo minúsculas, números y guiones.</small>
+      </label>
+      <label class="fld"><span>Clave</span>
+        <input id="login-pass" type="password" autocomplete="current-password" required />
+      </label>
+      <p class="form-error" id="login-error" hidden></p>
+      <button class="btn light wide-btn" type="submit" id="login-btn">Entrar</button>
+    </form>
+  </section>
+
+  <!-- Editor -->
+  <section id="editor" hidden>
+    <header class="adm-top">
+      <div class="adm-id">
+        <span class="mono" id="adm-mono"></span>
+        <div><small>Editando</small><strong id="adm-name"></strong></div>
+      </div>
+      <div class="adm-top-actions">
+        <a id="adm-view" class="pill" target="_blank" rel="noopener">Ver página</a>
+        <button id="adm-logout" class="pill ghost" type="button">Salir</button>
+      </div>
+    </header>
+    <nav class="tabs adm-tabs" id="adm-tabs"></nav>
+    <main id="adm-form" class="adm-form"></main>
+  </section>
+
+  <div class="savebar" id="savebar" hidden>
+    <span id="save-state">Sin cambios</span>
+    <button id="save-btn" class="btn light" type="button" disabled>Guardar cambios</button>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script src="/admin.js" type="module"></script>
+</body>
+</html>

@@ -110,17 +110,17 @@
       {
         "desde": "Aeropuerto El Tepual (Puerto Montt)",
         "modo": "avion",
-        "tiempo": "35 min en auto",
-        "detalle": "Toma la Ruta 5 al norte hacia Puerto Varas y luego el camino a Ensenada. Hay taxis y transfers en la salida del aeropuerto (aprox. $30.000). Carolina puede coordinarte un transfer."
+        "tiempo": "35–45 min",
+        "detalle": "Opción más simple: transfer compartido de Transimperio hasta la Plaza de Puerto Varas (referencial: ~$6.000 de día, ~$8.000 de noche). Desde la plaza, toma un taxi o el minibús a Ensenada y bájate en el km 4. También hay taxis oficiales en la salida, o Carolina te coordina un transfer privado hasta la puerta."
       },
       {
-        "desde": "Terminal de buses de Puerto Varas",
+        "desde": "Llegando en bus de larga distancia",
         "modo": "bus",
         "tiempo": "10 min en taxi",
-        "detalle": "En taxi o colectivo hacia Ensenada; pide bajarte en el km 4. El colectivo pasa cada 20 min aprox."
+        "detalle": "Puerto Varas no tiene un terminal único: Cruz del Sur llega a su terminal en San Francisco 1317 (esq. García Moreno) y Turbus a Del Salvador 1093. Desde cualquiera de los dos, camina unas cuadras a San Bernardo esq. Walker Martínez y toma el minibús a Ensenada, o pide un taxi."
       },
       {
-        "desde": "En auto desde Santiago o Puerto Montt",
+        "desde": "En auto",
         "modo": "auto",
         "tiempo": "—",
         "detalle": "Desde la costanera de Puerto Varas sigue la Ruta 225 hacia Ensenada. La entrada está a la izquierda en el km 4. Hay estacionamiento frente a la cabaña."
@@ -312,6 +312,67 @@
         "plataforma": "Airbnb",
         "url": "https://www.airbnb.cl"
       }
+    ]
+  },
+  "transporte_publico": {
+    "aviso": "Horarios y precios son referenciales (fuentes 2023–2025) y cambian por temporada. Confírmalos con el conductor o con Carolina.",
+    "lineas": [
+      {
+        "nombre": "Minibús a Ensenada · Saltos del Petrohué · Petrohué",
+        "icono": "bus",
+        "para": "La cabaña (km 4), Ensenada, Saltos del Petrohué, Lago Todos los Santos",
+        "donde": "Centro de Puerto Varas: esquina San Bernardo con Walker Martínez. Es un paradero en la calle, no un terminal: verás los minibuses estacionados con letrero “Ensenada” o “Petrohué”.",
+        "mapa": "San Bernardo con Walker Martínez, Puerto Varas",
+        "frecuencia": "Cada 20–30 min en temporada alta; menos frecuente en invierno y domingos.",
+        "precio": "Hasta Petrohué ~$3.000 (referencial). Al km 4, bastante menos.",
+        "consejo": "Para volver a la cabaña dile al conductor “me bajo en el kilómetro 4, Los Arrayanes”. Para ir al centro, espera en la parada del km 4 (frente al portón) y hazle señas."
+      },
+      {
+        "nombre": "Bus a Puerto Montt",
+        "icono": "bus",
+        "para": "Puerto Montt (terminal de buses, centro, Angelmó)",
+        "donde": "Paraderos del centro de Puerto Varas, cerca de la Plaza de Armas y por calle Del Salvador. Operan Thaebus, Llanquihue Express y otros minibuses.",
+        "mapa": "Plaza de Armas, Puerto Varas",
+        "frecuencia": "Muy frecuente: cada 10–15 min aprox. de día.",
+        "precio": "~$1.400–1.600 (feb. 2025).",
+        "consejo": "Unos 30–40 min. Se paga en efectivo al subir; lleva billetes chicos."
+      },
+      {
+        "nombre": "Bus a Llanquihue y Frutillar",
+        "icono": "bus",
+        "para": "Llanquihue, Frutillar (Teatro del Lago, costanera)",
+        "donde": "Paradero de micros cerca de la Plaza de Armas y en Del Salvador con Santa Rosa (Thaebus y otros).",
+        "mapa": "Del Salvador con Santa Rosa, Puerto Varas",
+        "frecuencia": "Frecuente durante el día.",
+        "precio": "Referencial ~$1.500–2.000.",
+        "consejo": "Unos 40–50 min hasta Frutillar. Para el Teatro del Lago pide bajarte en Frutillar Bajo (la parte junto al lago)."
+      },
+      {
+        "nombre": "Colectivos dentro de Puerto Varas",
+        "icono": "car",
+        "para": "Sectores de la ciudad (centro, poblaciones, cerros)",
+        "donde": "Son autos con número y letrero en el techo que hacen rutas fijas. Se toman en la calle haciendo señas, sobre todo en el centro.",
+        "mapa": "",
+        "frecuencia": "Constante de día.",
+        "precio": "~$800–1.000 por tramo (referencial, 2023).",
+        "consejo": "Comparten el auto con otros pasajeros. Antes de subir, pregúntale al chofer si pasa por tu destino."
+      },
+      {
+        "nombre": "Buses de larga distancia",
+        "icono": "bus",
+        "para": "Santiago, Temuco, Valdivia, Osorno, Puerto Montt y más",
+        "donde": "Cruz del Sur: San Francisco 1317 (esq. García Moreno). Turbus: Del Salvador 1093.",
+        "mapa": "Terminal Cruz del Sur, San Francisco 1317, Puerto Varas",
+        "frecuencia": "Varios al día; a Santiago hay salidas nocturnas.",
+        "precio": "Compra en kupos.cl, recorrido.cl o en la boletería.",
+        "consejo": "En verano y fines de semana largos compra con anticipación."
+      }
+    ],
+    "consejos": [
+      "Lleva efectivo y billetes chicos: en minibuses y colectivos casi nunca se paga con tarjeta.",
+      "Haz señas con la mano para que el bus se detenga y avisa al conductor dónde te bajas.",
+      "La app Moovit muestra varias líneas de la zona.",
+      "De noche hay menos buses: después de las 21:00 conviene taxi."
     ]
   }
 }

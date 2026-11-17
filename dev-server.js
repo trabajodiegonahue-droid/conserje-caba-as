@@ -32,6 +32,7 @@ http.createServer(async (req, res) => {
     }
     let file = url.pathname === '/' ? '/index.html' : url.pathname;
     if (/^\/cabana\/[^/]+\/?$/.test(file)) file = '/cabana.html'; // igual que vercel.json
+    if (file === '/admin') file = '/admin.html';
     const full = path.join(process.cwd(), 'public', path.normalize(file));
     if (!full.startsWith(path.join(process.cwd(), 'public'))) return res.status(403).end();
     const data = await readFile(full);

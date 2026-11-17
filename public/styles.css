@@ -24,7 +24,7 @@ body {
   font-size: 15px;
   -webkit-font-smoothing: antialiased;
 }
-button, input, select { font: inherit; color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 [hidden] { display: none !important; }
 svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
@@ -270,3 +270,21 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .report strong { display: block; font-size: 14.5px; }
 .report small { color: var(--muted); font-size: 12.5px; }
 .report > svg { color: var(--muted); width: 17px; height: 17px; }
+
+/* Transporte */
+.lines { display: grid; gap: 10px; }
+.line { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; }
+.line header { display: flex; gap: 14px; align-items: flex-start; }
+.line header .ri { width: 38px; height: 38px; border-radius: 12px; background: var(--ink); color: var(--dusk); display: grid; place-items: center; flex: none; }
+.line header strong { display: block; font-size: 15px; line-height: 1.3; }
+.line header small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.line dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 14px 0 0; font-size: 13.5px; }
+.line dt { font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--lake); font-weight: 700; padding-top: 2px; }
+.line dd { margin: 0; color: #2f3b40; }
+@media (max-width: 380px) { .line dl { grid-template-columns: 1fr; } .line dd { margin-bottom: 6px; } }
+.line-tip { display: flex; gap: 10px; margin: 12px 0 0; padding: 10px 12px; background: #eef2f1; border-radius: 12px; font-size: 13px; color: #2f3b40; }
+.line-tip svg { width: 17px; height: 17px; color: var(--lake); margin-top: 1px; }
+.line-map { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 13px; font-weight: 700; color: var(--lake); text-decoration: none; }
+.line-map svg { width: 16px; height: 16px; }
+
+.host-link { margin-top: 10px; color: var(--muted); font-size: 11.5px; text-decoration: underline; text-underline-offset: 3px; opacity: .7; }

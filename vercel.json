@@ -1,8 +1,17 @@
 {
   "rewrites": [
-    { "source": "/cabana/:slug", "destination": "/cabana.html" }
+    {
+      "source": "/cabana/:slug",
+      "destination": "/cabana.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    }
   ],
   "functions": {
-    "api/*.js": { "includeFiles": "data/**" }
+    "api/*.js": {
+      "includeFiles": "data/**"
+    }
   }
 }

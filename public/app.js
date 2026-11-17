@@ -95,9 +95,9 @@ const T = {
 // Textos de las secciones nuevas (se suman a T)
 const T2 = {
   es: {
-    tabs: { llegar: 'Llegar', extras: 'Extras', hoy: 'Hoy', cerca: 'Cerca', salida: 'Salida' },
-    titles: { llegar: 'Cómo <em>llegar</em>', extras: 'Servicios <em>extra</em>', hoy: 'Hoy en <em>Puerto Varas</em>', cerca: 'Lo que hay <em>cerca</em>', salida: 'Antes de <em>irte</em>' },
-    whereIs: 'Dónde está cada cosa', howTo: 'Cómo funciona', order: 'Pedir', orderNote: 'Se piden por WhatsApp a tu anfitriona.',
+    tabs: { moverse: 'Moverse', llegar: 'Llegar', extras: 'Extras', hoy: 'Hoy', cerca: 'Cerca', salida: 'Salida' },
+    titles: { moverse: 'Moverse en <em>bus y colectivo</em>', llegar: 'Cómo <em>llegar</em>', extras: 'Servicios <em>extra</em>', hoy: 'Hoy en <em>Puerto Varas</em>', cerca: 'Lo que hay <em>cerca</em>', salida: 'Antes de <em>irte</em>' },
+    tWhere: 'Dónde se toma', tFreq: 'Frecuencia', tFare: 'Precio', tGoes: 'Va a', tTips: 'Consejos', whereIs: 'Dónde está cada cosa', howTo: 'Cómo funciona', order: 'Pedir', orderNote: 'Se piden por WhatsApp a tu anfitriona.',
     ifRain: 'Si llueve', ifSun: 'Si hay sol', suggested: 'Recomendado hoy', maps: 'Abrir en Maps', reference: 'Referencia',
     review: 'Déjanos una reseña', report: 'Reportar un problema', reportNote: 'Escribe qué pasó y adjunta una foto en WhatsApp.', incidents: 'Si pasa algo',
     example: 'ejemplo', feels: 'Ahora', checked: 'listo',
@@ -105,9 +105,9 @@ const T2 = {
     kinds: { supermercado: 'Supermercado', almacen: 'Almacén', farmacia: 'Farmacia', bencinera: 'Bencinera', cajero: 'Cajero' },
   },
   en: {
-    tabs: { llegar: 'Getting here', extras: 'Extras', hoy: 'Today', cerca: 'Nearby', salida: 'Check-out' },
-    titles: { llegar: 'Getting <em>here</em>', extras: 'Extra <em>services</em>', hoy: 'Today in <em>Puerto Varas</em>', cerca: "What's <em>nearby</em>", salida: 'Before you <em>leave</em>' },
-    whereIs: 'Where things are', howTo: 'How it works', order: 'Order', orderNote: 'Ordered via WhatsApp with your host.',
+    tabs: { moverse: 'Get around', llegar: 'Getting here', extras: 'Extras', hoy: 'Today', cerca: 'Nearby', salida: 'Check-out' },
+    titles: { moverse: 'Getting around by <em>bus</em>', llegar: 'Getting <em>here</em>', extras: 'Extra <em>services</em>', hoy: 'Today in <em>Puerto Varas</em>', cerca: "What's <em>nearby</em>", salida: 'Before you <em>leave</em>' },
+    tWhere: 'Where to catch it', tFreq: 'Frequency', tFare: 'Fare', tGoes: 'Goes to', tTips: 'Tips', whereIs: 'Where things are', howTo: 'How it works', order: 'Order', orderNote: 'Ordered via WhatsApp with your host.',
     ifRain: 'If it rains', ifSun: 'If it’s sunny', suggested: 'Suggested today', maps: 'Open in Maps', reference: 'Landmark',
     review: 'Leave us a review', report: 'Report a problem', reportNote: 'Tell us what happened and attach a photo on WhatsApp.', incidents: 'If something happens',
     example: 'example', feels: 'Now', checked: 'done',
@@ -115,9 +115,9 @@ const T2 = {
     kinds: { supermercado: 'Supermarket', almacen: 'Corner shop', farmacia: 'Pharmacy', bencinera: 'Gas station', cajero: 'ATM' },
   },
   pt: {
-    tabs: { llegar: 'Chegar', extras: 'Extras', hoy: 'Hoje', cerca: 'Perto', salida: 'Saída' },
-    titles: { llegar: 'Como <em>chegar</em>', extras: 'Serviços <em>extras</em>', hoy: 'Hoje em <em>Puerto Varas</em>', cerca: 'O que há <em>perto</em>', salida: 'Antes de <em>partir</em>' },
-    whereIs: 'Onde fica cada coisa', howTo: 'Como funciona', order: 'Pedir', orderNote: 'Peça pelo WhatsApp à sua anfitriã.',
+    tabs: { moverse: 'Transporte', llegar: 'Chegar', extras: 'Extras', hoy: 'Hoje', cerca: 'Perto', salida: 'Saída' },
+    titles: { moverse: 'Ônibus e <em>colectivos</em>', llegar: 'Como <em>chegar</em>', extras: 'Serviços <em>extras</em>', hoy: 'Hoje em <em>Puerto Varas</em>', cerca: 'O que há <em>perto</em>', salida: 'Antes de <em>partir</em>' },
+    tWhere: 'Onde pegar', tFreq: 'Frequência', tFare: 'Preço', tGoes: 'Vai para', tTips: 'Dicas', whereIs: 'Onde fica cada coisa', howTo: 'Como funciona', order: 'Pedir', orderNote: 'Peça pelo WhatsApp à sua anfitriã.',
     ifRain: 'Se chover', ifSun: 'Se fizer sol', suggested: 'Recomendado hoje', maps: 'Abrir no Maps', reference: 'Referência',
     review: 'Deixe uma avaliação', report: 'Relatar um problema', reportNote: 'Conte o que aconteceu e envie uma foto no WhatsApp.', incidents: 'Se algo acontecer',
     example: 'exemplo', feels: 'Agora', checked: 'feito',
@@ -125,9 +125,9 @@ const T2 = {
     kinds: { supermercado: 'Supermercado', almacen: 'Mercearia', farmacia: 'Farmácia', bencinera: 'Posto', cajero: 'Caixa eletrônico' },
   },
   de: {
-    tabs: { llegar: 'Anreise', extras: 'Extras', hoy: 'Heute', cerca: 'In der Nähe', salida: 'Abreise' },
-    titles: { llegar: 'Die <em>Anreise</em>', extras: 'Zusätzliche <em>Services</em>', hoy: 'Heute in <em>Puerto Varas</em>', cerca: 'In der <em>Nähe</em>', salida: 'Vor der <em>Abreise</em>' },
-    whereIs: 'Wo was zu finden ist', howTo: 'So funktioniert’s', order: 'Bestellen', orderNote: 'Per WhatsApp bei Ihrer Gastgeberin bestellen.',
+    tabs: { moverse: 'Unterwegs', llegar: 'Anreise', extras: 'Extras', hoy: 'Heute', cerca: 'In der Nähe', salida: 'Abreise' },
+    titles: { moverse: 'Mit <em>Bus und Colectivo</em>', llegar: 'Die <em>Anreise</em>', extras: 'Zusätzliche <em>Services</em>', hoy: 'Heute in <em>Puerto Varas</em>', cerca: 'In der <em>Nähe</em>', salida: 'Vor der <em>Abreise</em>' },
+    tWhere: 'Abfahrt', tFreq: 'Takt', tFare: 'Preis', tGoes: 'Fährt nach', tTips: 'Tipps', whereIs: 'Wo was zu finden ist', howTo: 'So funktioniert’s', order: 'Bestellen', orderNote: 'Per WhatsApp bei Ihrer Gastgeberin bestellen.',
     ifRain: 'Bei Regen', ifSun: 'Bei Sonne', suggested: 'Heute empfohlen', maps: 'In Maps öffnen', reference: 'Orientierung',
     review: 'Bewertung schreiben', report: 'Problem melden', reportNote: 'Beschreiben Sie das Problem und senden Sie ein Foto per WhatsApp.', incidents: 'Falls etwas passiert',
     example: 'Beispiel', feels: 'Jetzt', checked: 'erledigt',
@@ -135,9 +135,9 @@ const T2 = {
     kinds: { supermercado: 'Supermarkt', almacen: 'Laden', farmacia: 'Apotheke', bencinera: 'Tankstelle', cajero: 'Geldautomat' },
   },
   it: {
-    tabs: { llegar: 'Arrivare', extras: 'Extra', hoy: 'Oggi', cerca: 'Vicino', salida: 'Partenza' },
-    titles: { llegar: 'Come <em>arrivare</em>', extras: 'Servizi <em>extra</em>', hoy: 'Oggi a <em>Puerto Varas</em>', cerca: 'Cosa c’è <em>vicino</em>', salida: 'Prima di <em>partire</em>' },
-    whereIs: 'Dove trovare le cose', howTo: 'Come funziona', order: 'Ordina', orderNote: 'Si ordinano su WhatsApp alla tua host.',
+    tabs: { moverse: 'Spostarsi', llegar: 'Arrivare', extras: 'Extra', hoy: 'Oggi', cerca: 'Vicino', salida: 'Partenza' },
+    titles: { moverse: 'Muoversi in <em>autobus</em>', llegar: 'Come <em>arrivare</em>', extras: 'Servizi <em>extra</em>', hoy: 'Oggi a <em>Puerto Varas</em>', cerca: 'Cosa c’è <em>vicino</em>', salida: 'Prima di <em>partire</em>' },
+    tWhere: 'Dove si prende', tFreq: 'Frequenza', tFare: 'Prezzo', tGoes: 'Va a', tTips: 'Consigli', whereIs: 'Dove trovare le cose', howTo: 'Come funziona', order: 'Ordina', orderNote: 'Si ordinano su WhatsApp alla tua host.',
     ifRain: 'Se piove', ifSun: 'Se c’è sole', suggested: 'Consigliato oggi', maps: 'Apri in Maps', reference: 'Riferimento',
     review: 'Lasciaci una recensione', report: 'Segnala un problema', reportNote: 'Racconta cosa è successo e allega una foto su WhatsApp.', incidents: 'Se succede qualcosa',
     example: 'esempio', feels: 'Ora', checked: 'fatto',
@@ -145,9 +145,9 @@ const T2 = {
     kinds: { supermercado: 'Supermercato', almacen: 'Alimentari', farmacia: 'Farmacia', bencinera: 'Benzinaio', cajero: 'Bancomat' },
   },
   fr: {
-    tabs: { llegar: 'Accès', extras: 'Extras', hoy: 'Aujourd’hui', cerca: 'À proximité', salida: 'Départ' },
-    titles: { llegar: 'Comment <em>venir</em>', extras: 'Services <em>en plus</em>', hoy: 'Aujourd’hui à <em>Puerto Varas</em>', cerca: 'À <em>proximité</em>', salida: 'Avant de <em>partir</em>' },
-    whereIs: 'Où trouver les choses', howTo: 'Mode d’emploi', order: 'Commander', orderNote: 'À commander par WhatsApp auprès de votre hôte.',
+    tabs: { moverse: 'Se déplacer', llegar: 'Accès', extras: 'Extras', hoy: 'Aujourd’hui', cerca: 'À proximité', salida: 'Départ' },
+    titles: { moverse: 'Se déplacer en <em>bus</em>', llegar: 'Comment <em>venir</em>', extras: 'Services <em>en plus</em>', hoy: 'Aujourd’hui à <em>Puerto Varas</em>', cerca: 'À <em>proximité</em>', salida: 'Avant de <em>partir</em>' },
+    tWhere: 'Où le prendre', tFreq: 'Fréquence', tFare: 'Prix', tGoes: 'Dessert', tTips: 'Conseils', whereIs: 'Où trouver les choses', howTo: 'Mode d’emploi', order: 'Commander', orderNote: 'À commander par WhatsApp auprès de votre hôte.',
     ifRain: 'S’il pleut', ifSun: 'S’il fait beau', suggested: 'Conseillé aujourd’hui', maps: 'Ouvrir dans Maps', reference: 'Repère',
     review: 'Laissez-nous un avis', report: 'Signaler un problème', reportNote: 'Décrivez le problème et joignez une photo sur WhatsApp.', incidents: 'En cas d’imprévu',
     example: 'exemple', feels: 'Maintenant', checked: 'fait',
@@ -303,6 +303,24 @@ function render() {
       ${row('key', `${t.arrival} · ${c.checkin?.hora || ''}`, c.checkin?.instrucciones)}
     </div>
     <a class="btn wide" href="${mapsUrl(L.mapa || c.direccion)}" target="_blank" rel="noopener">${ico('pin')}${t.maps}</a>`));
+  }
+
+
+  // Moverse: transporte público
+  if (c.transporte_publico?.lineas?.length) {
+    const tp = c.transporte_publico;
+    add('moverse', sec('moverse', `${tp.aviso ? `<p class="fine" style="margin:-4px 4px 12px">${esc(tp.aviso)}</p>` : ''}
+      <div class="lines">${tp.lineas.map((l) => `<article class="line">
+        <header><span class="ri">${ico(l.icono || 'bus')}</span><div><strong>${esc(l.nombre)}</strong>${l.para ? `<small>${t.tGoes}: ${esc(l.para)}</small>` : ''}</div></header>
+        <dl>
+          ${l.donde ? `<dt>${t.tWhere}</dt><dd>${esc(l.donde)}</dd>` : ''}
+          ${l.frecuencia ? `<dt>${t.tFreq}</dt><dd>${esc(l.frecuencia)}</dd>` : ''}
+          ${l.precio ? `<dt>${t.tFare}</dt><dd>${esc(l.precio)}</dd>` : ''}
+        </dl>
+        ${l.consejo ? `<p class="line-tip">${ico('info')}<span>${esc(l.consejo)}</span></p>` : ''}
+        ${l.mapa ? `<a class="line-map" target="_blank" rel="noopener" href="${mapsUrl(l.mapa)}">${ico('pin')}${t.maps}</a>` : ''}
+      </article>`).join('')}</div>
+      ${tp.consejos?.length ? `<div class="panel" style="margin-top:12px">${row('info', t.tTips, '')}<ul class="rules">${tp.consejos.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}`));
   }
 
   // La casa
@@ -518,6 +536,7 @@ async function init() {
   $('#mono').textContent = m;
   $('#chat-mono').textContent = m;
   $('#foot-name').textContent = cabana.nombre;
+  $('#host-link').href = `/admin?c=${encodeURIComponent(slug)}`;
   if (cabana.lugar) $('#lugar').textContent = cabana.lugar;
   $('#wifi-red').textContent = `${cabana.wifi?.red || ''}`;
   $('#wifi-clave').textContent = cabana.wifi?.clave || '—';

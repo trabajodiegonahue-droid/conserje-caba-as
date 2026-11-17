@@ -20,6 +20,7 @@ vercel.json      ← /cabana/:slug → plantilla
 |---|---|
 | Portada, wifi, horarios | `nombre`, `lugar`, `descripcion`, `wifi`, `checkin`, `checkout` |
 | Cómo llegar (aeropuerto, bus, auto) + botón Maps | `como_llegar` |
+| Moverse: minibuses, buses y colectivos (dónde se toman, adónde van, precio) | `transporte_publico` |
 | La casa: tinaja, parrilla, TV, calefón… | `equipos`, `donde_esta`, `otros`, `reglas` |
 | Estufa paso a paso | `estufa` |
 | Servicios extra con botón "Pedir" por WhatsApp | `extras` |
@@ -33,7 +34,29 @@ Cualquier campo que no pongas simplemente no aparece. El chat (Gemini) lee **tod
 
 > En la demo, los enlaces de `resenas` son de ejemplo: reemplázalos por el enlace real de tu ficha de Google o Airbnb.
 
+## Panel del anfitrión (`/admin`)
+
+Cada dueño edita su cabaña desde el celular en `https://TU-PROYECTO.vercel.app/admin`, sin tocar el JSON. Al guardar, el panel hace un *commit* en GitHub y Vercel publica el cambio solo en 1 o 2 minutos. No necesitas base de datos.
+
+**Configurarlo en Vercel** (*Settings → Environment Variables*, luego *Redeploy*):
+
+| Variable | Qué poner |
+|---|---|
+| `ADMIN_PASSWORD` | Tu clave de administrador: edita todas las cabañas y crea nuevas. |
+| `CLAVES_CABANAS` | (Opcional) Claves de cada dueño: `los-arrayanes:clave1,el-mirador:clave2`. Cada uno solo puede editar la suya. |
+| `GITHUB_REPO` | Tu repositorio, ej: `tu-usuario/conserje-caba-as`. |
+| `GITHUB_BRANCH` | La rama que publica Vercel (normalmente `main`). |
+| `GITHUB_TOKEN` | Un token de GitHub con permiso para escribir en ese repositorio (ver abajo). |
+
+**Crear el token de GitHub:** en GitHub ve a *Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token*. En *Repository access* elige **solo** este repositorio, y en *Permissions → Contents* elige **Read and write**. Copia el token y pégalo en Vercel como `GITHUB_TOKEN`. Nunca lo pongas en el código.
+
+En tu computador (`npm run dev`) el panel guarda directo en `data/cabanas/` y, si no configuraste `ADMIN_PASSWORD`, la clave es `admin`.
+
 ## Agregar una cabaña nueva
+
+**Desde el panel:** entra a `/admin`, elige "＋ Nueva cabaña", escribe su dirección (ej. `el-mirador`) y tu `ADMIN_PASSWORD`.
+
+**A mano:**
 
 1. Copia `data/cabanas/los-arrayanes.json` como `data/cabanas/el-mirador.json`.
 2. Cambia los datos (el campo `slug` debe ser igual al nombre del archivo; solo minúsculas, números y guiones).
