@@ -239,10 +239,6 @@ function row(icon, title, text, chips = []) {
   </div></div>`;
 }
 
-function sec(id, body, note = '') {
-  return `<section class="sec" id="${id}"><div class="sec-head"><h2>${T[lang].titles[id]}</h2>${note ? `<span class="sec-note">${esc(note)}</span>` : ''}</div>${body}</section>`;
-}
-
 const mapsUrl = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 const waUrl = (num, text) => `https://wa.me/${encodeURIComponent(num)}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
 
@@ -279,37 +275,111 @@ function weatherCard() {
   </div>`;
 }
 
+// ── Apartados: cada uno es una página propia (#llegar, #casa, …) ──
+const T3 = {
+  es: { restaurants: 'Restaurantes', tours: 'Tours y paseos', need: '¿Qué necesitas?', back: 'Inicio', see: 'Ver',
+    tabs: { llegar: 'Llegada', comer: 'Comer y comprar', salida: 'Tu salida', moverse: 'Moverse', explorar: 'Explorar' },
+    titles: { comer: 'Comer y <em>comprar</em>', explorar: 'Qué <em>explorar</em>' },
+    tileDesc: { llegar: 'Aeropuerto, bus, auto y check-in', casa: 'Tinaja, TV, estufa y reglas', extras: 'Tinaja, desayuno, transfer…', explorar: 'Clima, panoramas y tours', comer: 'Restaurantes y almacenes', moverse: 'Buses, minibuses y colectivos', salida: 'Check-out y reseñas', ayuda: 'Tu anfitriona y emergencias' } },
+  en: { restaurants: 'Restaurants', tours: 'Tours & trips', need: 'What do you need?', back: 'Home', see: 'Open',
+    tabs: { llegar: 'Arrival', comer: 'Eat & shop', salida: 'Check-out', moverse: 'Get around', explorar: 'Explore' },
+    titles: { comer: 'Eat & <em>shop</em>', explorar: 'What to <em>explore</em>' },
+    tileDesc: { llegar: 'Airport, bus, car and check-in', casa: 'Hot tub, TV, stove and rules', extras: 'Hot tub, breakfast, transfer…', explorar: 'Weather, ideas and tours', comer: 'Restaurants and shops', moverse: 'Buses, minibuses and colectivos', salida: 'Check-out and reviews', ayuda: 'Your host and emergencies' } },
+  pt: { restaurants: 'Restaurantes', tours: 'Passeios', need: 'Do que você precisa?', back: 'Início', see: 'Ver',
+    tabs: { llegar: 'Chegada', comer: 'Comer e comprar', salida: 'Sua saída', moverse: 'Transporte', explorar: 'Explorar' },
+    titles: { comer: 'Comer e <em>comprar</em>', explorar: 'O que <em>explorar</em>' },
+    tileDesc: { llegar: 'Aeroporto, ônibus, carro e check-in', casa: 'Ofurô, TV, lareira e regras', extras: 'Ofurô, café da manhã, transfer…', explorar: 'Clima, passeios e tours', comer: 'Restaurantes e mercados', moverse: 'Ônibus, vans e colectivos', salida: 'Check-out e avaliações', ayuda: 'Sua anfitriã e emergências' } },
+  de: { restaurants: 'Restaurants', tours: 'Touren & Ausflüge', need: 'Was brauchen Sie?', back: 'Start', see: 'Öffnen',
+    tabs: { llegar: 'Ankunft', comer: 'Essen & Einkaufen', salida: 'Abreise', moverse: 'Unterwegs', explorar: 'Entdecken' },
+    titles: { comer: 'Essen & <em>Einkaufen</em>', explorar: 'Was es zu <em>entdecken</em> gibt' },
+    tileDesc: { llegar: 'Flughafen, Bus, Auto, Check-in', casa: 'Badefass, TV, Ofen, Regeln', extras: 'Badefass, Frühstück, Transfer…', explorar: 'Wetter, Ideen und Touren', comer: 'Restaurants und Läden', moverse: 'Busse und Colectivos', salida: 'Check-out und Bewertungen', ayuda: 'Gastgeberin und Notfälle' } },
+  it: { restaurants: 'Ristoranti', tours: 'Tour ed escursioni', need: 'Di cosa hai bisogno?', back: 'Home', see: 'Apri',
+    tabs: { llegar: 'Arrivo', comer: 'Mangiare e spesa', salida: 'Partenza', moverse: 'Spostarsi', explorar: 'Esplorare' },
+    titles: { comer: 'Mangiare e <em>spesa</em>', explorar: 'Cosa <em>esplorare</em>' },
+    tileDesc: { llegar: 'Aeroporto, bus, auto e check-in', casa: 'Vasca, TV, stufa e regole', extras: 'Vasca, colazione, transfer…', explorar: 'Meteo, idee e tour', comer: 'Ristoranti e negozi', moverse: 'Autobus e colectivos', salida: 'Check-out e recensioni', ayuda: 'La tua host ed emergenze' } },
+  fr: { restaurants: 'Restaurants', tours: 'Excursions', need: 'De quoi avez-vous besoin ?', back: 'Accueil', see: 'Ouvrir',
+    tabs: { llegar: 'Arrivée', comer: 'Manger & courses', salida: 'Départ', moverse: 'Se déplacer', explorar: 'Explorer' },
+    titles: { comer: 'Manger & <em>courses</em>', explorar: 'Que <em>explorer</em>' },
+    tileDesc: { llegar: 'Aéroport, bus, voiture, check-in', casa: 'Bain nordique, TV, poêle, règles', extras: 'Bain nordique, petit-déj, transfert…', explorar: 'Météo, idées et excursions', comer: 'Restaurants et commerces', moverse: 'Bus et colectivos', salida: 'Check-out et avis', ayuda: 'Votre hôte et urgences' } },
+};
+for (const l of Object.keys(T3)) {
+  const { tabs, titles, ...rest } = T3[l];
+  Object.assign(T[l].tabs, tabs); Object.assign(T[l].titles, titles); Object.assign(T[l], rest);
+}
+
+const PAGE_ICONS = { llegar: 'key', casa: 'door', extras: 'star', explorar: 'compass', comer: 'fork', moverse: 'bus', salida: 'check', ayuda: 'sos' };
+const blk = (title, html) => `<section class="blk">${title ? `<h3 class="blk-title">${esc(title)}</h3>` : ''}${html}</section>`;
 let planTab = null;
-function render() {
+
+function buildPages() {
   const c = cabana, t = T[lang], a = c.anfitrion || {};
-  const ids = [];
-  const out = [];
-  const add = (id, html) => { out.push(html); ids.push(id); };
+  const P = {};
 
-  // Accesos rápidos
-  $('#actions').innerHTML = `
-    <button class="action" id="act-wifi"><span class="i">${ico('wifi')}</span>${t.act.wifi}</button>
-    ${a.whatsapp ? `<a class="action" href="${waUrl(a.whatsapp)}" target="_blank" rel="noopener"><span class="i">${ico('chat')}</span>${t.act.whatsapp}</a>` : ''}
-    <a class="action" href="${mapsUrl(c.como_llegar?.mapa || c.direccion || c.nombre)}" target="_blank" rel="noopener"><span class="i">${ico('pin')}</span>${t.act.map}</a>
-    <a class="action sos" href="#ayuda"><span class="i">${ico('sos')}</span>${t.act.sos}</a>`;
-  $('#act-wifi').onclick = copyWifi;
-
-  // Cómo llegar
-  if (c.como_llegar) {
-    const L = c.como_llegar, mIco = { avion: 'plane', bus: 'bus', auto: 'car' };
-    add('llegar', sec('llegar', `<div class="panel">
-      ${(L.opciones || []).map((o) => row(mIco[o.modo] || 'pin', o.desde, o.detalle, [o.tiempo !== '—' ? o.tiempo : ''])).join('')}
-      ${L.referencia ? row('pin', t.reference, L.referencia) : ''}
-      ${row('key', `${t.arrival} · ${c.checkin?.hora || ''}`, c.checkin?.instrucciones)}
-    </div>
-    <a class="btn wide" href="${mapsUrl(L.mapa || c.direccion)}" target="_blank" rel="noopener">${ico('pin')}${t.maps}</a>`));
+  if (c.como_llegar || c.checkin) {
+    const L = c.como_llegar || {}, mIco = { avion: 'plane', bus: 'bus', auto: 'car' };
+    P.llegar = blk('', `<div class="panel">
+        ${row('key', `Check-in · ${c.checkin?.hora || ''}`, c.checkin?.instrucciones)}
+        ${(L.opciones || []).map((o) => row(mIco[o.modo] || 'pin', o.desde, o.detalle, [o.tiempo !== '—' ? o.tiempo : ''])).join('')}
+        ${L.referencia ? row('pin', t.reference, L.referencia) : ''}
+      </div>
+      <a class="btn wide" href="${mapsUrl(L.mapa || c.direccion || c.nombre)}" target="_blank" rel="noopener">${ico('pin')}${t.maps}</a>`);
   }
 
+  {
+    const otrosIcons = { agua_caliente: 'drop', estacionamiento: 'car', basura: 'trash' };
+    const equipos = (c.equipos || []).map((e) => `<details class="dev"><summary><span class="ri">${ico(e.icono)}</span><strong>${esc(e.nombre)}</strong><span class="chev"></span></summary>
+        <ol class="steps small">${(e.pasos || []).map((p) => `<li>${esc(p)}</li>`).join('')}</ol>${e.nota ? `<p class="dev-note">${esc(e.nota)}</p>` : ''}</details>`).join('');
+    const e = c.estufa;
+    const otros = Object.entries(c.otros || {}).filter(([k]) => !['emergencias', 'agua_caliente'].includes(k));
+    P.casa = [
+      equipos ? blk(t.howTo, `<div class="panel devs">${equipos}</div>`) : '',
+      e ? blk(t.tabs.estufa, `<div class="panel">
+          <div class="stove-type">${ico('flame')}${esc(e.tipo || '')}</div>
+          <ol class="steps">${(e.pasos || []).map((p) => `<li>${esc(p)}</li>`).join('')}</ol>
+          ${e.lena ? `<div class="tip">${ico('wood')}<span><strong>${t.wood}.</strong> ${esc(e.lena)}</span></div>` : ''}
+        </div>${e.seguridad ? `<div class="warn">${ico('sos')}<span><strong>${t.safety}.</strong> ${esc(e.seguridad)}</span></div>` : ''}`) : '',
+      (c.donde_esta || otros.length) ? blk('', `<div class="panel">
+          ${c.donde_esta ? row('info', t.whereIs, c.donde_esta) : ''}
+          ${otros.map(([k, v]) => row(otrosIcons[k] || 'info', k.replace(/_/g, ' ').replace(/^./, (m) => m.toUpperCase()), v)).join('')}
+        </div>`) : '',
+      c.reglas?.length ? blk(t.rules, `<div class="panel"><ul class="rules plain">${c.reglas.map((r) => `<li>${esc(r)}</li>`).join('')}</ul></div>`) : '',
+    ].join('');
+  }
 
-  // Moverse: transporte público
+  if (c.extras?.length) {
+    P.extras = blk('', `<div class="panel">${c.extras.map((x) => `<div class="row"><span class="ri">${ico(x.icono)}</span><div class="rt">
+        <strong>${esc(x.nombre)}</strong><p>${esc(x.detalle || '')}</p></div>
+        <div class="buy"><span class="price">${esc(x.precio || '')}</span>
+        ${a.whatsapp ? `<a class="order" target="_blank" rel="noopener" href="${waUrl(a.whatsapp, `Hola ${a.nombre}, quisiera pedir: ${x.nombre} (${c.nombre}). ¡Gracias!`)}">${t.order}</a>` : ''}</div></div>`).join('')}</div>
+      <p class="fine">${t.orderNote}</p>`);
+  }
+
+  if (c.panoramas || c.tours?.length) {
+    let plans = '';
+    if (c.panoramas) {
+      const wet = weather?.current ? isWet(weather.current.weather_code) : true;
+      const tab = planTab || (wet ? 'lluvia' : 'sol');
+      plans = blk(t.tabs.hoy, `${weatherCard()}
+        <div class="seg" role="tablist">
+          ${['lluvia', 'sol'].map((k) => `<button role="tab" data-plan="${k}" class="${k === tab ? 'on' : ''}">${ico(k === 'lluvia' ? 'rain' : 'sun')}${k === 'lluvia' ? t.ifRain : t.ifSun}${(k === 'lluvia') === wet && weather?.current ? `<i>${t.suggested}</i>` : ''}</button>`).join('')}
+        </div>
+        <div class="panel">${(c.panoramas[tab] || []).map((p) => row(tab === 'lluvia' ? 'coffee' : 'sun', p.nombre, p.nota)).join('')}</div>`);
+    }
+    P.explorar = plans + (c.tours?.length ? blk(t.tours, `<div class="panel">${c.tours.map((r) => row('compass', r.nombre, r.nota, [r.duracion])).join('')}</div>`) : '');
+  }
+
+  if (c.restaurantes?.length || c.servicios_cercanos?.length) {
+    const k = { supermercado: 'cart', almacen: 'shop', farmacia: 'plus', bencinera: 'fuel', cajero: 'atm' };
+    P.comer = (c.restaurantes?.length ? blk(t.restaurants, `<div class="panel">${c.restaurantes.map((r) => row('fork', r.nombre, r.nota, [r.tipo, r.distancia])).join('')}</div>`) : '')
+      + (c.servicios_cercanos?.length ? blk(t.tabs.cerca, `<div class="panel">${c.servicios_cercanos.map((s) => `<div class="row"><span class="ri">${ico(k[s.tipo] || 'pin')}</span><div class="rt">
+          <span class="kind">${esc(t.kinds[s.tipo] || s.tipo || '')}</span><strong>${esc(s.nombre)}</strong>
+          <div class="meta">${[s.distancia, s.horario].filter(Boolean).map((m) => `<span class="chip">${esc(m)}</span>`).join('')}</div></div>
+          <a class="mapbtn" aria-label="${t.maps}" target="_blank" rel="noopener" href="${mapsUrl(`${s.nombre} ${c.lugar?.split('·')[0] || ''}`)}">${ico('ext')}</a></div>`).join('')}</div>`) : '');
+  }
+
   if (c.transporte_publico?.lineas?.length) {
     const tp = c.transporte_publico;
-    add('moverse', sec('moverse', `${tp.aviso ? `<p class="fine" style="margin:-4px 4px 12px">${esc(tp.aviso)}</p>` : ''}
+    P.moverse = blk('', `${tp.aviso ? `<p class="fine" style="margin:0 4px 12px">${esc(tp.aviso)}</p>` : ''}
       <div class="lines">${tp.lineas.map((l) => `<article class="line">
         <header><span class="ri">${ico(l.icono || 'bus')}</span><div><strong>${esc(l.nombre)}</strong>${l.para ? `<small>${t.tGoes}: ${esc(l.para)}</small>` : ''}</div></header>
         <dl>
@@ -319,84 +389,21 @@ function render() {
         </dl>
         ${l.consejo ? `<p class="line-tip">${ico('info')}<span>${esc(l.consejo)}</span></p>` : ''}
         ${l.mapa ? `<a class="line-map" target="_blank" rel="noopener" href="${mapsUrl(l.mapa)}">${ico('pin')}${t.maps}</a>` : ''}
-      </article>`).join('')}</div>
-      ${tp.consejos?.length ? `<div class="panel" style="margin-top:12px">${row('info', t.tTips, '')}<ul class="rules">${tp.consejos.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}`));
+      </article>`).join('')}</div>`)
+      + (tp.consejos?.length ? blk(t.tTips, `<div class="panel"><ul class="rules plain">${tp.consejos.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>`) : '');
   }
 
-  // La casa
-  const otrosIcons = { agua_caliente: 'drop', estacionamiento: 'car', basura: 'trash' };
-  const equipos = (c.equipos || []).map((e) => `<details class="dev"><summary><span class="ri">${ico(e.icono)}</span><strong>${esc(e.nombre)}</strong><span class="chev"></span></summary>
-      <ol class="steps small">${e.pasos.map((p) => `<li>${esc(p)}</li>`).join('')}</ol>${e.nota ? `<p class="dev-note">${esc(e.nota)}</p>` : ''}</details>`).join('');
-  add('casa', sec('casa', `
-    ${equipos ? `<p class="sub">${t.howTo}</p><div class="panel devs">${equipos}</div>` : ''}
-    <div class="panel" style="margin-top:10px">
-      ${c.donde_esta ? row('info', t.whereIs, c.donde_esta) : ''}
-      ${Object.entries(c.otros || {}).filter(([k]) => !['emergencias', 'agua_caliente'].includes(k)).map(([k, v]) => row(otrosIcons[k] || 'info', k.replace(/_/g, ' ').replace(/^./, (m) => m.toUpperCase()), v)).join('')}
-    </div>
-    ${c.reglas?.length ? `<div class="panel" style="margin-top:10px">${row('rule', t.rules, '')}<ul class="rules">${c.reglas.map((r) => `<li>${esc(r)}</li>`).join('')}</ul></div>` : ''}`));
-
-  // Estufa
-  if (c.estufa) {
-    const e = c.estufa;
-    add('estufa', sec('estufa', `<div class="panel">
-      <div class="stove-type">${ico('flame')}${esc(e.tipo)}</div>
-      <ol class="steps">${(e.pasos || []).map((p) => `<li>${esc(p)}</li>`).join('')}</ol>
-      ${e.lena ? `<div class="tip">${ico('wood')}<span><strong>${t.wood}.</strong> ${esc(e.lena)}</span></div>` : ''}
-    </div>
-    ${e.seguridad ? `<div class="warn">${ico('sos')}<span><strong>${t.safety}.</strong> ${esc(e.seguridad)}</span></div>` : ''}`));
-  }
-
-  // Extras
-  if (c.extras?.length) {
-    add('extras', sec('extras', `<div class="panel">${c.extras.map((x) => `<div class="row"><span class="ri">${ico(x.icono)}</span><div class="rt">
-        <strong>${esc(x.nombre)}</strong><p>${esc(x.detalle || '')}</p></div>
-        <div class="buy"><span class="price">${esc(x.precio || '')}</span>
-        ${a.whatsapp ? `<a class="order" target="_blank" rel="noopener" href="${waUrl(a.whatsapp, `Hola ${a.nombre}, quisiera pedir: ${x.nombre} (${c.nombre}). ¡Gracias!`)}">${t.order}</a>` : ''}</div></div>`).join('')}</div>
-      <p class="fine">${t.orderNote}</p>`));
-  }
-
-  // Hoy: clima + panoramas según el día
-  if (c.panoramas) {
-    const wet = weather?.current ? isWet(weather.current.weather_code) : true;
-    const tab = planTab || (wet ? 'lluvia' : 'sol');
-    const list = (c.panoramas[tab] || []).map((p) => row(tab === 'lluvia' ? 'coffee' : 'sun', p.nombre, p.nota)).join('');
-    add('hoy', sec('hoy', `${weatherCard()}
-      <div class="seg" role="tablist">
-        ${['lluvia', 'sol'].map((k) => `<button role="tab" data-plan="${k}" class="${k === tab ? 'on' : ''}">${ico(k === 'lluvia' ? 'rain' : 'sun')}${k === 'lluvia' ? t.ifRain : t.ifSun}${(k === 'lluvia') === wet && weather?.current ? `<i>${t.suggested}</i>` : ''}</button>`).join('')}
+  {
+    const done = readChecks();
+    P.salida = blk('', `<div class="panel">
+        ${row('door', `Check-out · ${c.checkout?.hora || ''}`, c.checkout?.instrucciones)}
+        ${(c.checkout?.lista || []).length ? `<div class="checks">${c.checkout.lista.map((x, i) => `<label class="check"><input type="checkbox" id="chk-${i}" data-i="${i}"${done[i] ? ' checked' : ''}><span class="box">${ico('check')}</span><span>${esc(x)}</span></label>`).join('')}</div>` : ''}
       </div>
-      <div class="panel">${list}</div>`));
+      ${c.resenas ? `<div class="review"><div class="stars">${ico('star').repeat(5)}</div><p>${esc(c.resenas.mensaje || '')}</p>
+        <div class="review-btns">${(c.resenas.enlaces || []).map((r) => `<a class="btn light" target="_blank" rel="noopener" href="${esc(r.url)}">${esc(r.plataforma)}</a>`).join('')}</div></div>` : ''}`);
   }
 
-  // Comer
-  if (c.restaurantes?.length) {
-    add('comer', sec('comer', `<div class="panel">${c.restaurantes.map((r) => row('fork', r.nombre, r.nota, [r.tipo, r.distancia])).join('')}</div>`, `${c.restaurantes.length} ${t.places}`));
-  }
-
-  // Cerca
-  if (c.servicios_cercanos?.length) {
-    const k = { supermercado: 'cart', almacen: 'shop', farmacia: 'plus', bencinera: 'fuel', cajero: 'atm' };
-    add('cerca', sec('cerca', `<div class="panel">${c.servicios_cercanos.map((s) => `<div class="row"><span class="ri">${ico(k[s.tipo] || 'pin')}</span><div class="rt">
-        <span class="kind">${esc(t.kinds[s.tipo] || s.tipo)}</span><strong>${esc(s.nombre)}</strong>
-        <div class="meta">${[s.distancia, s.horario].filter(Boolean).map((m) => `<span class="chip">${esc(m)}</span>`).join('')}</div></div>
-        <a class="mapbtn" aria-label="${t.maps}" target="_blank" rel="noopener" href="${mapsUrl(`${s.nombre} ${c.lugar?.split('·')[0] || ''}`)}">${ico('ext')}</a></div>`).join('')}</div>`));
-  }
-
-  // Explorar
-  if (c.tours?.length) {
-    add('explorar', sec('explorar', `<div class="panel">${c.tours.map((r) => row('compass', r.nombre, r.nota, [r.duracion])).join('')}</div>`, `${c.tours.length} ${t.places}`));
-  }
-
-  // Salida
-  const done = readChecks();
-  add('salida', sec('salida', `<div class="panel">
-      ${row('door', `${t.departure} · ${c.checkout?.hora || ''}`, c.checkout?.instrucciones)}
-      ${(c.checkout?.lista || []).length ? `<div class="checks">${c.checkout.lista.map((x, i) => `<label class="check"><input type="checkbox" id="chk-${i}" data-i="${i}"${done[i] ? ' checked' : ''}><span class="box">${ico('check')}</span><span>${esc(x)}</span></label>`).join('')}</div>` : ''}
-    </div>
-    ${c.resenas ? `<div class="review"><div class="stars">${ico('star').repeat(5)}</div><p>${esc(c.resenas.mensaje || '')}</p>
-      <div class="review-btns">${(c.resenas.enlaces || []).map((r) => `<a class="btn light" target="_blank" rel="noopener" href="${esc(r.url)}">${esc(r.plataforma)}</a>`).join('')}</div></div>` : ''}`));
-
-  // Ayuda
-  add('ayuda', sec('ayuda', `<div class="host">
+  P.ayuda = blk('', `<div class="host">
       <div class="host-top"><span class="avatar">${esc((a.nombre || '?')[0])}</span><div><span>${t.hostRole}</span><strong>${esc(a.nombre || '')}</strong></div></div>
       ${a.horario ? `<p class="host-hours">${esc(a.horario)}</p>` : ''}
       <div class="host-btns">
@@ -407,20 +414,63 @@ function render() {
     </div>
     ${a.whatsapp ? `<a class="report" target="_blank" rel="noopener" href="${waUrl(a.whatsapp, `Hola ${a.nombre}, tengo un problema en ${c.nombre}: `)}">
       <span class="ri">${ico('tool')}</span><span><strong>${t.report}</strong><small>${t.reportNote}</small></span>${ico('ext')}</a>` : ''}
-    ${c.imprevistos?.length ? `<p class="sub">${t.incidents}</p><div class="panel devs">${c.imprevistos.map((x) => `<details class="dev"><summary><span class="ri">${ico('bolt')}</span><strong>${esc(x.situacion)}</strong><span class="chev"></span></summary><p class="dev-note" style="margin-top:0">${esc(x.que_hacer)}</p></details>`).join('')}</div>` : ''}
-    <div class="sos-grid">${['131', '132', '133'].map((n, i) => `<a href="tel:${n}"><strong>${n}</strong><span>${t.sos[i]}</span></a>`).join('')}</div>`));
+    <div class="sos-grid">${['131', '132', '133'].map((n, i) => `<a href="tel:${n}"><strong>${n}</strong><span>${t.sos[i]}</span></a>`).join('')}</div>`)
+    + (c.imprevistos?.length ? blk(t.incidents, `<div class="panel devs">${c.imprevistos.map((x) => `<details class="dev"><summary><span class="ri">${ico('bolt')}</span><strong>${esc(x.situacion)}</strong><span class="chev"></span></summary><p class="dev-note" style="margin-top:0">${esc(x.que_hacer)}</p></details>`).join('')}</div>`) : '');
 
-  const y = window.scrollY;
-  $('#sections').innerHTML = out.join('');
-  $('#tabs').innerHTML = ids.map((id, i) => `<a href="#${id}" data-id="${id}"${i === 0 ? ' class="active"' : ''}>${t.tabs[id]}</a>`).join('');
-  window.scrollTo(0, y);
+  return P;
+}
+
+const ORDER = ['llegar', 'casa', 'extras', 'explorar', 'comer', 'moverse', 'salida', 'ayuda'];
+const route = () => decodeURIComponent(location.hash.slice(1));
+let shownRoute = null, homeY = 0;
+
+function render() {
+  const c = cabana, t = T[lang];
+  const pages = buildPages();
+  const r = route();
+  const onPage = !!pages[r];
+
+  // Accesos rápidos (inicio)
+  $('#actions').innerHTML = `
+    <button class="action" id="act-wifi"><span class="i">${ico('wifi')}</span>${t.act.wifi}</button>
+    ${c.anfitrion?.whatsapp ? `<a class="action" href="${waUrl(c.anfitrion.whatsapp)}" target="_blank" rel="noopener"><span class="i">${ico('chat')}</span>${t.act.whatsapp}</a>` : ''}
+    <a class="action" href="${mapsUrl(c.como_llegar?.mapa || c.direccion || c.nombre)}" target="_blank" rel="noopener"><span class="i">${ico('pin')}</span>${t.act.map}</a>
+    <a class="action sos" href="#ayuda"><span class="i">${ico('sos')}</span>${t.act.sos}</a>`;
+  $('#act-wifi').onclick = copyWifi;
+
+  // Tarjetas de apartados
+  $('#need').textContent = t.need;
+  $('#tiles').innerHTML = ORDER.filter((id) => pages[id]).map((id) => {
+    let desc = t.tileDesc[id];
+    if (id === 'explorar' && weather?.current) desc = `${Math.round(weather.current.temperature_2m)}° · ${t.wx[WX(weather.current.weather_code)[0]]} — ${t.tileDesc.explorar}`;
+    return `<a class="tile${id === 'ayuda' ? ' tile-help' : ''}" href="#${id}"><span class="ti">${ico(PAGE_ICONS[id])}</span><strong>${esc(t.tabs[id])}</strong><small>${esc(desc)}</small></a>`;
+  }).join('');
+
+  // Página
+  $('#home').hidden = onPage;
+  $('#page').hidden = !onPage;
+  if (onPage) {
+    $('#page-name').textContent = t.tabs[r];
+    $('#page-back-label').textContent = t.back;
+    $('#page-title').innerHTML = t.titles[r] || esc(t.tabs[r]);
+    $('#page-body').innerHTML = pages[r];
+    const i = ORDER.filter((id) => pages[id]).indexOf(r), list = ORDER.filter((id) => pages[id]);
+    const next = list[i + 1];
+    $('#page-next').innerHTML = next ? `<a class="next" href="#${next}"><span><small>${t.see}</small><strong>${esc(t.tabs[next])}</strong></span>${ico(PAGE_ICONS[next])}</a>` : '';
+  }
+
+  // Desplazamiento al cambiar de apartado
+  if (r !== shownRoute) {
+    if (onPage && !pages[shownRoute]) homeY = window.scrollY;
+    window.scrollTo(0, onPage ? 0 : homeY);
+    shownRoute = r;
+  }
 
   document.querySelectorAll('[data-plan]').forEach((b) => b.addEventListener('click', () => { planTab = b.dataset.plan; render(); }));
   document.querySelectorAll('.check input').forEach((cb) => cb.addEventListener('change', () => {
     const d = readChecks(); d[cb.dataset.i] = cb.checked;
     try { localStorage.setItem(`checks-${slug}`, JSON.stringify(d)); } catch {}
   }));
-  watchTabs();
   renderChips();
 }
 
@@ -428,21 +478,7 @@ function readChecks() {
   try { return JSON.parse(localStorage.getItem(`checks-${slug}`)) || {}; } catch { return {}; }
 }
 
-let observer;
-function watchTabs() {
-  observer?.disconnect();
-  observer = new IntersectionObserver((entries) => {
-    entries.forEach((en) => {
-      if (!en.isIntersecting) return;
-      document.querySelectorAll('.tabs a').forEach((a) => {
-        const on = a.dataset.id === en.target.id;
-        a.classList.toggle('active', on);
-        if (on) a.scrollIntoView({ inline: 'nearest', block: 'nearest' });
-      });
-    });
-  }, { rootMargin: '-40% 0px -55% 0px' });
-  document.querySelectorAll('.sec').forEach((s) => observer.observe(s));
-}
+window.addEventListener('hashchange', () => { if (cabana) render(); });
 
 async function copyWifi() {
   const btn = $('#copy-wifi');
@@ -535,6 +571,7 @@ async function init() {
   $('#descripcion').textContent = cabana.descripcion || '';
   $('#mono').textContent = m;
   $('#chat-mono').textContent = m;
+  $('#page-mono').textContent = m;
   $('#foot-name').textContent = cabana.nombre;
   $('#host-link').href = `/admin?c=${encodeURIComponent(slug)}`;
   if (cabana.lugar) $('#lugar').textContent = cabana.lugar;

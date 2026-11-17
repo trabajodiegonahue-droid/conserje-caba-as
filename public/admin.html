@@ -37,23 +37,24 @@
 
   <!-- Editor -->
   <section id="editor" hidden>
-    <header class="adm-top">
-      <div class="adm-id">
+    <header class="adm-bar">
+      <button id="adm-back" class="back" type="button" hidden><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span>Apartados</span></button>
+      <div class="adm-id" id="adm-id">
         <span class="mono" id="adm-mono"></span>
-        <div><small>Editando</small><strong id="adm-name"></strong></div>
+        <div><small>Panel del anfitrión</small><strong id="adm-name"></strong></div>
       </div>
-      <div class="adm-top-actions">
+      <strong class="adm-section" id="adm-section" hidden></strong>
+      <div class="adm-bar-actions">
         <a id="adm-view" class="pill" target="_blank" rel="noopener">Ver página</a>
         <button id="adm-logout" class="pill ghost" type="button">Salir</button>
       </div>
     </header>
-    <nav class="tabs adm-tabs" id="adm-tabs"></nav>
-    <main id="adm-form" class="adm-form"></main>
+    <main id="adm-main" class="adm-main"></main>
   </section>
 
   <div class="savebar" id="savebar" hidden>
     <span id="save-state">Sin cambios</span>
-    <button id="save-btn" class="btn light" type="button" disabled>Guardar cambios</button>
+    <button id="save-btn" class="btn light" type="button" disabled>Guardar</button>
   </div>
 
   <div class="toast" id="toast" role="status" hidden></div>

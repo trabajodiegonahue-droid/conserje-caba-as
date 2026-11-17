@@ -14,6 +14,7 @@
   <div id="loading" class="loading"><span class="loader"></span></div>
 
   <main id="app" hidden>
+    <div id="home">
     <header class="hero" id="hero">
       <svg class="scene" viewBox="0 0 400 340" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
         <defs>
@@ -84,15 +85,28 @@
 
       <nav class="actions" id="actions"></nav>
 
-      <nav class="tabs" id="tabs"></nav>
-
-      <div id="sections"></div>
+      <h2 class="need" id="need"></h2>
+      <nav class="tiles" id="tiles"></nav>
 
       <footer class="foot">
         <span id="foot-name"></span>
         <span data-i18n="footer"></span>
         <a class="host-link" id="host-link" href="/admin">Acceso anfitrión</a>
       </footer>
+    </div>
+    </div>
+
+    <div id="page" hidden>
+      <header class="pagebar">
+        <a href="#" class="back" aria-label="Volver"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><span id="page-back-label"></span></a>
+        <strong id="page-name"></strong>
+        <span class="mono small" id="page-mono"></span>
+      </header>
+      <div class="wrap">
+        <h1 class="page-title" id="page-title"></h1>
+        <div id="page-body"></div>
+        <div id="page-next"></div>
+      </div>
     </div>
   </main>
 
