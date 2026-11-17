@@ -16,7 +16,14 @@
   },
   "checkout": {
     "hora": "11:00",
-    "instrucciones": "Deja la llave dentro de la caja de seguridad, la loza lavada y la basura en el contenedor verde junto al portón. No es necesario sacar la ropa de cama."
+    "instrucciones": "Deja la llave dentro de la caja de seguridad, la loza lavada y la basura en el contenedor verde junto al portón. No es necesario sacar la ropa de cama.",
+    "lista": [
+      "Apaga la estufa y cierra el tiraje",
+      "Lava la loza",
+      "Basura al contenedor verde junto al portón",
+      "Cierra ventanas y puertas",
+      "Deja la llave en la caja de seguridad"
+    ]
   },
   "reglas": [
     "No se permite fumar dentro de la cabaña.",
@@ -91,5 +98,220 @@
       "duracion": "2 a 3 horas",
       "nota": "Pregúntale a Carolina por operadores locales con equipo incluido."
     }
-  ]
+  ],
+  "coordenadas": {
+    "lat": -41.3195,
+    "lon": -72.9854
+  },
+  "como_llegar": {
+    "mapa": "Camino a Ensenada km 4, Puerto Varas",
+    "referencia": "Portón de madera verde con un letrero tallado \"Los Arrayanes\", 200 m después de la parada de buses km 4.",
+    "opciones": [
+      {
+        "desde": "Aeropuerto El Tepual (Puerto Montt)",
+        "modo": "avion",
+        "tiempo": "35 min en auto",
+        "detalle": "Toma la Ruta 5 al norte hacia Puerto Varas y luego el camino a Ensenada. Hay taxis y transfers en la salida del aeropuerto (aprox. $30.000). Carolina puede coordinarte un transfer."
+      },
+      {
+        "desde": "Terminal de buses de Puerto Varas",
+        "modo": "bus",
+        "tiempo": "10 min en taxi",
+        "detalle": "En taxi o colectivo hacia Ensenada; pide bajarte en el km 4. El colectivo pasa cada 20 min aprox."
+      },
+      {
+        "desde": "En auto desde Santiago o Puerto Montt",
+        "modo": "auto",
+        "tiempo": "—",
+        "detalle": "Desde la costanera de Puerto Varas sigue la Ruta 225 hacia Ensenada. La entrada está a la izquierda en el km 4. Hay estacionamiento frente a la cabaña."
+      }
+    ]
+  },
+  "equipos": [
+    {
+      "nombre": "Tinaja caliente",
+      "icono": "tub",
+      "pasos": [
+        "Avisa a Carolina con 3 horas de anticipación (es un servicio extra).",
+        "Ella la deja llena y encendida; el agua queda lista a 38–40 °C.",
+        "Dúchate antes de entrar y no uses jabón dentro de la tinaja.",
+        "Al terminar, pon la tapa para mantener el calor."
+      ],
+      "nota": "No se permite vidrio en la zona de la tinaja. Niños siempre acompañados."
+    },
+    {
+      "nombre": "Parrilla",
+      "icono": "grill",
+      "pasos": [
+        "Está en la terraza, bajo el alero. El carbón y el encendedor están en el mueble de al lado.",
+        "Usa los iniciadores de fuego (no alcohol ni bencina).",
+        "Al terminar, cierra la tapa y deja que las cenizas se enfríen."
+      ],
+      "nota": "No hagas fuego en días de mucho viento."
+    },
+    {
+      "nombre": "Smart TV y Netflix",
+      "icono": "tv",
+      "pasos": [
+        "Usa el control negro grande para encender.",
+        "Presiona el botón Home y elige Netflix o YouTube.",
+        "Puedes iniciar sesión con tu propia cuenta; recuerda cerrarla al irte."
+      ],
+      "nota": "Si no hay señal, revisa que el wifi esté funcionando."
+    },
+    {
+      "nombre": "Calefón y agua caliente",
+      "icono": "drop",
+      "pasos": [
+        "El calefón es automático: abre la llave del agua caliente y espera 15 segundos.",
+        "Si no enciende, revisa que la llave de gas bajo el lavaplatos esté abierta (paralela al tubo).",
+        "Si sigue sin funcionar, escríbele a Carolina."
+      ],
+      "nota": "Duchas de máximo 10 minutos para que alcance el agua caliente para todos."
+    }
+  ],
+  "donde_esta": "Sábanas y frazadas extra en el clóset del pasillo. Botiquín bajo el lavamanos del baño. Linterna en el cajón de la cocina. Extintor junto a la puerta principal. Tablero eléctrico detrás de la puerta de la cocina.",
+  "extras": [
+    {
+      "nombre": "Tinaja caliente",
+      "precio": "$35.000",
+      "detalle": "Para hasta 4 personas, 3 horas. Avisar con 3 h de anticipación.",
+      "icono": "tub"
+    },
+    {
+      "nombre": "Saco de leña extra",
+      "precio": "$8.000",
+      "detalle": "Leña seca de eucalipto, se deja en la leñera.",
+      "icono": "wood"
+    },
+    {
+      "nombre": "Desayuno sureño",
+      "precio": "$12.000 p/p",
+      "detalle": "Pan amasado, mermelada casera, huevos de campo, kuchen y café. Entrega 9:00.",
+      "icono": "coffee"
+    },
+    {
+      "nombre": "Kit de asado",
+      "precio": "$25.000",
+      "detalle": "Carbón, longanizas, carne para 4, pebre y pan.",
+      "icono": "grill"
+    },
+    {
+      "nombre": "Transfer aeropuerto",
+      "precio": "$30.000",
+      "detalle": "Ida o vuelta a El Tepual, hasta 4 personas con equipaje.",
+      "icono": "car"
+    },
+    {
+      "nombre": "Late check-out (14:00)",
+      "precio": "$20.000",
+      "detalle": "Sujeto a disponibilidad. Pídelo el día anterior.",
+      "icono": "clock"
+    }
+  ],
+  "servicios_cercanos": [
+    {
+      "tipo": "supermercado",
+      "nombre": "Supermercado del Lago (ficticio)",
+      "distancia": "8 min en auto",
+      "horario": "08:30–22:00"
+    },
+    {
+      "tipo": "almacen",
+      "nombre": "Almacén Don Pepe (ficticio)",
+      "distancia": "5 min caminando",
+      "horario": "09:00–21:00 · pan amasado y huevos de campo"
+    },
+    {
+      "tipo": "farmacia",
+      "nombre": "Farmacia Centro (ficticia)",
+      "distancia": "10 min en auto",
+      "horario": "09:00–21:00"
+    },
+    {
+      "tipo": "bencinera",
+      "nombre": "Estación de servicio km 1 (ficticia)",
+      "distancia": "4 min en auto",
+      "horario": "24 horas"
+    },
+    {
+      "tipo": "cajero",
+      "nombre": "Cajero automático en el centro",
+      "distancia": "10 min en auto",
+      "horario": "24 horas"
+    }
+  ],
+  "panoramas": {
+    "lluvia": [
+      {
+        "nombre": "Teatro del Lago en Frutillar",
+        "nota": "Revisa la cartelera; tiene cafetería con vista al lago."
+      },
+      {
+        "nombre": "Termas en la zona de Cochamó o Puyehue",
+        "nota": "Ideal para un día gris; reserva antes."
+      },
+      {
+        "nombre": "Ruta de cafés y kuchen en Puerto Varas",
+        "nota": "Recorre la costanera y prueba kuchen de murta."
+      },
+      {
+        "nombre": "Museo Colonial Alemán de Frutillar",
+        "nota": "Historia de los colonos de la zona."
+      }
+    ],
+    "sol": [
+      {
+        "nombre": "Subir al volcán Osorno",
+        "nota": "En días despejados la vista al lago es increíble."
+      },
+      {
+        "nombre": "Saltos del Petrohué",
+        "nota": "Agua turquesa y senderos cortos."
+      },
+      {
+        "nombre": "Kayak o paddle en el lago",
+        "nota": "Mejor temprano, antes de que suba el viento."
+      },
+      {
+        "nombre": "Atardecer en la costanera",
+        "nota": "Lleva abrigo: refresca rápido al caer el sol."
+      }
+    ]
+  },
+  "imprevistos": [
+    {
+      "situacion": "Se cortó la luz",
+      "que_hacer": "Revisa el tablero eléctrico detrás de la puerta de la cocina y sube el automático que esté abajo. Si es un corte del sector, hay linterna y velas en el cajón de la cocina. Avisa a Carolina."
+    },
+    {
+      "situacion": "No hay agua",
+      "que_hacer": "Puede ser un corte del sector. Hay bidones de agua en la despensa. Escríbele a Carolina para confirmar."
+    },
+    {
+      "situacion": "Sismo",
+      "que_hacer": "Mantén la calma, aléjate de ventanas y protégete bajo una mesa firme. Cuando pase, sal al jardín por la puerta principal. No uses la estufa hasta revisar el cañón."
+    },
+    {
+      "situacion": "Alerta volcánica",
+      "que_hacer": "Sigue las instrucciones de SENAPRED y las radios locales. La ruta de evacuación es hacia el centro de Puerto Varas por la Ruta 225."
+    },
+    {
+      "situacion": "Algo se rompió",
+      "que_hacer": "No te preocupes, son cosas que pasan. Avísale a Carolina con una foto usando el botón \"Reportar un problema\"."
+    }
+  ],
+  "resenas": {
+    "mensaje": "Si disfrutaste tu estadía, una reseña nos ayuda muchísimo.",
+    "enlaces": [
+      {
+        "plataforma": "Google",
+        "url": "https://www.google.com/maps/search/?api=1&query=Puerto+Varas"
+      },
+      {
+        "plataforma": "Airbnb",
+        "url": "https://www.airbnb.cl"
+      }
+    ]
+  }
 }

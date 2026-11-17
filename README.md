@@ -14,6 +14,25 @@ api/cabana.js    ← entrega los datos de una cabaña
 vercel.json      ← /cabana/:slug → plantilla
 ```
 
+## Qué incluye cada página
+
+| Sección | Campo del JSON |
+|---|---|
+| Portada, wifi, horarios | `nombre`, `lugar`, `descripcion`, `wifi`, `checkin`, `checkout` |
+| Cómo llegar (aeropuerto, bus, auto) + botón Maps | `como_llegar` |
+| La casa: tinaja, parrilla, TV, calefón… | `equipos`, `donde_esta`, `otros`, `reglas` |
+| Estufa paso a paso | `estufa` |
+| Servicios extra con botón "Pedir" por WhatsApp | `extras` |
+| Hoy: clima en vivo (Open-Meteo, gratis) + panoramas si llueve / si hay sol | `coordenadas`, `panoramas` |
+| Restaurantes, tours | `restaurantes`, `tours` |
+| Cerca: supermercado, farmacia, bencinera, cajero | `servicios_cercanos` |
+| Antes de irte: checklist + reseñas | `checkout.lista`, `resenas` |
+| Ayuda: anfitrión, reportar problema, imprevistos, 131/132/133 | `anfitrion`, `imprevistos` |
+
+Cualquier campo que no pongas simplemente no aparece. El chat (Gemini) lee **todo** el JSON, así que cualquier dato que agregues ya lo puede responder.
+
+> En la demo, los enlaces de `resenas` son de ejemplo: reemplázalos por el enlace real de tu ficha de Google o Airbnb.
+
 ## Agregar una cabaña nueva
 
 1. Copia `data/cabanas/los-arrayanes.json` como `data/cabanas/el-mirador.json`.
