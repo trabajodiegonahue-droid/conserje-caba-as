@@ -1,0 +1,94 @@
+{
+  "slug": "los-arrayanes",
+  "nombre": "Cabaña Los Arrayanes",
+  "descripcion": "Cabaña de madera nativa para 4 personas, con vista al lago Llanquihue y al volcán Osorno. (Cabaña ficticia para demostración.)",
+  "direccion": "Camino a Ensenada km 4, Puerto Varas, Región de Los Lagos",
+  "foto": "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?auto=format&fit=crop&w=1200&q=70",
+  "wifi": {
+    "red": "LosArrayanes_5G",
+    "clave": "volcan2024",
+    "nota": "Si se cae, desenchufa el router (caja blanca junto al televisor) 10 segundos y vuelve a enchufarlo."
+  },
+  "checkin": {
+    "hora": "15:00",
+    "instrucciones": "La llave está en la caja de seguridad junto a la puerta. El código se envía por WhatsApp el día de llegada."
+  },
+  "checkout": {
+    "hora": "11:00",
+    "instrucciones": "Deja la llave dentro de la caja de seguridad, la loza lavada y la basura en el contenedor verde junto al portón. No es necesario sacar la ropa de cama."
+  },
+  "reglas": [
+    "No se permite fumar dentro de la cabaña.",
+    "Se aceptan mascotas pequeñas con aviso previo.",
+    "Horario de silencio: 23:00 a 08:00.",
+    "Máximo 4 huéspedes; no se permiten fiestas ni eventos.",
+    "Por favor separa el reciclaje: vidrio, plástico y latas en el contenedor azul."
+  ],
+  "estufa": {
+    "tipo": "Estufa a leña de combustión lenta",
+    "pasos": [
+      "Abre completamente el tiraje (palanca de la derecha hacia arriba).",
+      "Pon dos bolitas de papel de diario y encima astillas en forma de pirámide.",
+      "Enciende el papel y deja la puerta entreabierta 5 minutos.",
+      "Cuando las astillas estén bien prendidas, agrega 2 o 3 leños medianos y cierra la puerta.",
+      "Después de 15 minutos, baja el tiraje hasta la mitad para que la leña dure más."
+    ],
+    "seguridad": "No uses alcohol ni parafina para encender. No dejes ropa sobre la estufa. Las cenizas van frías al balde metálico, nunca a la basura.",
+    "lena": "La leña seca está en la leñera techada detrás de la cabaña. Hay una canasta con astillas y diario junto a la estufa."
+  },
+  "otros": {
+    "agua_caliente": "El calefón a gas es automático; si no sale agua caliente, revisa que la llave de gas bajo el lavaplatos esté abierta.",
+    "estacionamiento": "Estacionamiento para un auto frente a la cabaña.",
+    "basura": "El camión pasa martes y viernes por la mañana.",
+    "emergencias": "Emergencias: 131 (ambulancia), 132 (bomberos), 133 (Carabineros). Hospital más cercano: Hospital de Puerto Varas, a 10 minutos en auto."
+  },
+  "anfitrion": {
+    "nombre": "Carolina",
+    "telefono": "+56 9 1234 5678",
+    "whatsapp": "56912345678",
+    "email": "hola@cabanalosarrayanes.cl",
+    "horario": "Disponible de 09:00 a 21:00. Para emergencias, a cualquier hora por llamada."
+  },
+  "restaurantes": [
+    {
+      "nombre": "Fogón del Lago (ficticio)",
+      "tipo": "Carnes y cocina sureña",
+      "distancia": "5 min en auto",
+      "nota": "Pide el curanto en olla. Reserva el fin de semana."
+    },
+    {
+      "nombre": "Café Kuchen Haus (ficticio)",
+      "tipo": "Café y pastelería alemana",
+      "distancia": "10 min en auto, centro de Puerto Varas",
+      "nota": "Ideal para once: kuchen de murta y café."
+    },
+    {
+      "nombre": "Mar y Volcán (ficticio)",
+      "tipo": "Pescados y mariscos",
+      "distancia": "12 min en auto, costanera",
+      "nota": "Salmón a la mantequilla y vista al lago al atardecer."
+    }
+  ],
+  "tours": [
+    {
+      "nombre": "Saltos del Petrohué y Lago Todos los Santos",
+      "duracion": "Medio día",
+      "nota": "A 45 min en auto. Lleva chaqueta impermeable."
+    },
+    {
+      "nombre": "Volcán Osorno",
+      "duracion": "Medio día o día completo",
+      "nota": "Subida en auto hasta el centro de ski; en verano hay andarivel y trekking."
+    },
+    {
+      "nombre": "Frutillar y Teatro del Lago",
+      "duracion": "Medio día",
+      "nota": "A 30 min por la costanera. Revisa la cartelera del teatro."
+    },
+    {
+      "nombre": "Kayak en el lago Llanquihue",
+      "duracion": "2 a 3 horas",
+      "nota": "Pregúntale a Carolina por operadores locales con equipo incluido."
+    }
+  ]
+}

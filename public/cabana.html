@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f4d3a" />
+  <title>Conserje de la cabaña</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="loading" class="loading">…</div>
+
+  <main id="app" hidden>
+    <header class="hero" id="hero">
+      <div class="hero-overlay">
+        <div class="lang" role="group" aria-label="Idioma">
+          <button data-lang="es">ES</button><button data-lang="en">EN</button><button data-lang="pt">PT</button><button data-lang="de">DE</button><button data-lang="it">IT</button><button data-lang="fr">FR</button>
+        </div>
+        <p class="eyebrow" data-i18n="welcome"></p>
+        <h1 id="nombre"></h1>
+        <p id="direccion" class="muted-light"></p>
+      </div>
+    </header>
+
+    <section class="quick">
+      <div class="card">
+        <div class="card-title">📶 <span data-i18n="wifi"></span></div>
+        <div class="kv"><span data-i18n="network"></span><strong id="wifi-red"></strong></div>
+        <div class="kv"><span data-i18n="password"></span><strong id="wifi-clave"></strong></div>
+        <button class="btn-soft" id="copy-wifi" data-i18n="copy"></button>
+      </div>
+      <div class="card">
+        <div class="card-title">🕒 <span data-i18n="times"></span></div>
+        <div class="kv"><span>Check-in</span><strong id="checkin"></strong></div>
+        <div class="kv"><span>Check-out</span><strong id="checkout"></strong></div>
+      </div>
+    </section>
+
+    <section id="sections" class="sections"></section>
+
+    <p class="footer-note" data-i18n="footer"></p>
+  </main>
+
+  <button id="open-chat" class="fab" hidden>💬 <span data-i18n="ask"></span></button>
+
+  <div id="chat" class="chat" hidden aria-modal="true" role="dialog">
+    <div class="chat-head">
+      <div>
+        <strong data-i18n="concierge"></strong>
+        <div class="chat-sub" id="chat-sub"></div>
+      </div>
+      <button id="close-chat" class="icon-btn" aria-label="Cerrar">✕</button>
+    </div>
+    <div id="messages" class="messages" aria-live="polite"></div>
+    <div id="chips" class="chips"></div>
+    <form id="chat-form" class="chat-form">
+      <input id="chat-input" autocomplete="off" maxlength="1000" />
+      <button type="submit" class="send" aria-label="Enviar">➤</button>
+    </form>
+  </div>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

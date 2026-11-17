@@ -1,0 +1,54 @@
+# 🏡 Conserje IA para cabañas – Puerto Varas
+
+Web app donde cada cabaña tiene su página (`/cabana/<nombre>`) con wifi, horarios, reglas, estufa, contacto y recomendaciones, más un chat con **Gemini Flash** que responde **en el idioma del huésped** (español, inglés, portugués, alemán, italiano, francés, y cualquier otro), usando solo la información de esa cabaña.
+
+Demo: `/cabana/los-arrayanes` (cabaña ficticia).
+
+## Estructura
+
+```
+data/cabanas/los-arrayanes.json   ← datos de cada cabaña (1 archivo por cabaña)
+public/cabana.html, app.js, styles.css  ← plantilla única (móvil primero)
+api/chat.js      ← función serverless que llama a Gemini (la API key vive aquí)
+api/cabana.js    ← entrega los datos de una cabaña
+vercel.json      ← /cabana/:slug → plantilla
+```
+
+## Agregar una cabaña nueva
+
+1. Copia `data/cabanas/los-arrayanes.json` como `data/cabanas/el-mirador.json`.
+2. Cambia los datos (el campo `slug` debe ser igual al nombre del archivo; solo minúsculas, números y guiones).
+3. Sube el cambio a GitHub → Vercel publica solo. La URL será `/cabana/el-mirador`.
+
+Tip: genera un código QR con esa URL y déjalo impreso en la cabaña.
+
+## Publicar gratis en Vercel (paso a paso)
+
+1. **Clave de Gemini**: entra a https://aistudio.google.com/apikey con tu cuenta de Google → *Create API key* → cópiala. (El plan gratuito de Flash no pide tarjeta.)
+2. **Cuenta en Vercel**: ve a https://vercel.com/signup y regístrate con *Continue with GitHub* (plan Hobby, gratis).
+3. **Importar el proyecto**: en Vercel → *Add New… → Project* → elige el repositorio `conserje-caba-as` → *Import*.
+4. **Configuración**: *Framework Preset* = **Other**. No cambies Build ni Output.
+5. **Variable secreta**: en la misma pantalla abre *Environment Variables* y agrega
+   - Name: `GEMINI_API_KEY` — Value: tu clave.
+   (Opcional: `GEMINI_MODEL` si quieres fijar un modelo, por ejemplo `gemini-2.5-flash`. Por defecto usa `gemini-flash-latest`.)
+6. Pulsa **Deploy**. En ~1 minuto tendrás una URL tipo `https://conserje-caba-as.vercel.app`.
+7. Abre `https://TU-PROYECTO.vercel.app/cabana/los-arrayanes` y prueba el chat.
+
+> Si agregas o cambias la variable después del primer deploy: *Settings → Environment Variables*, guárdala y luego *Deployments → ⋯ → Redeploy*.
+
+La clave **nunca llega al navegador**: el celular habla con `/api/chat` y es esa función en el servidor de Vercel la que llama a Google.
+
+## Probar en tu computador (opcional)
+
+Requiere Node 18+.
+
+```bash
+cp .env.example .env   # y pega tu clave en GEMINI_API_KEY
+npm run dev            # abre http://localhost:3000/cabana/los-arrayanes
+```
+
+## Notas
+
+- El plan gratuito de Gemini tiene límites por minuto/día; si se superan, el chat muestra un aviso para reintentar.
+- Los datos de la cabaña (incluida la clave del wifi) son visibles para quien tenga el enlace: comparte la URL solo con tus huéspedes.
+- Google puede usar los datos del plan gratuito para mejorar sus productos; no pongas información sensible en los JSON.

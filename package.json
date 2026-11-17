@@ -1,0 +1,13 @@
+{
+  "name": "conserje-cabanas",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Conserje con IA para cabañas turísticas (Gemini + Vercel)",
+  "scripts": {
+    "dev": "node dev-server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
