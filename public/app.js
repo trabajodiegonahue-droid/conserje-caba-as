@@ -234,7 +234,7 @@ function setLang(l) {
 
 function row(icon, title, text, chips = []) {
   return `<div class="row"><span class="ri">${ico(icon)}</span><div class="rt">
-    <strong>${esc(title)}</strong>${text ? `<p>${esc(text)}</p>` : ''}
+    <strong>${esc(title)}</strong>${text ? clampText(text, 120) : ''}
     ${chips.length ? `<div class="meta">${chips.filter(Boolean).map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</div>` : ''}
   </div></div>`;
 }
@@ -253,7 +253,7 @@ async function loadWeather() {
   const k = cabana.coordenadas;
   if (!k) return;
   try {
-    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${k.lat}&longitude=${k.lon}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=4`);
+    const r = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${k.lat}&longitude=${k.lon}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunset&timezone=auto&forecast_days=4`);
     if (!r.ok) throw new Error();
     weather = await r.json();
   } catch { weather = null; }
@@ -270,7 +270,7 @@ function weatherCard() {
     return `<div class="wx-day"><span>${esc(name)}</span>${ico(WX(code)[1])}<b>${Math.round(weather.daily.temperature_2m_max[i + 1])}°</b><small>${Math.round(weather.daily.temperature_2m_min[i + 1])}°</small></div>`;
   }).join('');
   return `<div class="wx">
-    <div class="wx-now">${ico(icon)}<div><strong>${Math.round(weather.current.temperature_2m)}°</strong><span>${t.wx[cond]}${weather.ejemplo ? ` · ${t.example}` : ''}</span></div></div>
+    <div class="wx-now"><span class="wx-anim ${icon}">${ico(icon)}</span><div><strong>${Math.round(weather.current.temperature_2m)}°</strong><span>${t.wx[cond]}${weather.ejemplo ? ` · ${t.example}` : ''}</span>${weather.daily?.sunset?.[0] ? `<span class="wx-sun">${ico('sunset')}${t.sunset} ${weather.daily.sunset[0].slice(11, 16)}</span>` : ''}</div></div>
     <div class="wx-days">${days}</div>
   </div>`;
 }
@@ -307,54 +307,106 @@ for (const l of Object.keys(T3)) {
   Object.assign(T[l].tabs, tabs); Object.assign(T[l].titles, titles); Object.assign(T[l], rest);
 }
 
+// ── Textos de los detalles visuales ──
+const T4 = {
+  es: { steps: 'pasos', more: 'Ver más', less: 'Ver menos', greet: ['Buenos días', 'Buenas tardes', 'Buenas noches'], sunset: 'Atardecer', picks: 'Hoy te recomendamos', special: 'Para hacerlo especial', qr: 'QR', qrTitle: 'Comparte el wifi', qrHint: 'Apunta la cámara de otro teléfono a este código para conectarse.', of: 'de', ready: 'listo', howCatch: 'Cómo tomarlo', allDone: '¡Todo listo! Buen viaje.' },
+  en: { steps: 'steps', more: 'More', less: 'Less', greet: ['Good morning', 'Good afternoon', 'Good evening'], sunset: 'Sunset', picks: 'Our picks for today', special: 'Make it special', qr: 'QR', qrTitle: 'Share the wifi', qrHint: 'Point another phone’s camera at this code to connect.', of: 'of', ready: 'done', howCatch: 'How to catch it', allDone: 'All set! Safe travels.' },
+  pt: { steps: 'passos', more: 'Ver mais', less: 'Ver menos', greet: ['Bom dia', 'Boa tarde', 'Boa noite'], sunset: 'Pôr do sol', picks: 'Recomendados de hoje', special: 'Para tornar especial', qr: 'QR', qrTitle: 'Compartilhe o wifi', qrHint: 'Aponte a câmera de outro celular para este código para conectar.', of: 'de', ready: 'feito', howCatch: 'Como pegar', allDone: 'Tudo pronto! Boa viagem.' },
+  de: { steps: 'Schritte', more: 'Mehr', less: 'Weniger', greet: ['Guten Morgen', 'Guten Tag', 'Guten Abend'], sunset: 'Sonnenuntergang', picks: 'Heute empfohlen', special: 'Für besondere Momente', qr: 'QR', qrTitle: 'WLAN teilen', qrHint: 'Mit der Kamera eines anderen Handys scannen, um sich zu verbinden.', of: 'von', ready: 'erledigt', howCatch: 'So steigen Sie ein', allDone: 'Alles erledigt! Gute Reise.' },
+  it: { steps: 'passaggi', more: 'Altro', less: 'Meno', greet: ['Buongiorno', 'Buon pomeriggio', 'Buonasera'], sunset: 'Tramonto', picks: 'Consigliati oggi', special: 'Per renderlo speciale', qr: 'QR', qrTitle: 'Condividi il wifi', qrHint: 'Inquadra questo codice con la fotocamera di un altro telefono per connetterti.', of: 'di', ready: 'fatto', howCatch: 'Come prenderlo', allDone: 'Tutto pronto! Buon viaggio.' },
+  fr: { steps: 'étapes', more: 'Plus', less: 'Moins', greet: ['Bonjour', 'Bon après-midi', 'Bonsoir'], sunset: 'Coucher du soleil', picks: 'Nos idées du jour', special: 'Pour un moment spécial', qr: 'QR', qrTitle: 'Partager le wifi', qrHint: 'Visez ce code avec l’appareil photo d’un autre téléphone pour vous connecter.', of: 'sur', ready: 'fait', howCatch: 'Comment le prendre', allDone: 'Tout est prêt ! Bon voyage.' },
+};
+for (const l of Object.keys(T4)) Object.assign(T[l], T4[l]);
+
+Object.assign(I, {
+  bed: '<path d="M3 18V7M3 13h18v5M21 18v-3a3 3 0 0 0-3-3h-7v1"/><circle cx="7" cy="10.5" r="1.8"/>',
+  paw: '<circle cx="7" cy="9" r="1.6"/><circle cx="11" cy="6" r="1.6"/><circle cx="15" cy="6.5" r="1.6"/><circle cx="18" cy="10" r="1.6"/><path d="M8 17c0-3 2-5 4.5-5s4.5 2 4.5 5c0 1.5-1.2 2.5-2.6 2.2-1.2-.3-2.6-.3-3.8 0C9.2 19.5 8 18.5 8 17z"/>',
+  moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  users: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3 3 0 0 1 0 6M21 20c0-2.6-1.6-4.8-4-5.6"/>',
+  nosmoke: '<path d="M3 15h12v3H3zM18 15v3M21 15v3M4 4l16 16"/><path d="M18 11c0-2-1.5-2.5-1.5-4"/>',
+  recycle: '<path d="M7 19H4.5a1.5 1.5 0 0 1-1.3-2.2L5.5 13M12 5l1.3-2.2a1.5 1.5 0 0 1 2.6 0L18.5 7M17 19h2.5a1.5 1.5 0 0 0 1.3-2.2L18.5 13"/><path d="M9 21l-2-2 2-2M10 6l2-1 1 2.3M20 11l-1.5 2-2.3-.6"/>',
+  ban: '<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>',
+  qr: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v.1M14 20.5h.1M17.5 20.5H21V17"/>',
+  sunset: '<path d="M3 18h18M6 14a6 6 0 0 1 12 0M12 3v4M5 7l1.5 1.5M19 7l-1.5 1.5M8 21h8"/>',
+  extinguisher: '<path d="M9 8h6v12a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1z"/><path d="M12 8V5M9 5h6M15 5l3-2"/>',
+  flash: '<path d="M8 3h8l-1 6H9z"/><path d="M9 9v10a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V9"/>',
+  med: '<rect x="3" y="6" width="18" height="14" rx="2.5"/><path d="M9 6V4h6v2M12 10v6M9 13h6"/>',
+  chevd: '<path d="M6 9l6 6 6-6"/>',
+  chev: '<path d="M9 5l7 7-7 7"/>',
+});
+
+// Ícono según palabras clave (reglas y "dónde está cada cosa")
+const KEYICON = [
+  [/fum|smok|rauch|fumo/i, 'nosmoke'], [/mascota|pet|perro|gato/i, 'paw'], [/silencio|ruido|noise|23:00|22:00/i, 'moon'],
+  [/huésped|personas|fiesta|evento|guests/i, 'users'], [/recicla|vidrio|plástico|basura/i, 'recycle'],
+  [/sábana|frazada|toalla|cama|almohada/i, 'bed'], [/botiquín|remedio|primeros auxilios/i, 'med'], [/linterna|vela/i, 'flash'],
+  [/extintor/i, 'extinguisher'], [/tablero|eléctric|automático|luz/i, 'bolt'], [/llave/i, 'key'], [/leña/i, 'wood'],
+];
+const iconFor = (text, fallback = 'info') => (KEYICON.find(([re]) => re.test(text)) || [, fallback])[1];
+
+// Arte de color para las tarjetas (sin fotos)
+const ARTS = [
+  ['#1f4d5c', '#7fb0b8'], ['#2b3a2e', '#8fae7e'], ['#3b2a35', '#d39a7a'], ['#22303d', '#e2b48c'], ['#2c3e45', '#c9d3d6'],
+];
+const art = (s) => { let h = 0; for (const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return ARTS[h % ARTS.length]; };
+
+// Texto corto: primera oración
+const firstSentence = (s = '') => (String(s).match(/^.*?[.;](\s|$)/) || [s])[0].replace(/[.;]\s*$/, '');
+
 const PAGE_ICONS = { llegar: 'key', casa: 'door', extras: 'star', explorar: 'compass', comer: 'fork', moverse: 'bus', salida: 'check', ayuda: 'sos' };
-const blk = (title, html) => `<section class="blk">${title ? `<h3 class="blk-title">${esc(title)}</h3>` : ''}${html}</section>`;
-let planTab = null;
+let blkIndex = 0;
+const blk = (title, html) => `<section class="blk reveal" style="--i:${blkIndex++}">${title ? `<h3 class="blk-title">${esc(title)}</h3>` : ''}${html}</section>`;
+let planTab = null, routeTab = 0;
 
 function buildPages() {
   const c = cabana, t = T[lang], a = c.anfitrion || {};
   const P = {};
+  const page = (fn) => { blkIndex = 0; return fn(); };
 
-  if (c.como_llegar || c.checkin) {
+  if (c.como_llegar || c.checkin) P.llegar = page(() => {
     const L = c.como_llegar || {}, mIco = { avion: 'plane', bus: 'bus', auto: 'car' };
-    P.llegar = blk('', `<div class="panel">
-        ${row('key', `Check-in · ${c.checkin?.hora || ''}`, c.checkin?.instrucciones)}
-        ${(L.opciones || []).map((o) => row(mIco[o.modo] || 'pin', o.desde, o.detalle, [o.tiempo !== '—' ? o.tiempo : ''])).join('')}
-        ${L.referencia ? row('pin', t.reference, L.referencia) : ''}
-      </div>
-      <a class="btn wide" href="${mapsUrl(L.mapa || c.direccion || c.nombre)}" target="_blank" rel="noopener">${ico('pin')}${t.maps}</a>`);
-  }
+    const ops = L.opciones || [];
+    const sel = ops[Math.min(routeTab, ops.length - 1)];
+    return blk('', `<div class="arrive">
+        <div class="arrive-time"><span class="label">Check-in</span><strong>${esc(c.checkin?.hora || '—')}</strong></div>
+        <p>${esc(c.checkin?.instrucciones || '')}</p>
+      </div>`)
+      + (ops.length ? blk(t.tabs.llegar, `<div class="route-pick" role="tablist">${ops.map((o, i) => `<button role="tab" class="${o === sel ? 'on' : ''}" data-route="${i}">${ico(mIco[o.modo] || 'pin')}<span>${esc(firstSentence(o.desde).replace(/\s*\(.*\)/, ''))}</span></button>`).join('')}</div>
+        <div class="route-card" key="${routeTab}">
+          <div class="route-top"><span class="big-ico">${ico(mIco[sel.modo] || 'pin')}</span><div><strong>${esc(sel.desde)}</strong>${sel.tiempo && sel.tiempo !== '—' ? `<span class="chip">${esc(sel.tiempo)}</span>` : ''}</div></div>
+          ${clampText(sel.detalle, 160)}
+        </div>`) : '')
+      + blk('', `${L.referencia ? `<div class="landmark">${ico('pin')}<span><small>${t.reference}</small>${esc(L.referencia)}</span></div>` : ''}
+        <a class="btn wide" href="${mapsUrl(L.mapa || c.direccion || c.nombre)}" target="_blank" rel="noopener">${ico('pin')}${t.maps}</a>`);
+  });
 
-  {
+  P.casa = page(() => {
     const otrosIcons = { agua_caliente: 'drop', estacionamiento: 'car', basura: 'trash' };
     const equipos = (c.equipos || []).map((e) => `<details class="dev"><summary><span class="ri">${ico(e.icono)}</span><strong>${esc(e.nombre)}</strong><span class="chev"></span></summary>
         <ol class="steps small">${(e.pasos || []).map((p) => `<li>${esc(p)}</li>`).join('')}</ol>${e.nota ? `<p class="dev-note">${esc(e.nota)}</p>` : ''}</details>`).join('');
     const e = c.estufa;
+    const spots = (c.donde_esta || '').split(/\.\s+|\.$/).map((x) => x.trim()).filter(Boolean);
     const otros = Object.entries(c.otros || {}).filter(([k]) => !['emergencias', 'agua_caliente'].includes(k));
-    P.casa = [
+    return [
       equipos ? blk(t.howTo, `<div class="panel devs">${equipos}</div>`) : '',
-      e ? blk(t.tabs.estufa, `<div class="panel">
-          <div class="stove-type">${ico('flame')}${esc(e.tipo || '')}</div>
+      e ? blk(t.tabs.estufa, `<details class="dev stove"><summary><span class="ri hot">${ico('flame')}</span><strong>${esc(e.tipo || t.tabs.estufa)}<small>${(e.pasos || []).length} ${t.steps || 'pasos'}</small></strong><span class="chev"></span></summary>
           <ol class="steps">${(e.pasos || []).map((p) => `<li>${esc(p)}</li>`).join('')}</ol>
           ${e.lena ? `<div class="tip">${ico('wood')}<span><strong>${t.wood}.</strong> ${esc(e.lena)}</span></div>` : ''}
-        </div>${e.seguridad ? `<div class="warn">${ico('sos')}<span><strong>${t.safety}.</strong> ${esc(e.seguridad)}</span></div>` : ''}`) : '',
-      (c.donde_esta || otros.length) ? blk('', `<div class="panel">
-          ${c.donde_esta ? row('info', t.whereIs, c.donde_esta) : ''}
-          ${otros.map(([k, v]) => row(otrosIcons[k] || 'info', k.replace(/_/g, ' ').replace(/^./, (m) => m.toUpperCase()), v)).join('')}
-        </div>`) : '',
-      c.reglas?.length ? blk(t.rules, `<div class="panel"><ul class="rules plain">${c.reglas.map((r) => `<li>${esc(r)}</li>`).join('')}</ul></div>`) : '',
+        </details>${e.seguridad ? `<div class="warn">${ico('sos')}<span><strong>${t.safety}.</strong> ${esc(e.seguridad)}</span></div>` : ''}`) : '',
+      spots.length ? blk(t.whereIs, `<div class="spots">${spots.map((s, i) => `<div class="spot reveal" style="--i:${i}"><span>${ico(iconFor(s))}</span><p>${esc(s)}</p></div>`).join('')}</div>`) : '',
+      otros.length ? blk('', `<div class="panel">${otros.map(([k, v]) => row(otrosIcons[k] || 'info', k.replace(/_/g, ' ').replace(/^./, (m) => m.toUpperCase()), v)).join('')}</div>`) : '',
+      c.reglas?.length ? blk(t.rules, `<div class="rule-grid">${c.reglas.map((r, i) => `<div class="rule reveal" style="--i:${i}"><span>${ico(iconFor(r, 'check'))}</span><p>${esc(r)}</p></div>`).join('')}</div>`) : '',
     ].join('');
-  }
+  });
 
-  if (c.extras?.length) {
-    P.extras = blk('', `<div class="panel">${c.extras.map((x) => `<div class="row"><span class="ri">${ico(x.icono)}</span><div class="rt">
-        <strong>${esc(x.nombre)}</strong><p>${esc(x.detalle || '')}</p></div>
-        <div class="buy"><span class="price">${esc(x.precio || '')}</span>
-        ${a.whatsapp ? `<a class="order" target="_blank" rel="noopener" href="${waUrl(a.whatsapp, `Hola ${a.nombre}, quisiera pedir: ${x.nombre} (${c.nombre}). ¡Gracias!`)}">${t.order}</a>` : ''}</div></div>`).join('')}</div>
-      <p class="fine">${t.orderNote}</p>`);
-  }
+  if (c.extras?.length) P.extras = page(() => blk('', `<div class="extra-grid">${c.extras.map((x, i) => { const [c1, c2] = art(x.nombre); return `<article class="extra reveal" style="--i:${i};--a:${c1};--b:${c2}">
+        <div class="extra-art">${ico(x.icono)}<span class="price">${esc(x.precio || '')}</span></div>
+        <div class="extra-body"><strong>${esc(x.nombre)}</strong>${clampText(x.detalle, 70)}
+        ${a.whatsapp ? `<a class="order" target="_blank" rel="noopener" href="${waUrl(a.whatsapp, `Hola ${a.nombre}, quisiera pedir: ${x.nombre} (${c.nombre}). ¡Gracias!`)}">${ico('chat')}${t.order}</a>` : ''}</div>
+      </article>`; }).join('')}</div>
+      <p class="fine">${t.orderNote}</p>`));
 
-  if (c.panoramas || c.tours?.length) {
+  if (c.panoramas || c.tours?.length) P.explorar = page(() => {
     let plans = '';
     if (c.panoramas) {
       const wet = weather?.current ? isWet(weather.current.weather_code) : true;
@@ -363,61 +415,92 @@ function buildPages() {
         <div class="seg" role="tablist">
           ${['lluvia', 'sol'].map((k) => `<button role="tab" data-plan="${k}" class="${k === tab ? 'on' : ''}">${ico(k === 'lluvia' ? 'rain' : 'sun')}${k === 'lluvia' ? t.ifRain : t.ifSun}${(k === 'lluvia') === wet && weather?.current ? `<i>${t.suggested}</i>` : ''}</button>`).join('')}
         </div>
-        <div class="panel">${(c.panoramas[tab] || []).map((p) => row(tab === 'lluvia' ? 'coffee' : 'sun', p.nombre, p.nota)).join('')}</div>`);
+        <div class="cards-row">${(c.panoramas[tab] || []).map((p, i) => card(p.nombre, p.nota, tab === 'lluvia' ? 'coffee' : 'sun', '', i)).join('')}</div>`);
     }
-    P.explorar = plans + (c.tours?.length ? blk(t.tours, `<div class="panel">${c.tours.map((r) => row('compass', r.nombre, r.nota, [r.duracion])).join('')}</div>`) : '');
-  }
+    return plans + (c.tours?.length ? blk(t.tours, `<div class="panel">${c.tours.map((r) => row('compass', r.nombre, r.nota, [r.duracion])).join('')}</div>`) : '');
+  });
 
-  if (c.restaurantes?.length || c.servicios_cercanos?.length) {
+  if (c.restaurantes?.length || c.servicios_cercanos?.length) P.comer = page(() => {
     const k = { supermercado: 'cart', almacen: 'shop', farmacia: 'plus', bencinera: 'fuel', cajero: 'atm' };
-    P.comer = (c.restaurantes?.length ? blk(t.restaurants, `<div class="panel">${c.restaurantes.map((r) => row('fork', r.nombre, r.nota, [r.tipo, r.distancia])).join('')}</div>`) : '')
-      + (c.servicios_cercanos?.length ? blk(t.tabs.cerca, `<div class="panel">${c.servicios_cercanos.map((s) => `<div class="row"><span class="ri">${ico(k[s.tipo] || 'pin')}</span><div class="rt">
-          <span class="kind">${esc(t.kinds[s.tipo] || s.tipo || '')}</span><strong>${esc(s.nombre)}</strong>
-          <div class="meta">${[s.distancia, s.horario].filter(Boolean).map((m) => `<span class="chip">${esc(m)}</span>`).join('')}</div></div>
-          <a class="mapbtn" aria-label="${t.maps}" target="_blank" rel="noopener" href="${mapsUrl(`${s.nombre} ${c.lugar?.split('·')[0] || ''}`)}">${ico('ext')}</a></div>`).join('')}</div>`) : '');
-  }
+    return (c.restaurantes?.length ? blk(t.restaurants, `<div class="cards-row">${c.restaurantes.map((r, i) => card(r.nombre, r.nota, 'fork', [r.tipo, r.distancia].filter(Boolean).join(' · '), i)).join('')}</div>`) : '')
+      + (c.servicios_cercanos?.length ? blk(t.tabs.cerca, `<div class="near-grid">${c.servicios_cercanos.map((s, i) => `<a class="near reveal" style="--i:${i}" target="_blank" rel="noopener" href="${mapsUrl(`${s.nombre} ${c.lugar?.split('·')[0] || ''}`)}">
+          <span class="near-ico">${ico(k[s.tipo] || 'pin')}</span>
+          <span class="kind">${esc(t.kinds[s.tipo] || s.tipo || '')}</span>
+          <strong>${esc(s.nombre)}</strong>
+          <small>${esc(s.distancia || '')}</small>
+          ${s.horario ? `<small class="hours">${ico('clock')}${esc(firstSentence(s.horario.split('·')[0]))}</small>` : ''}
+        </a>`).join('')}</div>`) : '');
+  });
 
-  if (c.transporte_publico?.lineas?.length) {
+  if (c.transporte_publico?.lineas?.length) P.moverse = page(() => {
     const tp = c.transporte_publico;
-    P.moverse = blk('', `${tp.aviso ? `<p class="fine" style="margin:0 4px 12px">${esc(tp.aviso)}</p>` : ''}
-      <div class="lines">${tp.lineas.map((l) => `<article class="line">
-        <header><span class="ri">${ico(l.icono || 'bus')}</span><div><strong>${esc(l.nombre)}</strong>${l.para ? `<small>${t.tGoes}: ${esc(l.para)}</small>` : ''}</div></header>
-        <dl>
-          ${l.donde ? `<dt>${t.tWhere}</dt><dd>${esc(l.donde)}</dd>` : ''}
-          ${l.frecuencia ? `<dt>${t.tFreq}</dt><dd>${esc(l.frecuencia)}</dd>` : ''}
-          ${l.precio ? `<dt>${t.tFare}</dt><dd>${esc(l.precio)}</dd>` : ''}
-        </dl>
-        ${l.consejo ? `<p class="line-tip">${ico('info')}<span>${esc(l.consejo)}</span></p>` : ''}
-        ${l.mapa ? `<a class="line-map" target="_blank" rel="noopener" href="${mapsUrl(l.mapa)}">${ico('pin')}${t.maps}</a>` : ''}
+    return blk('', `${tp.aviso ? `<p class="notice">${ico('info')}<span>${esc(tp.aviso)}</span></p>` : ''}
+      <div class="lines">${tp.lineas.map((l, i) => `<article class="line reveal" style="--i:${i}">
+        <header><span class="ri">${ico(l.icono || 'bus')}</span><div><strong>${esc(l.nombre)}</strong>${l.para ? `<small>${esc(l.para)}</small>` : ''}</div></header>
+        <div class="facts">
+          ${l.donde ? `<div class="fact">${ico('pin')}<span>${esc(firstSentence(l.donde))}</span></div>` : ''}
+          ${l.frecuencia ? `<div class="fact">${ico('clock')}<span>${esc(firstSentence(l.frecuencia))}</span></div>` : ''}
+          ${l.precio ? `<div class="fact money"><b>$</b><span>${esc(firstSentence(l.precio))}</span></div>` : ''}
+        </div>
+        <details class="line-more"><summary>${t.howCatch}${ico('chevd')}</summary>
+          ${l.donde ? `<p>${esc(l.donde)}</p>` : ''}
+          ${l.consejo ? `<p class="line-tip">${ico('info')}<span>${esc(l.consejo)}</span></p>` : ''}
+          ${l.mapa ? `<a class="line-map" target="_blank" rel="noopener" href="${mapsUrl(l.mapa)}">${ico('pin')}${t.maps}</a>` : ''}
+        </details>
       </article>`).join('')}</div>`)
-      + (tp.consejos?.length ? blk(t.tTips, `<div class="panel"><ul class="rules plain">${tp.consejos.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>`) : '');
-  }
+      + (tp.consejos?.length ? blk(t.tTips, `<div class="tips-row">${tp.consejos.map((x, i) => `<div class="tipcard reveal" style="--i:${i}"><b>${i + 1}</b><p>${esc(x)}</p></div>`).join('')}</div>`) : '');
+  });
 
-  {
-    const done = readChecks();
-    P.salida = blk('', `<div class="panel">
-        ${row('door', `Check-out · ${c.checkout?.hora || ''}`, c.checkout?.instrucciones)}
-        ${(c.checkout?.lista || []).length ? `<div class="checks">${c.checkout.lista.map((x, i) => `<label class="check"><input type="checkbox" id="chk-${i}" data-i="${i}"${done[i] ? ' checked' : ''}><span class="box">${ico('check')}</span><span>${esc(x)}</span></label>`).join('')}</div>` : ''}
-      </div>
-      ${c.resenas ? `<div class="review"><div class="stars">${ico('star').repeat(5)}</div><p>${esc(c.resenas.mensaje || '')}</p>
-        <div class="review-btns">${(c.resenas.enlaces || []).map((r) => `<a class="btn light" target="_blank" rel="noopener" href="${esc(r.url)}">${esc(r.plataforma)}</a>`).join('')}</div></div>` : ''}`);
-  }
+  P.salida = page(() => {
+    const done = readChecks(), list = c.checkout?.lista || [];
+    const n = list.filter((_, i) => done[i]).length;
+    return blk('', `<div class="arrive out">
+        <div class="arrive-time"><span class="label">Check-out</span><strong>${esc(c.checkout?.hora || '—')}</strong></div>
+        ${clampText(c.checkout?.instrucciones, 110)}
+      </div>`)
+      + (list.length ? blk('', `<div class="panel checklist">
+          <div class="progress">${ring(n, list.length)}<div><strong id="prog-n">${n} ${t.of} ${list.length}</strong><span id="prog-msg">${n === list.length ? t.allDone : t.ready}</span></div></div>
+          <div class="checks">${list.map((x, i) => `<label class="check"><input type="checkbox" id="chk-${i}" data-i="${i}"${done[i] ? ' checked' : ''}><span class="box">${ico('check')}</span><span>${esc(x)}</span></label>`).join('')}</div>
+        </div>`) : '')
+      + (c.resenas ? blk('', `<div class="review"><div class="stars">${[0, 1, 2, 3, 4].map((i) => `<span style="--i:${i}">${ico('star')}</span>`).join('')}</div><p>${esc(c.resenas.mensaje || '')}</p>
+          <div class="review-btns">${(c.resenas.enlaces || []).map((r) => `<a class="btn light" target="_blank" rel="noopener" href="${esc(r.url)}">${esc(r.plataforma)}</a>`).join('')}</div></div>`) : '');
+  });
 
-  P.ayuda = blk('', `<div class="host">
+  P.ayuda = page(() => blk('', `<div class="host">
       <div class="host-top"><span class="avatar">${esc((a.nombre || '?')[0])}</span><div><span>${t.hostRole}</span><strong>${esc(a.nombre || '')}</strong></div></div>
-      ${a.horario ? `<p class="host-hours">${esc(a.horario)}</p>` : ''}
+      ${a.horario ? `<p class="host-hours">${esc(firstSentence(a.horario))}</p>` : ''}
       <div class="host-btns">
         ${a.whatsapp ? `<a class="btn light" href="${waUrl(a.whatsapp)}" target="_blank" rel="noopener">${ico('chat')}WhatsApp</a>` : ''}
         ${a.telefono ? `<a class="btn ghost" href="tel:${esc(a.telefono.replace(/\s/g, ''))}">${ico('phone')}${t.call}</a>` : ''}
       </div>
-      <p class="host-hours" style="margin:0">${esc(a.telefono || '')}${a.email ? ` · ${esc(a.email)}` : ''}</p>
     </div>
+    <div class="sos-grid">${['131', '132', '133'].map((n, i) => `<a class="reveal" style="--i:${i}" href="tel:${n}"><strong>${n}</strong><span>${t.sos[i]}</span></a>`).join('')}</div>
     ${a.whatsapp ? `<a class="report" target="_blank" rel="noopener" href="${waUrl(a.whatsapp, `Hola ${a.nombre}, tengo un problema en ${c.nombre}: `)}">
-      <span class="ri">${ico('tool')}</span><span><strong>${t.report}</strong><small>${t.reportNote}</small></span>${ico('ext')}</a>` : ''}
-    <div class="sos-grid">${['131', '132', '133'].map((n, i) => `<a href="tel:${n}"><strong>${n}</strong><span>${t.sos[i]}</span></a>`).join('')}</div>`)
-    + (c.imprevistos?.length ? blk(t.incidents, `<div class="panel devs">${c.imprevistos.map((x) => `<details class="dev"><summary><span class="ri">${ico('bolt')}</span><strong>${esc(x.situacion)}</strong><span class="chev"></span></summary><p class="dev-note" style="margin-top:0">${esc(x.que_hacer)}</p></details>`).join('')}</div>`) : '');
+      <span class="ri">${ico('tool')}</span><span><strong>${t.report}</strong><small>${t.reportNote}</small></span>${ico('ext')}</a>` : ''}`)
+    + (c.imprevistos?.length ? blk(t.incidents, `<div class="panel devs">${c.imprevistos.map((x) => `<details class="dev"><summary><span class="ri">${ico(iconFor(x.situacion, 'bolt'))}</span><strong>${esc(x.situacion)}</strong><span class="chev"></span></summary><p class="dev-note" style="margin-top:0">${esc(x.que_hacer)}</p></details>`).join('')}</div>`) : ''));
 
   return P;
+}
+
+// Texto largo → 2 líneas con "Ver más"
+function clampText(text, max = 120) {
+  if (!text) return '';
+  if (text.length <= max) return `<p class="txt">${esc(text)}</p>`;
+  return `<div class="clampbox"><p class="txt clamp">${esc(text)}</p><button type="button" class="more" data-more>${T[lang].more}</button></div>`;
+}
+
+// Tarjeta con arte de color (panoramas, restaurantes)
+function card(title, note, icon, meta, i) {
+  const [c1, c2] = art(title);
+  return `<article class="pcard reveal" style="--i:${i};--a:${c1};--b:${c2}">
+    <div class="pcard-art">${ico(icon)}</div>
+    <div class="pcard-body"><strong>${esc(title)}</strong>${meta ? `<small>${esc(meta)}</small>` : ''}${note ? `<p>${esc(note)}</p>` : ''}</div>
+  </article>`;
+}
+
+function ring(n, total) {
+  const C = 2 * Math.PI * 22, off = C * (1 - (total ? n / total : 0));
+  return `<svg class="ring" viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" class="ring-bg"/><circle cx="26" cy="26" r="22" class="ring-fg" stroke-dasharray="${C}" stroke-dashoffset="${off}" data-c="${C}"/></svg>`;
 }
 
 const ORDER = ['llegar', 'casa', 'extras', 'explorar', 'comer', 'moverse', 'salida', 'ayuda'];
@@ -430,49 +513,126 @@ function render() {
   const r = route();
   const onPage = !!pages[r];
 
-  // Accesos rápidos (inicio)
+  // Saludo y datos del momento en la portada
+  const h = new Date().getHours();
+  $('#greet').textContent = t.greet[h < 12 ? 0 : h < 20 ? 1 : 2];
+  const chips = [];
+  if (weather?.current) {
+    const [cond, icon] = WX(weather.current.weather_code);
+    chips.push(`<span class="hchip">${ico(icon)}${Math.round(weather.current.temperature_2m)}° ${esc(t.wx[cond])}</span>`);
+  }
+  const sunset = weather?.daily?.sunset?.[0];
+  if (sunset) chips.push(`<span class="hchip">${ico('sunset')}${t.sunset} ${sunset.slice(11, 16)}</span>`);
+  $('#hero-chips').innerHTML = chips.join('');
+
+  // Accesos rápidos
   $('#actions').innerHTML = `
-    <button class="action" id="act-wifi"><span class="i">${ico('wifi')}</span>${t.act.wifi}</button>
+    <button class="action" id="act-wifi"><span class="i">${ico('qr')}</span>${t.qr} Wi-Fi</button>
     ${c.anfitrion?.whatsapp ? `<a class="action" href="${waUrl(c.anfitrion.whatsapp)}" target="_blank" rel="noopener"><span class="i">${ico('chat')}</span>${t.act.whatsapp}</a>` : ''}
     <a class="action" href="${mapsUrl(c.como_llegar?.mapa || c.direccion || c.nombre)}" target="_blank" rel="noopener"><span class="i">${ico('pin')}</span>${t.act.map}</a>
     <a class="action sos" href="#ayuda"><span class="i">${ico('sos')}</span>${t.act.sos}</a>`;
-  $('#act-wifi').onclick = copyWifi;
+  $('#act-wifi').onclick = openQR;
 
-  // Tarjetas de apartados
+  // Apartados
   $('#need').textContent = t.need;
-  $('#tiles').innerHTML = ORDER.filter((id) => pages[id]).map((id) => {
+  $('#tiles').innerHTML = ORDER.filter((id) => pages[id]).map((id, i) => {
     let desc = t.tileDesc[id];
-    if (id === 'explorar' && weather?.current) desc = `${Math.round(weather.current.temperature_2m)}° · ${t.wx[WX(weather.current.weather_code)[0]]} — ${t.tileDesc.explorar}`;
-    return `<a class="tile${id === 'ayuda' ? ' tile-help' : ''}" href="#${id}"><span class="ti">${ico(PAGE_ICONS[id])}</span><strong>${esc(t.tabs[id])}</strong><small>${esc(desc)}</small></a>`;
+    if (id === 'explorar' && weather?.current) desc = `${Math.round(weather.current.temperature_2m)}° · ${t.wx[WX(weather.current.weather_code)[0]]}`;
+    if (id === 'salida' && c.checkout?.hora) desc = `Check-out ${c.checkout.hora}`;
+    if (id === 'llegar' && c.checkin?.hora) desc = `Check-in ${c.checkin.hora}`;
+    return `<a class="tile reveal${id === 'ayuda' ? ' tile-help' : ''}" style="--i:${i}" href="#${id}"><span class="ti">${ico(PAGE_ICONS[id])}</span><strong>${esc(t.tabs[id])}</strong><small>${esc(desc)}</small></a>`;
   }).join('');
 
-  // Página
+  // Recomendados de hoy (según el clima) y extras destacados
+  const wet = weather?.current ? isWet(weather.current.weather_code) : true;
+  const picks = [...(c.panoramas?.[wet ? 'lluvia' : 'sol'] || []).map((p) => [p.nombre, p.nota, wet ? 'coffee' : 'sun']), ...(c.tours || []).slice(0, 2).map((p) => [p.nombre, p.duracion, 'compass'])];
+  $('#picks').innerHTML = picks.length ? `<div class="row-head"><h2>${t.picks}</h2><a href="#explorar">${t.see} ${ico('chev')}</a></div>
+    <div class="scroller">${picks.map(([n, note, icon], i) => { const [c1, c2] = art(n); return `<a href="#explorar" class="mini reveal" style="--i:${i};--a:${c1};--b:${c2}"><span class="mini-ico">${ico(icon)}</span><strong>${esc(n)}</strong><small>${esc(firstSentence(note || ''))}</small></a>`; }).join('')}</div>` : '';
+  $('#special').innerHTML = c.extras?.length ? `<div class="row-head"><h2>${t.special}</h2><a href="#extras">${t.see} ${ico('chev')}</a></div>
+    <div class="scroller">${c.extras.map((x, i) => { const [c1, c2] = art(x.nombre); return `<a href="#extras" class="mini extra-mini reveal" style="--i:${i};--a:${c1};--b:${c2}"><span class="mini-ico">${ico(x.icono)}</span><strong>${esc(x.nombre)}</strong><small class="mini-price">${esc(x.precio || '')}</small></a>`; }).join('')}</div>` : '';
+
+  // Página de apartado
   $('#home').hidden = onPage;
   $('#page').hidden = !onPage;
   if (onPage) {
     $('#page-name').textContent = t.tabs[r];
     $('#page-back-label').textContent = t.back;
     $('#page-title').innerHTML = t.titles[r] || esc(t.tabs[r]);
+    $('#page-ico').innerHTML = ico(PAGE_ICONS[r]);
     $('#page-body').innerHTML = pages[r];
-    const i = ORDER.filter((id) => pages[id]).indexOf(r), list = ORDER.filter((id) => pages[id]);
-    const next = list[i + 1];
-    $('#page-next').innerHTML = next ? `<a class="next" href="#${next}"><span><small>${t.see}</small><strong>${esc(t.tabs[next])}</strong></span>${ico(PAGE_ICONS[next])}</a>` : '';
+    const list = ORDER.filter((id) => pages[id]), next = list[list.indexOf(r) + 1];
+    $('#page-next').innerHTML = next ? `<a class="next" href="#${next}"><span><small>${t.see}</small><strong>${esc(t.tabs[next])}</strong></span><span class="next-ico">${ico(PAGE_ICONS[next])}</span></a>` : '';
   }
 
-  // Desplazamiento al cambiar de apartado
   if (r !== shownRoute) {
     if (onPage && !pages[shownRoute]) homeY = window.scrollY;
     window.scrollTo(0, onPage ? 0 : homeY);
+    const el = onPage ? $('#page') : $('#home');
+    el.classList.remove('enter'); void el.offsetWidth; el.classList.add('enter');
     shownRoute = r;
+  } else {
+    document.querySelectorAll('.reveal').forEach((x) => x.classList.add('shown'));
   }
 
   document.querySelectorAll('[data-plan]').forEach((b) => b.addEventListener('click', () => { planTab = b.dataset.plan; render(); }));
-  document.querySelectorAll('.check input').forEach((cb) => cb.addEventListener('change', () => {
-    const d = readChecks(); d[cb.dataset.i] = cb.checked;
-    try { localStorage.setItem(`checks-${slug}`, JSON.stringify(d)); } catch {}
-  }));
+  document.querySelectorAll('[data-route]').forEach((b) => b.addEventListener('click', () => { routeTab = +b.dataset.route; render(); }));
+  document.querySelectorAll('.check input').forEach((cb) => cb.addEventListener('change', onCheck));
   renderChips();
 }
+
+function onCheck(e) {
+  const cb = e.target, t = T[lang];
+  const d = readChecks(); d[cb.dataset.i] = cb.checked;
+  try { localStorage.setItem(`checks-${slug}`, JSON.stringify(d)); } catch {}
+  const all = document.querySelectorAll('.check input'), n = [...all].filter((x) => x.checked).length;
+  const fg = document.querySelector('.ring-fg');
+  if (fg) fg.style.strokeDashoffset = fg.dataset.c * (1 - n / all.length);
+  $('#prog-n').textContent = `${n} ${t.of} ${all.length}`;
+  $('#prog-msg').textContent = n === all.length ? t.allDone : t.ready;
+  document.querySelector('.checklist')?.classList.toggle('complete', n === all.length);
+}
+
+// "Ver más" en textos largos
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-more]'); if (!b) return;
+  const box = b.closest('.clampbox'); const open = box.classList.toggle('open');
+  b.textContent = open ? T[lang].less : T[lang].more;
+});
+
+// QR del wifi para compartir
+function wifiEsc(s = '') { return String(s).replace(/([\;,:"])/g, '\\$1'); }
+function openQR() {
+  const w = cabana.wifi || {}, t = T[lang];
+  let svg = '';
+  try {
+    if (window.qrcode) {
+      qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+      const qr = qrcode(0, 'M');
+      qr.addData(`WIFI:T:WPA;S:${wifiEsc(w.red)};P:${wifiEsc(w.clave)};;`);
+      qr.make();
+      svg = qr.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+    }
+  } catch {}
+  $('#qr-title').textContent = t.qrTitle;
+  $('#qr-hint').textContent = t.qrHint;
+  $('#qr-code').innerHTML = svg || `<p>${esc(w.red || '')}</p>`;
+  $('#qr-net').textContent = w.red || '';
+  $('#qr-pass').textContent = w.clave || '';
+  $('#qr-sheet').hidden = false;
+}
+
+// Paralaje suave del volcán
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (ticking || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    const y = window.scrollY;
+    const scene = document.querySelector('.scene');
+    if (scene && y < 700) scene.style.transform = `translateY(${y * 0.25}px)`;
+    ticking = false;
+  });
+}, { passive: true });
 
 function readChecks() {
   try { return JSON.parse(localStorage.getItem(`checks-${slug}`)) || {}; } catch { return {}; }
@@ -584,6 +744,9 @@ async function init() {
   $('#copy-wifi').addEventListener('click', copyWifi);
   $('#open-chat').addEventListener('click', openChat);
   $('#close-chat').addEventListener('click', () => ($('#chat').hidden = true));
+  $('#qr-sheet').addEventListener('click', (e) => { if (e.target.id === 'qr-sheet' || e.target.closest('#qr-close')) $('#qr-sheet').hidden = true; });
+  $('#copy-wifi').insertAdjacentHTML('beforebegin', `<button class="copy qr-btn" id="qr-btn" aria-label="QR">${ico('qr')}</button>`);
+  $('#qr-btn').addEventListener('click', openQR);
   $('#chat-form').addEventListener('submit', (e) => { e.preventDefault(); send($('#chat-input').value); });
   $('#chips').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) send(b.textContent); });
 

@@ -60,9 +60,11 @@
       </div>
 
       <div class="hero-text">
+        <p class="greet" id="greet"></p>
         <p class="eyebrow" id="lugar">Puerto Varas · Lago Llanquihue</p>
         <h1 id="nombre"></h1>
         <p class="lede" id="descripcion"></p>
+        <div class="hero-chips" id="hero-chips"></div>
       </div>
     </header>
 
@@ -88,6 +90,9 @@
       <h2 class="need" id="need"></h2>
       <nav class="tiles" id="tiles"></nav>
 
+      <section class="strip" id="picks"></section>
+      <section class="strip" id="special"></section>
+
       <footer class="foot">
         <span id="foot-name"></span>
         <span data-i18n="footer"></span>
@@ -103,7 +108,7 @@
         <span class="mono small" id="page-mono"></span>
       </header>
       <div class="wrap">
-        <h1 class="page-title" id="page-title"></h1>
+        <div class="page-head"><span class="page-ico" id="page-ico"></span><h1 class="page-title" id="page-title"></h1></div>
         <div id="page-body"></div>
         <div id="page-next"></div>
       </div>
@@ -133,6 +138,17 @@
     </form>
   </div>
 
+  <div id="qr-sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="qr-title">
+    <div class="sheet-card">
+      <button class="icon-btn sheet-x" id="qr-close" aria-label="Cerrar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <h3 id="qr-title"></h3>
+      <div class="qr-code" id="qr-code"></div>
+      <div class="qr-data"><span id="qr-net"></span><strong id="qr-pass"></strong></div>
+      <p id="qr-hint"></p>
+    </div>
+  </div>
+
+  <script src="/vendor/qrcode.js"></script>
   <script src="/app.js" type="module"></script>
 </body>
 </html>

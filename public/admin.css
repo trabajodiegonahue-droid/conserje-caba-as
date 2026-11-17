@@ -146,3 +146,13 @@ body.adm { background: var(--mist); }
 .toast { position: fixed; z-index: 30; left: 50%; transform: translateX(-50%); top: calc(70px + env(safe-area-inset-top)); width: min(440px, calc(100% - 32px)); padding: 13px 16px; border-radius: 14px; background: var(--surface); color: var(--ink); font-size: 14px; font-weight: 600; box-shadow: 0 18px 40px -12px rgba(16,28,34,.45); border-left: 4px solid var(--lake); animation: rise .25s ease-out; }
 .toast.err { border-left-color: var(--ember); }
 .item-txt small:empty { display: none; }
+@keyframes admUp { from { opacity: 0; transform: translateY(12px); } }
+.adm-tile, .howto li, .grp { animation: admUp .45s cubic-bezier(.2,.8,.2,1) both; }
+.adm-tile:nth-child(2) { animation-delay: .04s } .adm-tile:nth-child(3) { animation-delay: .08s } .adm-tile:nth-child(4) { animation-delay: .12s }
+.adm-tile:nth-child(5) { animation-delay: .16s } .adm-tile:nth-child(6) { animation-delay: .2s } .adm-tile:nth-child(7) { animation-delay: .24s }
+.adm-tile:nth-child(8) { animation-delay: .28s } .adm-tile:nth-child(9) { animation-delay: .32s }
+.howto li:nth-child(2) { animation-delay: .06s } .howto li:nth-child(3) { animation-delay: .12s }
+.grp:nth-of-type(2) { animation-delay: .06s } .grp:nth-of-type(3) { animation-delay: .12s } .grp:nth-of-type(4) { animation-delay: .18s }
+.adm-tile .ti { transition: transform .25s; } .adm-tile:hover .ti { transform: rotate(-6deg) scale(1.06); }
+.item-body { animation: admUp .25s ease-out; }
+@media (prefers-reduced-motion: reduce) { .adm-tile, .howto li, .grp, .item-body { animation: none; } }
