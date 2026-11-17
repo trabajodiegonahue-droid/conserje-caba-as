@@ -1,4 +1,5 @@
 import { getCabana } from '../lib/cabanas.js';
+import { demoReply } from '../lib/demo.js';
 
 // POST /api/chat  { slug, messages: [{ role: "user"|"assistant", text }] }
 // La clave GEMINI_API_KEY vive solo aquí (variable de entorno del servidor).
@@ -32,7 +33,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return res.status(500).json({ error: 'Falta configurar GEMINI_API_KEY en el servidor.' });
+  const demo = !apiKey || process.env.DEMO_MODE === '1';
 
   const { slug, messages } = readBody(req);
   const cabana = await getCabana(slug);
@@ -54,6 +55,11 @@ export default async function handler(req, res) {
   while (contents.length && contents[0].role !== 'user') contents.shift();
   if (!contents.length || contents.at(-1).role !== 'user') {
     return res.status(400).json({ error: 'El último mensaje debe ser del huésped' });
+  }
+
+  // Sin clave: respuestas de demostración (sin IA) para poder probar la app
+  if (demo) {
+    return res.status(200).json({ reply: demoReply(cabana, contents.at(-1).parts[0].text), demo: true });
   }
 
   try {

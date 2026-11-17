@@ -190,6 +190,7 @@ async function send(text) {
     if (!r.ok) throw new Error(data.error || T[lang].error);
     history.push({ role: 'assistant', text: data.reply });
     addMsg('bot', data.reply);
+    if (data.demo) $('#chat-sub').textContent = '🧪 Modo demo (sin IA)';
   } catch (err) {
     typing.remove();
     history.pop(); // permite reintentar sin romper el historial
