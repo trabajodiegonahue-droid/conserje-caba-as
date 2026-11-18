@@ -8,7 +8,8 @@ const MODEL = process.env.GEMINI_MODEL || 'gemini-flash-latest';
 const MAX_MESSAGES = 12;     // historial que se envía al modelo
 const MAX_CHARS = 1000;      // largo máximo por mensaje
 
-function buildSystemPrompt(cabana) {
+function buildSystemPrompt(full) {
+  const { privado, ...cabana } = full; // el código de acceso nunca va al modelo
   return `Eres el conserje virtual de "${cabana.nombre}", una cabaña turística en Puerto Varas, Chile.
 Atiendes a los huéspedes de forma cálida, breve y práctica, como un buen anfitrión del sur de Chile.
 

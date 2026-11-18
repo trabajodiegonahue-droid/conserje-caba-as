@@ -35,9 +35,15 @@ const I = {
   chev: '<path d="M9 5l7 7-7 7"/>',
   wifi: '<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 15.8a5 5 0 0 1 6.8 0"/>',
   ext: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+  lock: '<rect x="5" y="10" width="14" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14.5v2.5"/>',
+  image: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
+  link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  copy: '<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
+  chat: '<path d="M20 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.2A8 8 0 1 1 20 11.5z"/>',
 };
 const ico = (n) => `<svg viewBox="0 0 24 24">${I[n] || I.info}</svg>`;
 
+const COMODIDADES = [['wifi', 'Wifi'], ['estufa', 'Estufa a leña'], ['tinaja', 'Tinaja'], ['parrilla', 'Parrilla'], ['vista', 'Vista al volcán'], ['cocina', 'Cocina equipada'], ['tv', 'Smart TV'], ['estacionamiento', 'Estacionamiento'], ['calefon', 'Agua caliente'], ['mascotas', 'Acepta mascotas'], ['ropa_cama', 'Ropa de cama'], ['botiquin', 'Botiquín'], ['lavadora', 'Lavadora'], ['terraza', 'Terraza'], ['kayak', 'Kayak'], ['cuna', 'Cuna']];
 const ICONOS = [['tub', 'Tinaja'], ['grill', 'Parrilla'], ['tv', 'TV'], ['drop', 'Agua'], ['coffee', 'Comida'], ['wood', 'Leña'], ['car', 'Auto'], ['bus', 'Bus'], ['clock', 'Horario'], ['flame', 'Fuego'], ['key', 'Llave'], ['info', 'Otro']];
 
 // ── Apartados (iguales a los que ve el huésped) ──
@@ -51,6 +57,15 @@ const SECTIONS = [
       { path: 'descripcion', label: 'Descripción', type: 'textarea', ph: 'Una o dos frases que describan la cabaña.' },
       { path: 'direccion', label: 'Dirección', type: 'text', ph: 'Ej: Camino a Ensenada km 4, Puerto Varas' },
     ] },
+    { title: 'Fotos', help: 'La primera es la portada. Pega el enlace directo de cada foto (termina en .jpg, .png o .webp).', fields: [
+      { path: 'fotos', type: 'images' },
+    ] },
+    { title: 'Mensaje de bienvenida', help: 'Aparece en la portada con tu nombre y firma. Escríbelo como si le hablaras al huésped.', fields: [
+      { path: 'bienvenida', type: 'textarea', ph: 'Ej: Qué alegría recibirlos…' },
+    ] },
+    { title: 'Lo que ofrece la cabaña', help: 'Toca para marcar o desmarcar.', fields: [
+      { path: 'comodidades', type: 'multi', options: COMODIDADES },
+    ] },
     { title: 'Wifi', fields: [
       { path: 'wifi.red', label: 'Nombre de la red', type: 'text', ph: 'Ej: LosArrayanes_5G' },
       { path: 'wifi.clave', label: 'Clave', type: 'text', ph: 'Ej: volcan2024' },
@@ -59,6 +74,15 @@ const SECTIONS = [
     { title: 'Horarios', fields: [
       { path: 'checkin.hora', label: 'Check-in desde', type: 'time' },
       { path: 'checkout.hora', label: 'Check-out hasta', type: 'time' },
+    ] },
+  ] },
+  { id: 'acceso', icon: 'lock', title: 'Acceso y huéspedes', desc: 'Código de la puerta y enlaces personales', groups: [
+    { title: 'Enviar la guía a un huésped', help: 'Crea un enlace con su nombre y fechas. Verá un saludo personal, la cuenta regresiva y el código de la puerta solo durante su estadía.', fields: [
+      { type: 'linkgen' },
+    ] },
+    { title: 'Código de acceso', help: 'Privado: nunca aparece en la página pública ni en el chat. Solo lo ve un huésped con enlace, desde el día de su llegada hasta su salida.', fields: [
+      { path: 'privado.codigo_acceso', label: 'Código', type: 'text', ph: 'Ej: 4821', half: true },
+      { path: 'privado.nota_acceso', label: 'Dónde se usa', type: 'textarea', ph: 'Ej: Caja de seguridad gris a la derecha de la puerta.' },
     ] },
   ] },
   { id: 'llegar', icon: 'key', title: 'Llegada', desc: 'Cómo llegar y entrar', groups: [
@@ -108,23 +132,24 @@ const SECTIONS = [
         { path: 'precio', label: 'Precio', type: 'text', ph: 'Ej: $12.000 por persona' },
         { path: 'detalle', label: 'Qué incluye', type: 'textarea' },
         { path: 'icono', label: 'Ícono', type: 'icon' },
+        { path: 'foto', label: 'Foto (opcional)', type: 'image' },
       ] },
     ] },
   ] },
   { id: 'explorar', icon: 'compass', title: 'Explorar', desc: 'Clima, panoramas y tours', groups: [
     { title: 'Panoramas si llueve', fields: [
       { path: 'panoramas.lluvia', type: 'list', itemTitle: 'nombre', add: 'Agregar panorama', item: [
-        { path: 'nombre', label: 'Panorama', type: 'text' }, { path: 'nota', label: 'Consejo', type: 'textarea' },
+        { path: 'nombre', label: 'Panorama', type: 'text' }, { path: 'nota', label: 'Consejo', type: 'textarea' }, { path: 'foto', label: 'Foto (opcional)', type: 'image' },
       ] },
     ] },
     { title: 'Panoramas si hay sol', fields: [
       { path: 'panoramas.sol', type: 'list', itemTitle: 'nombre', add: 'Agregar panorama', item: [
-        { path: 'nombre', label: 'Panorama', type: 'text' }, { path: 'nota', label: 'Consejo', type: 'textarea' },
+        { path: 'nombre', label: 'Panorama', type: 'text' }, { path: 'nota', label: 'Consejo', type: 'textarea' }, { path: 'foto', label: 'Foto (opcional)', type: 'image' },
       ] },
     ] },
     { title: 'Tours y paseos', fields: [
       { path: 'tours', type: 'list', itemTitle: 'nombre', itemSub: 'duracion', add: 'Agregar tour', item: [
-        { path: 'nombre', label: 'Nombre', type: 'text' }, { path: 'duracion', label: 'Duración', type: 'text', ph: 'Ej: Medio día' }, { path: 'nota', label: 'Consejo', type: 'textarea' },
+        { path: 'nombre', label: 'Nombre', type: 'text' }, { path: 'duracion', label: 'Duración', type: 'text', ph: 'Ej: Medio día' }, { path: 'nota', label: 'Consejo', type: 'textarea' }, { path: 'foto', label: 'Foto (opcional)', type: 'image' },
       ] },
     ] },
     { title: 'Clima en vivo', help: 'Ubicación de la cabaña para mostrar el clima. En Google Maps, mantén presionado sobre la cabaña y copia los dos números que aparecen.', fields: [
@@ -136,7 +161,7 @@ const SECTIONS = [
     { title: 'Restaurantes', fields: [
       { path: 'restaurantes', type: 'list', itemTitle: 'nombre', itemSub: 'distancia', add: 'Agregar restaurante', item: [
         { path: 'nombre', label: 'Nombre', type: 'text' }, { path: 'tipo', label: 'Tipo de comida', type: 'text', ph: 'Ej: Pescados y mariscos' },
-        { path: 'distancia', label: 'Distancia', type: 'text', ph: 'Ej: 10 min en auto' }, { path: 'nota', label: 'Tu recomendación', type: 'textarea' },
+        { path: 'distancia', label: 'Distancia', type: 'text', ph: 'Ej: 10 min en auto' }, { path: 'nota', label: 'Tu recomendación', type: 'textarea' }, { path: 'foto', label: 'Foto (opcional)', type: 'image' },
       ] },
     ] },
     { title: 'Cerca de la cabaña', fields: [
@@ -182,6 +207,8 @@ const SECTIONS = [
       { path: 'anfitrion.whatsapp', label: 'WhatsApp', type: 'tel', ph: '56912345678', help: 'Solo números, con 56 adelante.', half: true },
       { path: 'anfitrion.email', label: 'Email', type: 'email' },
       { path: 'anfitrion.horario', label: 'Cuándo te pueden contactar', type: 'textarea' },
+      { path: 'anfitrion.foto', label: 'Tu foto (opcional)', type: 'image' },
+      { path: 'anfitrion.idiomas', label: 'Idiomas que hablas', type: 'strings', add: 'Agregar idioma', ph: 'Ej: English' },
     ] },
     { title: 'Emergencias', fields: [
       { path: 'otros.emergencias', label: 'Hospital y números útiles', type: 'textarea' },
@@ -261,8 +288,7 @@ async function login(slug, password, silent = false) {
   try {
     const res = await api({ action: 'login', slug, password });
     if (res.exists) {
-      const r = await fetch(`/api/cabana?slug=${encodeURIComponent(slug)}`, { cache: 'no-store' });
-      draft = await r.json();
+      draft = (await api({ action: 'get', slug, password })).data;
     } else {
       draft = { slug, nombre: '', lugar: 'Puerto Varas · Lago Llanquihue', wifi: {}, checkin: { hora: '15:00' }, checkout: { hora: '11:00', lista: [] }, anfitrion: {}, reglas: [] };
     }
@@ -295,7 +321,8 @@ function summary(s) {
   const n = (p) => (get(draft, p) || []).length;
   const plural = (k, one, many) => `${k} ${k === 1 ? one : many}`;
   switch (s.id) {
-    case 'basicos': return draft.wifi?.red ? `Wifi: ${draft.wifi.red}` : 'Falta el wifi';
+    case 'basicos': return draft.wifi?.red ? `Wifi: ${draft.wifi.red} · ${n('fotos')} fotos` : 'Falta el wifi';
+    case 'acceso': return draft.privado?.codigo_acceso ? 'Código configurado · crear enlace' : 'Falta el código de la puerta';
     case 'llegar': return plural(n('como_llegar.opciones'), 'forma de llegar', 'formas de llegar');
     case 'casa': return `${plural(n('equipos'), 'equipo', 'equipos')} · ${plural(n('reglas'), 'regla', 'reglas')}`;
     case 'extras': return plural(n('extras'), 'servicio', 'servicios');
@@ -320,6 +347,7 @@ function show(id) {
   $('#adm-section').textContent = s ? s.title : '';
   $('#adm-view').href = `/cabana/${session.slug}${s && s.id !== 'basicos' ? `#${s.id}` : ''}`;
   $('#adm-view').textContent = s ? 'Ver apartado' : 'Ver página';
+  $('#adm-main').classList.add('anim');
   $('#adm-main').innerHTML = s ? sectionHTML(s) : homeHTML();
   window.scrollTo(0, 0);
   autosize();
@@ -355,7 +383,7 @@ function sectionHTML(s) {
 }
 
 function field(f, base = '') {
-  const path = base ? `${base}.${f.path}` : f.path;
+  const path = base ? `${base}.${f.path || ''}` : (f.path || '');
   const v = get(draft, path);
   const id = `f-${path.replace(/\./g, '-')}`;
   const label = f.label ? `<span class="lbl">${esc(f.label)}${f.required ? ' <i>obligatorio</i>' : ''}</span>` : '';
@@ -402,6 +430,37 @@ function field(f, base = '') {
       <button type="button" class="add" data-act="add" data-list="${esc(path)}" data-kind="object" data-title="${esc(f.itemTitle)}" data-sub="${esc(f.itemSub || '')}">＋ ${esc(f.add || 'Agregar')}</button></div>`;
   }
 
+  if (f.type === 'images') {
+    const items = arr(path);
+    return `<div class="fld">${label}${help}
+      <div class="thumbs">${items.map((src, i) => `<figure class="thumb${i === 0 ? ' first' : ''}"><img src="${esc(src)}" alt="" onerror="this.parentNode.classList.add('bad')"><span class="bad-msg">No se pudo cargar</span>${i === 0 ? '<b>Portada</b>' : ''}
+        <span class="thumb-tools">${i > 0 ? `<button type="button" class="ib light" data-act="up" data-list="${esc(path)}" data-i="${i}" aria-label="Mover antes">${ico('up')}</button>` : ''}<button type="button" class="ib light del" data-act="del" data-list="${esc(path)}" data-i="${i}" aria-label="Quitar">${ico('trash')}</button></span></figure>`).join('')}
+        <label class="thumb add-photo">${ico('image')}<span>Agregar foto</span></label></div>
+      <div class="url-add" hidden><input type="url" placeholder="https://…/foto.jpg" data-url-for="${esc(path)}"><button type="button" class="tb" data-add-url="${esc(path)}">Agregar</button></div></div>`;
+  }
+
+  if (f.type === 'image') {
+    const val = v || '';
+    return `<label class="${f.half ? 'fld half' : 'fld'}" for="${id}">${label}${help}<span class="img-field">${val ? `<img src="${esc(val)}" alt="" onerror="this.style.visibility='hidden'">` : `<span class="img-ph">${ico('image')}</span>`}<input id="${id}" data-path="${esc(path)}" type="url" value="${esc(val)}" placeholder="Enlace de la foto (https://…)"></span></label>`;
+  }
+
+  if (f.type === 'multi') {
+    const sel = new Set(Array.isArray(v) ? v : []);
+    return `<div class="fld">${label}${help}<div class="multi">${f.options.map(([val, lab]) =>
+      `<button type="button" role="checkbox" aria-checked="${sel.has(val)}" class="mchip${sel.has(val) ? ' on' : ''}" data-multi="${esc(path)}" data-val="${esc(val)}">${sel.has(val) ? ico('check') : ''}${esc(lab)}</button>`).join('')}</div></div>`;
+  }
+
+  if (f.type === 'linkgen') {
+    const d0 = new Date(), iso = (x) => new Date(d0.getTime() + x * 864e5).toISOString().slice(0, 10);
+    return `<div class="linkgen">
+      <label class="fld"><span class="lbl">Nombre del huésped</span><input id="lg-name" type="text" placeholder="Ej: Familia González" autocomplete="off"></label>
+      <div class="lg-dates"><label class="fld"><span class="lbl">Llegada</span><input id="lg-in" type="date" value="${iso(1)}"></label>
+      <label class="fld"><span class="lbl">Salida</span><input id="lg-out" type="date" value="${iso(4)}"></label></div>
+      <button type="button" class="btn-primary" id="lg-make">${ico('link')}Crear enlace</button>
+      <div class="lg-result" id="lg-result" hidden></div>
+    </div>`;
+  }
+
   if (f.type === 'choice') {
     return `<div class="fld">${label}${help}<div class="choices" role="radiogroup">${f.options.map(([val, lab]) =>
       `<button type="button" role="radio" aria-checked="${v === val}" class="choice${v === val ? ' on' : ''}" data-set="${esc(path)}" data-val="${esc(val)}">${esc(lab)}</button>`).join('')}</div></div>`;
@@ -422,7 +481,7 @@ function field(f, base = '') {
 function autosize() {
   document.querySelectorAll('#adm-main textarea').forEach((t) => { t.style.height = 'auto'; t.style.height = `${t.scrollHeight + 2}px`; });
 }
-function rerender() { const y = window.scrollY; $('#adm-main').innerHTML = sectionHTML(SECTIONS.find((x) => x.id === current)); autosize(); window.scrollTo(0, y); }
+function rerender() { const y = window.scrollY; $('#adm-main').classList.remove('anim'); $('#adm-main').innerHTML = sectionHTML(SECTIONS.find((x) => x.id === current)); autosize(); window.scrollTo(0, y); }
 
 // Escribir en los campos
 document.addEventListener('input', (e) => {
@@ -450,6 +509,23 @@ document.addEventListener('click', (e) => {
 
   const tog = e.target.closest('[data-toggle]');
   if (tog) { const k = tog.dataset.toggle; open.has(k) ? open.delete(k) : open.add(k); return rerender(); }
+
+  const mc = e.target.closest('[data-multi]');
+  if (mc) {
+    const list = arr(mc.dataset.multi), i = list.indexOf(mc.dataset.val);
+    i >= 0 ? list.splice(i, 1) : list.push(mc.dataset.val);
+    setDirty(true); return rerender();
+  }
+  if (e.target.closest('.add-photo')) { const box = e.target.closest('.fld').querySelector('.url-add'); box.hidden = false; box.querySelector('input').focus(); return; }
+  const au = e.target.closest('[data-add-url]');
+  if (au) {
+    const inp = au.parentNode.querySelector('input'), url = inp.value.trim();
+    if (!/^https?:\/\//.test(url)) { inp.focus(); return toast('Pega un enlace que empiece con https://', 'err'); }
+    arr(au.dataset.addUrl).push(url); setDirty(true); return rerender();
+  }
+  if (e.target.closest('#lg-make')) return makeLink();
+  const cp = e.target.closest('[data-copy]');
+  if (cp) { navigator.clipboard?.writeText(cp.dataset.copy).then(() => toast('Enlace copiado.')).catch(() => { const i = document.querySelector('#lg-url'); i?.select(); }); return; }
 
   const pick = e.target.closest('[data-set]');
   if (pick) { set(draft, pick.dataset.set, pick.dataset.val); setDirty(true); return rerender(); }
@@ -487,6 +563,25 @@ document.addEventListener('click', (e) => {
 });
 
 $('#adm-back').addEventListener('click', () => show(null));
+
+async function makeLink() {
+  const nombre = $('#lg-name').value.trim(), llegada = $('#lg-in').value, salida = $('#lg-out').value;
+  if (!nombre) { $('#lg-name').focus(); return toast('Escribe el nombre del huésped.', 'err'); }
+  if (!llegada || !salida || salida < llegada) return toast('Revisa las fechas: la salida debe ser después de la llegada.', 'err');
+  const btn = $('#lg-make'); btn.disabled = true;
+  try {
+    const { path } = await api({ action: 'link', slug: session.slug, password: session.password, nombre, llegada, salida });
+    const url = new URL(path, location.href).href;
+    const msg = `¡Hola ${nombre}! Les comparto la guía de ${draft.nombre}: wifi, cómo llegar, recomendaciones y todo lo de la cabaña. El código de la puerta aparecerá ahí mismo el día de su llegada. ${url}`;
+    $('#lg-result').hidden = false;
+    $('#lg-result').innerHTML = `<input id="lg-url" readonly value="${esc(url)}" onclick="this.select()">
+      <div class="lg-btns"><button type="button" class="tb" data-copy="${esc(url)}">${ico('copy')}Copiar</button>
+      <a class="tb wa" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(msg)}">${ico('chat')}Enviar por WhatsApp</a>
+      <a class="tb" target="_blank" rel="noopener" href="${esc(url)}">${ico('ext')}Probar</a></div>
+      <small class="help">Si cambiaste el código, guarda antes de enviar.</small>`;
+  } catch (err) { toast(err.message, 'err'); }
+  finally { btn.disabled = false; }
+}
 
 function setDirty(v) {
   dirty = v;

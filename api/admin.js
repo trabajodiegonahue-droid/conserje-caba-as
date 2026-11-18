@@ -1,6 +1,7 @@
 import { checkPassword } from '../lib/auth.js';
 import { listCabanas, saveCabana, SLUG_RE } from '../lib/storage.js';
 import { getCabana } from '../lib/cabanas.js';
+import { makeToken } from '../lib/guest.js';
 
 // POST /api/admin  { action: 'list' | 'login' | 'save' | 'create', slug, password, data }
 const MAX_BYTES = 200_000;
@@ -34,6 +35,20 @@ export default async function handler(req, res) {
       const exists = !!(await getCabana(slug));
       if (!exists && role !== 'admin') return res.status(404).json({ error: 'Esa cabaña no existe.' });
       return res.status(200).json({ ok: true, role, exists });
+    }
+
+    // Datos completos (incluye la parte privada) para editar
+    if (action === 'get') {
+      const data = await getCabana(slug);
+      if (!data) return res.status(404).json({ error: 'Esa cabaña no existe.' });
+      return res.status(200).json({ data });
+    }
+
+    // Enlace personalizado para un huésped
+    if (action === 'link') {
+      const { nombre, llegada, salida } = readBody(req);
+      const token = makeToken({ slug, nombre, llegada, salida });
+      return res.status(200).json({ path: `/cabana/${slug}?g=${token}` });
     }
 
     if (action === 'save' || action === 'create') {

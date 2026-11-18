@@ -229,7 +229,7 @@ function setLang(l) {
   document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = T[l][el.dataset.i18n]; });
   $('#chat-input').placeholder = T[l].placeholder;
   $('#chat-sub').textContent = demoMode ? T[l].demo : T[l].online;
-  if (cabana) render();
+  if (cabana) { render(); renderInstall(); }
 }
 
 function row(icon, title, text, chips = []) {
@@ -353,6 +353,182 @@ const art = (s) => { let h = 0; for (const ch of String(s)) h = (h * 31 + ch.cha
 // Texto corto: primera oración
 const firstSentence = (s = '') => (String(s).match(/^.*?[.;](\s|$)/) || [s])[0].replace(/[.;]\s*$/, '');
 
+// ═══ Detalles premium ═══
+const AMEN = {
+  es: { wifi: 'Wifi rápido', estufa: 'Estufa a leña', tinaja: 'Tinaja caliente', parrilla: 'Parrilla', vista: 'Vista al volcán', cocina: 'Cocina equipada', tv: 'Smart TV', estacionamiento: 'Estacionamiento', calefon: 'Agua caliente', mascotas: 'Acepta mascotas', ropa_cama: 'Ropa de cama', botiquin: 'Botiquín', lavadora: 'Lavadora', terraza: 'Terraza', kayak: 'Kayak', cuna: 'Cuna' },
+  en: { wifi: 'Fast wifi', estufa: 'Wood stove', tinaja: 'Hot tub', parrilla: 'BBQ grill', vista: 'Volcano view', cocina: 'Full kitchen', tv: 'Smart TV', estacionamiento: 'Parking', calefon: 'Hot water', mascotas: 'Pets allowed', ropa_cama: 'Bed linen', botiquin: 'First-aid kit', lavadora: 'Washer', terraza: 'Terrace', kayak: 'Kayak', cuna: 'Crib' },
+  pt: { wifi: 'Wifi rápido', estufa: 'Lareira a lenha', tinaja: 'Ofurô', parrilla: 'Churrasqueira', vista: 'Vista do vulcão', cocina: 'Cozinha equipada', tv: 'Smart TV', estacionamiento: 'Estacionamento', calefon: 'Água quente', mascotas: 'Aceita pets', ropa_cama: 'Roupa de cama', botiquin: 'Kit de primeiros socorros', lavadora: 'Máquina de lavar', terraza: 'Terraço', kayak: 'Caiaque', cuna: 'Berço' },
+  de: { wifi: 'Schnelles WLAN', estufa: 'Holzofen', tinaja: 'Badefass', parrilla: 'Grill', vista: 'Vulkanblick', cocina: 'Voll ausgestattete Küche', tv: 'Smart-TV', estacionamiento: 'Parkplatz', calefon: 'Warmwasser', mascotas: 'Haustiere erlaubt', ropa_cama: 'Bettwäsche', botiquin: 'Erste-Hilfe-Set', lavadora: 'Waschmaschine', terraza: 'Terrasse', kayak: 'Kajak', cuna: 'Babybett' },
+  it: { wifi: 'Wifi veloce', estufa: 'Stufa a legna', tinaja: 'Vasca calda', parrilla: 'Barbecue', vista: 'Vista sul vulcano', cocina: 'Cucina attrezzata', tv: 'Smart TV', estacionamiento: 'Parcheggio', calefon: 'Acqua calda', mascotas: 'Animali ammessi', ropa_cama: 'Biancheria', botiquin: 'Kit di pronto soccorso', lavadora: 'Lavatrice', terraza: 'Terrazza', kayak: 'Kayak', cuna: 'Culla' },
+  fr: { wifi: 'Wifi rapide', estufa: 'Poêle à bois', tinaja: 'Bain nordique', parrilla: 'Barbecue', vista: 'Vue sur le volcan', cocina: 'Cuisine équipée', tv: 'Smart TV', estacionamiento: 'Parking', calefon: 'Eau chaude', mascotas: 'Animaux acceptés', ropa_cama: 'Linge de lit', botiquin: 'Trousse de secours', lavadora: 'Lave-linge', terraza: 'Terrasse', kayak: 'Kayak', cuna: 'Lit bébé' },
+};
+const AMEN_ICON = { wifi: 'wifi', estufa: 'flame', tinaja: 'tub', parrilla: 'grill', vista: 'mountain', cocina: 'pot', tv: 'tv', estacionamiento: 'car', calefon: 'drop', mascotas: 'paw', ropa_cama: 'bed', botiquin: 'med', lavadora: 'washer', terraza: 'sun', kayak: 'wave', cuna: 'users' };
+
+const T5 = {
+  es: { hi: 'Hola', yourStay: 'Tu estadía', nights: (n) => `${n} ${n === 1 ? 'noche' : 'noches'}`, before: (d) => (d === 1 ? 'Llegas mañana' : `Faltan ${d} días`), arriveToday: 'Hoy llegas', night: (i, n) => `Noche ${i} de ${n}`, lastDay: 'Hoy es tu salida', after: 'Gracias por tu visita',
+    access: 'Código de acceso', reveal: 'Toca para ver', accessFrom: (d) => `Aparecerá el ${d}`, from: (n) => `Un mensaje de ${n}`, read: 'Leer completo', close: 'Cerrar', speaks: 'Habla', offers: 'Lo que ofrece la cabaña', seeAll: (n) => `Ver las ${n}`, seeLess: 'Ver menos', gallery: 'Galería',
+    rateQ: '¿Cómo estuvo tu estadía?', rateHigh: '¡Gracias! Una reseña nos ayuda muchísimo.', rateLow: (h) => `Lamentamos que no haya sido perfecto. Cuéntale a ${h} qué podemos mejorar.`, tellHost: (h) => `Escribir a ${h}`,
+    install: 'Instalar en tu teléfono', installed: 'Disponible sin conexión', iosHint: 'En Safari toca Compartir ⬆︎ y luego “Agregar a inicio”.' },
+  en: { hi: 'Hello', yourStay: 'Your stay', nights: (n) => `${n} ${n === 1 ? 'night' : 'nights'}`, before: (d) => (d === 1 ? 'You arrive tomorrow' : `${d} days to go`), arriveToday: 'You arrive today', night: (i, n) => `Night ${i} of ${n}`, lastDay: 'Check-out day', after: 'Thank you for staying',
+    access: 'Door code', reveal: 'Tap to reveal', accessFrom: (d) => `Available on ${d}`, from: (n) => `A note from ${n}`, read: 'Read more', close: 'Close', speaks: 'Speaks', offers: 'What this place offers', seeAll: (n) => `Show all ${n}`, seeLess: 'Show less', gallery: 'Gallery',
+    rateQ: 'How was your stay?', rateHigh: 'Thank you! A review helps us a lot.', rateLow: (h) => `Sorry it wasn’t perfect. Tell ${h} what we can improve.`, tellHost: (h) => `Message ${h}`,
+    install: 'Add to your phone', installed: 'Available offline', iosHint: 'In Safari tap Share ⬆︎ then “Add to Home Screen”.' },
+  pt: { hi: 'Olá', yourStay: 'Sua estadia', nights: (n) => `${n} ${n === 1 ? 'noite' : 'noites'}`, before: (d) => (d === 1 ? 'Você chega amanhã' : `Faltam ${d} dias`), arriveToday: 'Você chega hoje', night: (i, n) => `Noite ${i} de ${n}`, lastDay: 'Hoje é sua saída', after: 'Obrigado pela visita',
+    access: 'Código de acesso', reveal: 'Toque para ver', accessFrom: (d) => `Disponível em ${d}`, from: (n) => `Uma mensagem de ${n}`, read: 'Ler tudo', close: 'Fechar', speaks: 'Fala', offers: 'O que a cabana oferece', seeAll: (n) => `Ver as ${n}`, seeLess: 'Ver menos', gallery: 'Galeria',
+    rateQ: 'Como foi sua estadia?', rateHigh: 'Obrigado! Uma avaliação ajuda muito.', rateLow: (h) => `Sentimos que não foi perfeito. Conte a ${h} o que podemos melhorar.`, tellHost: (h) => `Escrever para ${h}`,
+    install: 'Instalar no celular', installed: 'Disponível offline', iosHint: 'No Safari toque em Compartilhar ⬆︎ e “Adicionar à Tela de Início”.' },
+  de: { hi: 'Hallo', yourStay: 'Ihr Aufenthalt', nights: (n) => `${n} ${n === 1 ? 'Nacht' : 'Nächte'}`, before: (d) => (d === 1 ? 'Anreise morgen' : `Noch ${d} Tage`), arriveToday: 'Anreise heute', night: (i, n) => `Nacht ${i} von ${n}`, lastDay: 'Heute ist Abreise', after: 'Danke für Ihren Besuch',
+    access: 'Zugangscode', reveal: 'Antippen zum Anzeigen', accessFrom: (d) => `Verfügbar ab ${d}`, from: (n) => `Eine Nachricht von ${n}`, read: 'Weiterlesen', close: 'Schließen', speaks: 'Spricht', offers: 'Ausstattung', seeAll: (n) => `Alle ${n} anzeigen`, seeLess: 'Weniger', gallery: 'Galerie',
+    rateQ: 'Wie war Ihr Aufenthalt?', rateHigh: 'Danke! Eine Bewertung hilft uns sehr.', rateLow: (h) => `Schade, dass es nicht perfekt war. Sagen Sie ${h}, was wir verbessern können.`, tellHost: (h) => `${h} schreiben`,
+    install: 'Auf dem Handy installieren', installed: 'Offline verfügbar', iosHint: 'In Safari auf Teilen ⬆︎ und „Zum Home-Bildschirm“ tippen.' },
+  it: { hi: 'Ciao', yourStay: 'Il tuo soggiorno', nights: (n) => `${n} ${n === 1 ? 'notte' : 'notti'}`, before: (d) => (d === 1 ? 'Arrivi domani' : `Mancano ${d} giorni`), arriveToday: 'Arrivi oggi', night: (i, n) => `Notte ${i} di ${n}`, lastDay: 'Oggi è la partenza', after: 'Grazie della visita',
+    access: 'Codice di accesso', reveal: 'Tocca per vedere', accessFrom: (d) => `Disponibile dal ${d}`, from: (n) => `Un messaggio di ${n}`, read: 'Leggi tutto', close: 'Chiudi', speaks: 'Parla', offers: 'Cosa offre la casetta', seeAll: (n) => `Mostra tutti i ${n}`, seeLess: 'Mostra meno', gallery: 'Galleria',
+    rateQ: 'Com’è andato il soggiorno?', rateHigh: 'Grazie! Una recensione ci aiuta tanto.', rateLow: (h) => `Ci dispiace che non sia stato perfetto. Racconta a ${h} cosa migliorare.`, tellHost: (h) => `Scrivi a ${h}`,
+    install: 'Installa sul telefono', installed: 'Disponibile offline', iosHint: 'In Safari tocca Condividi ⬆︎ e “Aggiungi a Home”.' },
+  fr: { hi: 'Bonjour', yourStay: 'Votre séjour', nights: (n) => `${n} ${n === 1 ? 'nuit' : 'nuits'}`, before: (d) => (d === 1 ? 'Arrivée demain' : `J-${d}`), arriveToday: 'Arrivée aujourd’hui', night: (i, n) => `Nuit ${i} sur ${n}`, lastDay: 'Jour du départ', after: 'Merci de votre visite',
+    access: 'Code d’accès', reveal: 'Touchez pour voir', accessFrom: (d) => `Disponible le ${d}`, from: (n) => `Un mot de ${n}`, read: 'Lire la suite', close: 'Fermer', speaks: 'Parle', offers: 'Ce que propose le chalet', seeAll: (n) => `Voir les ${n}`, seeLess: 'Voir moins', gallery: 'Galerie',
+    rateQ: 'Comment s’est passé votre séjour ?', rateHigh: 'Merci ! Un avis nous aide beaucoup.', rateLow: (h) => `Désolés que tout n’ait pas été parfait. Dites à ${h} ce que nous pouvons améliorer.`, tellHost: (h) => `Écrire à ${h}`,
+    install: 'Installer sur le téléphone', installed: 'Disponible hors ligne', iosHint: 'Dans Safari, touchez Partager ⬆︎ puis « Sur l’écran d’accueil ».' },
+};
+for (const l of Object.keys(T5)) Object.assign(T[l], T5[l]);
+
+Object.assign(I, {
+  mountain: '<path d="M2 20l7-12 4 6 2-3 7 9z"/><path d="M7.5 10.5l1.5 1 1.5-1"/>',
+  pot: '<path d="M4 10h16v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M2 10h20M9 6c0-1 1-1 1-2M14 6c0-1 1-1 1-2"/>',
+  washer: '<rect x="4" y="3" width="16" height="18" rx="2.5"/><circle cx="12" cy="13" r="4.5"/><path d="M8 6.5h.1M11 6.5h3"/>',
+  wave: '<path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2M2 19c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M8 11l4-7 4 7"/>',
+  lock: '<rect x="5" y="10" width="14" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14.5v2.5"/>',
+  calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  quote: '<path d="M10 7H6a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v1a3 3 0 0 1-3 3M20 7h-4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2v1a3 3 0 0 1-3 3"/>',
+  download: '<path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/>',
+});
+
+// Portadas topográficas generadas (cuando no hay foto): curvas de nivel únicas para cada nombre
+const PALETTES = [['#1d3b45', '#a9cdd1'], ['#283a2d', '#b3c9a3'], ['#3a2c2a', '#e5bb95'], ['#262f3a', '#d9cdb8'], ['#2f3e3d', '#cdd7d6']];
+function seedOf(s) { let h = 2166136261; for (const ch of String(s)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+function rng(seed) { return () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const topoCache = new Map();
+function topo(name) {
+  if (topoCache.has(name)) return topoCache.get(name);
+  const r = rng(seedOf(name)), [bg, line] = PALETTES[seedOf(name) % PALETTES.length];
+  let d = '';
+  const peaks = 2 + Math.floor(r() * 2);
+  for (let p = 0; p < peaks; p++) {
+    const cx = 20 + r() * 160, cy = 15 + r() * 110, rings = 6 + Math.floor(r() * 5), step = 7 + r() * 4;
+    const ph = [r() * 6.28, r() * 6.28, r() * 6.28], amp = [0.12 + r() * 0.1, 0.06 + r() * 0.06, 0.03];
+    for (let k = 1; k <= rings; k++) {
+      const pts = [];
+      for (let i = 0; i < 48; i++) {
+        const a = (i / 48) * Math.PI * 2;
+        const rad = k * step * (1 + amp[0] * Math.sin(2 * a + ph[0] + k * 0.15) + amp[1] * Math.sin(3 * a + ph[1]) + amp[2] * Math.sin(5 * a + ph[2]));
+        pts.push([cx + rad * Math.cos(a), cy + rad * 0.82 * Math.sin(a)]);
+      }
+      const mid = (i) => { const a = pts[i % 48], b = pts[(i + 1) % 48]; return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; };
+      let s = `M${mid(0).map((v) => v.toFixed(1)).join(' ')}`;
+      for (let i = 1; i <= 48; i++) { const c = pts[i % 48], m = mid(i); s += `Q${c[0].toFixed(1)} ${c[1].toFixed(1)} ${m[0].toFixed(1)} ${m[1].toFixed(1)}`; }
+      d += s + 'Z';
+    }
+  }
+  const svg = `<svg class="topo" viewBox="0 0 200 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="200" height="140" fill="${bg}"/><path d="${d}" fill="none" stroke="${line}" stroke-opacity=".38" stroke-width=".55"/></svg>`;
+  topoCache.set(name, svg);
+  return svg;
+}
+// Foto si existe; si no carga o no hay, la portada topográfica
+const cover = (name, foto) => `${topo(name)}${foto ? `<img class="cover-img" src="${esc(foto)}" alt="" loading="lazy" onerror="this.remove()">` : ''}`;
+
+// Fechas de la estadía
+const dayNum = (s) => Math.round(new Date(`${s}T12:00:00`).getTime() / 864e5);
+const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+const fmtDay = (s) => new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short' }).format(new Date(`${s}T12:00:00`));
+
+function stayStatus(g) {
+  const t = T[lang], today = dayNum(todayStr()), a = dayNum(g.llegada), b = dayNum(g.salida), n = Math.max(1, b - a);
+  if (today < a) return { label: t.before(a - today), phase: 'before' };
+  if (today === a) return { label: t.arriveToday, phase: 'during', pct: 0 };
+  if (today < b) return { label: t.night(today - a + 1, n), phase: 'during', pct: (today - a) / n };
+  if (today === b) return { label: t.lastDay, phase: 'last', pct: 1 };
+  return { label: t.after, phase: 'after', pct: 1 };
+}
+
+function stayHead() {
+  const g = cabana.huesped, t = T[lang];
+  if (!g) return '';
+  const st = stayStatus(g), n = Math.max(1, dayNum(g.salida) - dayNum(g.llegada));
+  return `<div class="stay-head">
+      <div><span class="label">${t.yourStay}</span><strong>${fmtDay(g.llegada)} — ${fmtDay(g.salida)}</strong><small>${t.nights(n)}</small></div>
+      <span class="stay-pill ${st.phase}">${esc(st.label)}</span>
+    </div>
+    ${st.pct !== undefined ? `<div class="stay-bar"><i style="width:${Math.round(st.pct * 100)}%"></i></div>` : ''}`;
+}
+
+function accessRow() {
+  const t = T[lang];
+  if (cabana.acceso?.codigo_acceso) {
+    return `<div class="stay-access">
+      <div class="wifi-icon">${ico('lock')}</div>
+      <div class="wifi-text"><span class="label">${t.access}</span>
+        <button class="code" id="code-btn" data-code="${esc(cabana.acceso.codigo_acceso)}" aria-live="polite"><span class="dots">• • • •</span><small>${t.reveal}</small></button>
+        ${cabana.acceso.nota_acceso ? `<p class="code-note" hidden>${esc(cabana.acceso.nota_acceso)}</p>` : ''}
+      </div>
+    </div>`;
+  }
+  if (cabana.acceso_desde) {
+    return `<div class="stay-access locked"><div class="wifi-icon">${ico('lock')}</div>
+      <div class="wifi-text"><span class="label">${t.access}</span><strong class="soon">${t.accessFrom(fmtDay(cabana.acceso_desde))}</strong></div></div>`;
+  }
+  return '';
+}
+
+function letterHTML() {
+  const c = cabana, a = c.anfitrion || {}, t = T[lang];
+  if (!c.bienvenida) return '';
+  const face = a.foto ? `<img src="${esc(a.foto)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'${esc((a.nombre || '?')[0])}'}))">` : `<span>${esc((a.nombre || '?')[0])}</span>`;
+  return `<section class="letter reveal">
+    <div class="letter-top"><div class="face">${face}</div><div><span class="label">${t.from(esc(a.nombre || ''))}</span>
+      ${a.idiomas?.length ? `<small>${t.speaks} ${esc(a.idiomas.join(' · '))}</small>` : ''}</div></div>
+    <p class="letter-txt clamp3" id="letter-txt">${esc(c.bienvenida)}</p>
+    <div class="letter-foot"><button class="more" type="button" id="letter-more">${t.read}</button><span class="sign">${esc(a.nombre || '')}</span></div>
+  </section>`;
+}
+
+let amenOpen = false;
+function amenitiesHTML() {
+  const list = (cabana.comodidades || []).filter((k) => AMEN.es[k]);
+  if (!list.length) return '';
+  const t = T[lang], shown = amenOpen ? list : list.slice(0, 6);
+  return `<section class="amen reveal"><h2 class="sec-h">${t.offers}</h2>
+    <div class="amen-grid">${shown.map((k, i) => `<div class="am" style="--i:${i}">${ico(AMEN_ICON[k] || 'check')}<span>${esc((AMEN[lang] || AMEN.es)[k])}</span></div>`).join('')}</div>
+    ${list.length > 6 ? `<button class="ghost-btn" type="button" id="amen-toggle">${amenOpen ? t.seeLess : t.seeAll(list.length)}</button>` : ''}
+  </section>`;
+}
+
+function galleryHTML() {
+  const f = cabana.fotos || [];
+  if (f.length < 2) return '';
+  return `<section class="strip"><div class="row-head"><h2>${T[lang].gallery}</h2></div>
+    <div class="scroller gallery">${f.map((src, i) => `<figure class="ph reveal" style="--i:${i}">${cover(cabana.nombre + i, src)}</figure>`).join('')}</div></section>`;
+}
+
+function rateHTML() {
+  const c = cabana, a = c.anfitrion || {}, t = T[lang];
+  let saved = 0; try { saved = +localStorage.getItem(`rate-${slug}`) || 0; } catch {}
+  const out = !saved ? '' : saved >= 4
+    ? `<p>${t.rateHigh}</p><div class="review-btns">${(c.resenas?.enlaces || []).map((r) => `<a class="btn light" target="_blank" rel="noopener" href="${esc(r.url)}">${esc(r.plataforma)}</a>`).join('')}</div>`
+    : `<p>${t.rateLow(esc(a.nombre || ''))}</p>${a.whatsapp ? `<div class="review-btns"><a class="btn light" target="_blank" rel="noopener" href="${waUrl(a.whatsapp, `Hola ${a.nombre}, mi estadía en ${c.nombre} fue de ${saved}/5. Quería comentarte: `)}">${ico('chat')}${t.tellHost(esc(a.nombre || ''))}</a></div>` : ''}`;
+  return `<div class="review"><p class="rq">${t.rateQ}</p>
+    <div class="stars-pick" role="radiogroup">${[1, 2, 3, 4, 5].map((n) => `<button type="button" role="radio" aria-checked="${n === saved}" aria-label="${n}" data-rate="${n}" class="${n <= saved ? 'on' : ''}" style="--i:${n}">${ico('star')}</button>`).join('')}</div>
+    <div class="rate-out">${out}</div></div>`;
+}
+
+document.addEventListener('click', (e) => {
+  const code = e.target.closest('#code-btn');
+  if (code) { code.classList.add('shown'); code.innerHTML = `<span class="digits">${esc(code.dataset.code.split('').join(' '))}</span>`; document.querySelector('.code-note')?.removeAttribute('hidden'); return; }
+  if (e.target.closest('#letter-more')) { const p = $('#letter-txt'); const open = p.classList.toggle('open'); e.target.textContent = open ? T[lang].close : T[lang].read; return; }
+  if (e.target.closest('#amen-toggle')) { amenOpen = !amenOpen; render(); return; }
+  const star = e.target.closest('[data-rate]');
+  if (star) { try { localStorage.setItem(`rate-${slug}`, star.dataset.rate); } catch {} render(); }
+});
+
 const PAGE_ICONS = { llegar: 'key', casa: 'door', extras: 'star', explorar: 'compass', comer: 'fork', moverse: 'bus', salida: 'check', ayuda: 'sos' };
 let blkIndex = 0;
 const blk = (title, html) => `<section class="blk reveal" style="--i:${blkIndex++}">${title ? `<h3 class="blk-title">${esc(title)}</h3>` : ''}${html}</section>`;
@@ -399,8 +575,8 @@ function buildPages() {
     ].join('');
   });
 
-  if (c.extras?.length) P.extras = page(() => blk('', `<div class="extra-grid">${c.extras.map((x, i) => { const [c1, c2] = art(x.nombre); return `<article class="extra reveal" style="--i:${i};--a:${c1};--b:${c2}">
-        <div class="extra-art">${ico(x.icono)}<span class="price">${esc(x.precio || '')}</span></div>
+  if (c.extras?.length) P.extras = page(() => blk('', `<div class="extra-grid">${c.extras.map((x, i) => { return `<article class="extra reveal" style="--i:${i}">
+        <div class="extra-art">${cover(x.nombre, x.foto)}<span class="art-ico">${ico(x.icono)}</span><span class="price">${esc(x.precio || '')}</span></div>
         <div class="extra-body"><strong>${esc(x.nombre)}</strong>${clampText(x.detalle, 70)}
         ${a.whatsapp ? `<a class="order" target="_blank" rel="noopener" href="${waUrl(a.whatsapp, `Hola ${a.nombre}, quisiera pedir: ${x.nombre} (${c.nombre}). ¡Gracias!`)}">${ico('chat')}${t.order}</a>` : ''}</div>
       </article>`; }).join('')}</div>
@@ -415,14 +591,14 @@ function buildPages() {
         <div class="seg" role="tablist">
           ${['lluvia', 'sol'].map((k) => `<button role="tab" data-plan="${k}" class="${k === tab ? 'on' : ''}">${ico(k === 'lluvia' ? 'rain' : 'sun')}${k === 'lluvia' ? t.ifRain : t.ifSun}${(k === 'lluvia') === wet && weather?.current ? `<i>${t.suggested}</i>` : ''}</button>`).join('')}
         </div>
-        <div class="cards-row">${(c.panoramas[tab] || []).map((p, i) => card(p.nombre, p.nota, tab === 'lluvia' ? 'coffee' : 'sun', '', i)).join('')}</div>`);
+        <div class="cards-row">${(c.panoramas[tab] || []).map((p, i) => card(p.nombre, p.nota, tab === 'lluvia' ? 'coffee' : 'sun', '', i, p.foto)).join('')}</div>`);
     }
     return plans + (c.tours?.length ? blk(t.tours, `<div class="panel">${c.tours.map((r) => row('compass', r.nombre, r.nota, [r.duracion])).join('')}</div>`) : '');
   });
 
   if (c.restaurantes?.length || c.servicios_cercanos?.length) P.comer = page(() => {
     const k = { supermercado: 'cart', almacen: 'shop', farmacia: 'plus', bencinera: 'fuel', cajero: 'atm' };
-    return (c.restaurantes?.length ? blk(t.restaurants, `<div class="cards-row">${c.restaurantes.map((r, i) => card(r.nombre, r.nota, 'fork', [r.tipo, r.distancia].filter(Boolean).join(' · '), i)).join('')}</div>`) : '')
+    return (c.restaurantes?.length ? blk(t.restaurants, `<div class="cards-row">${c.restaurantes.map((r, i) => card(r.nombre, r.nota, 'fork', [r.tipo, r.distancia].filter(Boolean).join(' · '), i, r.foto)).join('')}</div>`) : '')
       + (c.servicios_cercanos?.length ? blk(t.tabs.cerca, `<div class="near-grid">${c.servicios_cercanos.map((s, i) => `<a class="near reveal" style="--i:${i}" target="_blank" rel="noopener" href="${mapsUrl(`${s.nombre} ${c.lugar?.split('·')[0] || ''}`)}">
           <span class="near-ico">${ico(k[s.tipo] || 'pin')}</span>
           <span class="kind">${esc(t.kinds[s.tipo] || s.tipo || '')}</span>
@@ -462,8 +638,7 @@ function buildPages() {
           <div class="progress">${ring(n, list.length)}<div><strong id="prog-n">${n} ${t.of} ${list.length}</strong><span id="prog-msg">${n === list.length ? t.allDone : t.ready}</span></div></div>
           <div class="checks">${list.map((x, i) => `<label class="check"><input type="checkbox" id="chk-${i}" data-i="${i}"${done[i] ? ' checked' : ''}><span class="box">${ico('check')}</span><span>${esc(x)}</span></label>`).join('')}</div>
         </div>`) : '')
-      + (c.resenas ? blk('', `<div class="review"><div class="stars">${[0, 1, 2, 3, 4].map((i) => `<span style="--i:${i}">${ico('star')}</span>`).join('')}</div><p>${esc(c.resenas.mensaje || '')}</p>
-          <div class="review-btns">${(c.resenas.enlaces || []).map((r) => `<a class="btn light" target="_blank" rel="noopener" href="${esc(r.url)}">${esc(r.plataforma)}</a>`).join('')}</div></div>`) : '');
+      + ((c.resenas || c.anfitrion?.whatsapp) ? blk('', rateHTML()) : '');
   });
 
   P.ayuda = page(() => blk('', `<div class="host">
@@ -490,10 +665,9 @@ function clampText(text, max = 120) {
 }
 
 // Tarjeta con arte de color (panoramas, restaurantes)
-function card(title, note, icon, meta, i) {
-  const [c1, c2] = art(title);
-  return `<article class="pcard reveal" style="--i:${i};--a:${c1};--b:${c2}">
-    <div class="pcard-art">${ico(icon)}</div>
+function card(title, note, icon, meta, i, foto) {
+  return `<article class="pcard reveal" style="--i:${i}">
+    <div class="pcard-art">${cover(title, foto)}<span class="art-ico">${ico(icon)}</span></div>
     <div class="pcard-body"><strong>${esc(title)}</strong>${meta ? `<small>${esc(meta)}</small>` : ''}${note ? `<p>${esc(note)}</p>` : ''}</div>
   </article>`;
 }
@@ -515,7 +689,12 @@ function render() {
 
   // Saludo y datos del momento en la portada
   const h = new Date().getHours();
-  $('#greet').textContent = t.greet[h < 12 ? 0 : h < 20 ? 1 : 2];
+  $('#greet').textContent = t.greet[h < 12 ? 0 : h < 20 ? 1 : 2] + (c.huesped?.nombre ? `, ${c.huesped.nombre}` : '');
+  $('#stay-head').innerHTML = stayHead();
+  $('#stay-access').innerHTML = accessRow();
+  $('#letter').innerHTML = letterHTML();
+  $('#amen').innerHTML = amenitiesHTML();
+  $('#gallery').innerHTML = galleryHTML();
   const chips = [];
   if (weather?.current) {
     const [cond, icon] = WX(weather.current.weather_code);
@@ -545,11 +724,11 @@ function render() {
 
   // Recomendados de hoy (según el clima) y extras destacados
   const wet = weather?.current ? isWet(weather.current.weather_code) : true;
-  const picks = [...(c.panoramas?.[wet ? 'lluvia' : 'sol'] || []).map((p) => [p.nombre, p.nota, wet ? 'coffee' : 'sun']), ...(c.tours || []).slice(0, 2).map((p) => [p.nombre, p.duracion, 'compass'])];
+  const picks = [...(c.panoramas?.[wet ? 'lluvia' : 'sol'] || []).map((p) => [p.nombre, p.nota, wet ? 'coffee' : 'sun', p.foto]), ...(c.tours || []).slice(0, 2).map((p) => [p.nombre, p.duracion, 'compass', p.foto])];
   $('#picks').innerHTML = picks.length ? `<div class="row-head"><h2>${t.picks}</h2><a href="#explorar">${t.see} ${ico('chev')}</a></div>
-    <div class="scroller">${picks.map(([n, note, icon], i) => { const [c1, c2] = art(n); return `<a href="#explorar" class="mini reveal" style="--i:${i};--a:${c1};--b:${c2}"><span class="mini-ico">${ico(icon)}</span><strong>${esc(n)}</strong><small>${esc(firstSentence(note || ''))}</small></a>`; }).join('')}</div>` : '';
+    <div class="scroller">${picks.map(([n, note, icon, foto], i) => { return `<a href="#explorar" class="mini reveal" style="--i:${i}">${cover(n, foto)}<span class="mini-shade"></span><span class="mini-ico">${ico(icon)}</span><strong>${esc(n)}</strong><small>${esc(firstSentence(note || ''))}</small></a>`; }).join('')}</div>` : '';
   $('#special').innerHTML = c.extras?.length ? `<div class="row-head"><h2>${t.special}</h2><a href="#extras">${t.see} ${ico('chev')}</a></div>
-    <div class="scroller">${c.extras.map((x, i) => { const [c1, c2] = art(x.nombre); return `<a href="#extras" class="mini extra-mini reveal" style="--i:${i};--a:${c1};--b:${c2}"><span class="mini-ico">${ico(x.icono)}</span><strong>${esc(x.nombre)}</strong><small class="mini-price">${esc(x.precio || '')}</small></a>`; }).join('')}</div>` : '';
+    <div class="scroller">${c.extras.map((x, i) => { return `<a href="#extras" class="mini extra-mini reveal" style="--i:${i}">${cover(x.nombre, x.foto)}<span class="mini-shade"></span><span class="mini-ico">${ico(x.icono)}</span><strong>${esc(x.nombre)}</strong><small class="mini-price">${esc(x.precio || '')}</small></a>`; }).join('')}</div>` : '';
 
   // Página de apartado
   $('#home').hidden = onPage;
@@ -718,7 +897,10 @@ function openChat() {
 
 async function init() {
   try {
-    const r = await fetch(`/api/cabana?slug=${encodeURIComponent(slug || '')}`);
+    const q = new URLSearchParams(location.search).get('g');
+    let g = q;
+    try { if (q) localStorage.setItem(`guest-${slug}`, q); else g = localStorage.getItem(`guest-${slug}`); } catch {}
+    const r = await fetch(`/api/cabana?slug=${encodeURIComponent(slug || '')}${g ? `&g=${encodeURIComponent(g)}` : ''}`);
     if (!r.ok) throw new Error();
     cabana = await r.json();
   } catch {
@@ -735,6 +917,7 @@ async function init() {
   $('#foot-name').textContent = cabana.nombre;
   $('#host-link').href = `/admin?c=${encodeURIComponent(slug)}`;
   if (cabana.lugar) $('#lugar').textContent = cabana.lugar;
+  if (cabana.fotos?.[0]) $('#hero').insertAdjacentHTML('afterbegin', `<img class="hero-photo" src="${esc(cabana.fotos[0])}" alt="" onload="this.classList.add('ok')" onerror="this.remove()"><span class="hero-shade"></span>`);
   $('#wifi-red').textContent = `${cabana.wifi?.red || ''}`;
   $('#wifi-clave').textContent = cabana.wifi?.clave || '—';
   $('#checkin').textContent = cabana.checkin?.hora || '—';
@@ -751,10 +934,38 @@ async function init() {
   $('#chips').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) send(b.textContent); });
 
   setLang(lang);
+  setupPWA();
   loadWeather();
   $('#loading').hidden = true;
   $('#app').hidden = false;
   $('#open-chat').hidden = false;
+}
+
+// ═══ Instalar en el teléfono y uso sin conexión ═══
+let installEvt = null;
+const standalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
+function renderInstall() {
+  const box = $('#install'); if (!box) return;
+  const t = T[lang];
+  if (standalone()) { box.innerHTML = `<span class="ios-hint">${ico('check')} ${t.installed}</span>`; return; }
+  if (installEvt || isIOS()) box.innerHTML = `<button class="install" id="install-btn" type="button">${ico('download')}${t.install}</button><p class="ios-hint" id="ios-hint" hidden>${t.iosHint}</p>`;
+  else box.innerHTML = '';
+}
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installEvt = e; renderInstall(); });
+document.addEventListener('click', async (e) => {
+  if (!e.target.closest('#install-btn')) return;
+  if (installEvt) { installEvt.prompt(); await installEvt.userChoice.catch(() => {}); installEvt = null; renderInstall(); }
+  else $('#ios-hint').hidden = false;
+});
+function setupPWA() {
+  try {
+    const link = document.createElement('link');
+    link.rel = 'manifest'; link.href = `/api/manifest?slug=${encodeURIComponent(slug)}`;
+    document.head.appendChild(link);
+    if ('serviceWorker' in navigator && /^https:|^http:\/\/localhost/.test(location.href)) navigator.serviceWorker.register('/sw.js').catch(() => {});
+  } catch {}
+  renderInstall();
 }
 
 init();

@@ -18,7 +18,9 @@ vercel.json      ← /cabana/:slug → plantilla
 
 | Sección | Campo del JSON |
 |---|---|
-| Portada, wifi, horarios | `nombre`, `lugar`, `descripcion`, `wifi`, `checkin`, `checkout` |
+| Portada, fotos, wifi, horarios | `nombre`, `lugar`, `descripcion`, `fotos`, `wifi`, `checkin`, `checkout` |
+| Carta de bienvenida y comodidades | `bienvenida`, `comodidades`, `anfitrion.foto`, `anfitrion.idiomas` |
+| Código de la puerta (privado) | `privado.codigo_acceso`, `privado.nota_acceso` |
 | Cómo llegar (aeropuerto, bus, auto) + botón Maps | `como_llegar` |
 | Moverse: minibuses, buses y colectivos (dónde se toman, adónde van, precio) | `transporte_publico` |
 | La casa: tinaja, parrilla, TV, calefón… | `equipos`, `donde_esta`, `otros`, `reglas` |
@@ -34,6 +36,21 @@ Cualquier campo que no pongas simplemente no aparece. El chat (Gemini) lee **tod
 
 > En la demo, los enlaces de `resenas` son de ejemplo: reemplázalos por el enlace real de tu ficha de Google o Airbnb.
 
+## Enlaces personales para cada huésped
+
+Desde el panel (**Acceso y huéspedes → Enviar la guía a un huésped**) escribes el nombre y las fechas y el panel crea un enlace como `/cabana/los-arrayanes?g=…`. Con ese enlace el huésped ve:
+
+- Un saludo con su nombre, sus fechas y la cuenta regresiva ("Faltan 3 días", "Noche 2 de 3", "Hoy es tu salida").
+- **El código de la puerta, solo desde el día de llegada hasta el de salida.** Antes ve "Aparecerá el 20 nov".
+
+El enlace va firmado: nadie puede cambiar las fechas ni inventar uno. El código vive en la parte `privado` del JSON, que **nunca** sale en la página pública ni se le entrega al chat de IA.
+
+> Como el código queda guardado en tu repositorio de GitHub, deja el repositorio como **privado** y cambia el código de la caja de seguridad de vez en cuando.
+
+## Instalable y sin internet
+
+La guía se puede **instalar en el teléfono** como una app (botón al pie de la página; en iPhone: Compartir → Agregar a inicio) y **funciona sin conexión** una vez abierta, ideal para cabañas con mala señal. El chat sí necesita internet.
+
 ## Panel del anfitrión (`/admin`)
 
 Cada dueño edita su cabaña desde el celular en `https://TU-PROYECTO.vercel.app/admin`, sin tocar el JSON. Al guardar, el panel hace un *commit* en GitHub y Vercel publica el cambio solo en 1 o 2 minutos. No necesitas base de datos.
@@ -43,6 +60,7 @@ Cada dueño edita su cabaña desde el celular en `https://TU-PROYECTO.vercel.app
 | Variable | Qué poner |
 |---|---|
 | `ADMIN_PASSWORD` | Tu clave de administrador: edita todas las cabañas y crea nuevas. |
+| `LINK_SECRET` | Una frase larga cualquiera para firmar los enlaces de huéspedes (si no la pones, se usa `ADMIN_PASSWORD`). Si la cambias, los enlaces ya enviados dejan de funcionar. |
 | `CLAVES_CABANAS` | (Opcional) Claves de cada dueño: `los-arrayanes:clave1,el-mirador:clave2`. Cada uno solo puede editar la suya. |
 | `GITHUB_REPO` | Tu repositorio, ej: `tu-usuario/conserje-caba-as`. |
 | `GITHUB_BRANCH` | La rama que publica Vercel (normalmente `main`). |

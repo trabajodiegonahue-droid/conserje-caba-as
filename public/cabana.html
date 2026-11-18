@@ -9,6 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 </head>
 <body>
   <div id="loading" class="loading"><span class="loader"></span></div>
@@ -70,6 +74,7 @@
 
     <div class="wrap">
       <section class="stay" aria-label="Estadía">
+        <div id="stay-head"></div>
         <div class="stay-times">
           <div><span class="label">Check-in</span><strong id="checkin"></strong></div>
           <div class="arrow"><svg viewBox="0 0 24 24"><path d="M4 12h15m-5-5 5 5-5 5"/></svg></div>
@@ -83,19 +88,25 @@
           </div>
           <button class="copy" id="copy-wifi"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg><span data-i18n="copy"></span></button>
         </div>
+        <div id="stay-access"></div>
       </section>
 
       <nav class="actions" id="actions"></nav>
+
+      <div id="letter"></div>
+      <div id="amen"></div>
 
       <h2 class="need" id="need"></h2>
       <nav class="tiles" id="tiles"></nav>
 
       <section class="strip" id="picks"></section>
       <section class="strip" id="special"></section>
+      <div id="gallery"></div>
 
       <footer class="foot">
         <span id="foot-name"></span>
         <span data-i18n="footer"></span>
+        <div id="install"></div>
         <a class="host-link" id="host-link" href="/admin">Acceso anfitrión</a>
       </footer>
     </div>

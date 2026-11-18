@@ -3,8 +3,25 @@
   "nombre": "Cabaña Los Arrayanes",
   "lugar": "Puerto Varas · Lago Llanquihue",
   "descripcion": "Madera nativa, cuatro huéspedes y el volcán Osorno en la ventana. Cabaña ficticia de demostración.",
+  "fotos": [
+    "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?auto=format&fit=crop&w=1400&q=70"
+  ],
+  "bienvenida": "Qué alegría recibirlos. Esta cabaña la construimos con madera nativa pensando en días de lluvia junto a la estufa y mañanas despejadas mirando el Osorno. Aquí encontrarán todo lo que necesitan; y si falta algo, me escriben a cualquier hora. ¡Disfruten el sur!",
+  "comodidades": [
+    "wifi",
+    "estufa",
+    "tinaja",
+    "parrilla",
+    "vista",
+    "cocina",
+    "tv",
+    "estacionamiento",
+    "calefon",
+    "mascotas",
+    "ropa_cama",
+    "botiquin"
+  ],
   "direccion": "Camino a Ensenada km 4, Puerto Varas, Región de Los Lagos",
-  "foto": "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?auto=format&fit=crop&w=1200&q=70",
   "wifi": {
     "red": "LosArrayanes_5G",
     "clave": "volcan2024",
@@ -12,7 +29,7 @@
   },
   "checkin": {
     "hora": "15:00",
-    "instrucciones": "La llave está en la caja de seguridad junto a la puerta. El código se envía por WhatsApp el día de llegada."
+    "instrucciones": "La llave está en la caja de seguridad junto a la puerta. Tu código aparece aquí mismo el día de llegada."
   },
   "checkout": {
     "hora": "11:00",
@@ -55,7 +72,15 @@
     "telefono": "+56 9 1234 5678",
     "whatsapp": "56912345678",
     "email": "hola@cabanalosarrayanes.cl",
-    "horario": "Disponible de 09:00 a 21:00. Para emergencias, a cualquier hora por llamada."
+    "horario": "Disponible de 09:00 a 21:00. Para emergencias, a cualquier hora por llamada.",
+    "foto": "",
+    "bio": "Nací en Puerto Varas y llevo diez años recibiendo viajeros. Me encanta recomendar rincones fuera del circuito turístico.",
+    "idiomas": [
+      "Español",
+      "English",
+      "Português"
+    ],
+    "respuesta": "Responde en menos de 1 hora"
   },
   "restaurantes": [
     {
@@ -374,5 +399,9 @@
       "La app Moovit muestra varias líneas de la zona.",
       "De noche hay menos buses: después de las 21:00 conviene taxi."
     ]
+  },
+  "privado": {
+    "codigo_acceso": "4821",
+    "nota_acceso": "Caja de seguridad gris a la derecha de la puerta principal. Gira la perilla después de marcar el código."
   }
 }
