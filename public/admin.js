@@ -85,11 +85,18 @@ const SECTIONS = [
       { path: 'privado.nota_acceso', label: 'Dónde se usa', type: 'textarea', ph: 'Ej: Caja de seguridad gris a la derecha de la puerta.' },
     ] },
   ] },
-  { id: 'llegar', icon: 'key', title: 'Llegada', desc: 'Cómo llegar y entrar', groups: [
+  { id: 'llegar', icon: 'key', title: 'Llegar y moverse', desc: 'Antes de llegar, primeros pasos, taxi y buses', groups: [
+    { title: 'Antes de llegar', help: 'Se muestra en la portada los días previos a la llegada. Pocas cosas y muy prácticas.', fields: [
+      { path: 'antes_de_llegar', type: 'strings', add: 'Agregar consejo', ph: 'Ej: Compra en el centro: camino a la cabaña solo hay un almacén.' },
+    ] },
+    { title: 'Primeros pasos', help: 'Se muestra en la portada el día de llegada: lo que hay que hacer en los primeros 30 minutos.', fields: [
+      { path: 'primeros_pasos', type: 'strings', add: 'Agregar paso', ph: 'Ej: Enciende la estufa con los pasos de La casa.' },
+    ] },
     { title: 'Al llegar', fields: [
       { path: 'checkin.instrucciones', label: 'Cómo entrar a la cabaña', type: 'textarea', ph: 'Ej: La llave está en la caja de seguridad junto a la puerta…' },
       { path: 'como_llegar.referencia', label: 'Cómo reconocer la entrada', type: 'textarea', ph: 'Ej: Portón verde con letrero tallado.' },
       { path: 'como_llegar.mapa', label: 'Dirección para el botón de Google Maps', type: 'text', ph: 'Ej: Camino a Ensenada km 4, Puerto Varas' },
+      { path: 'como_llegar.noche', label: 'Si llegan de noche', type: 'textarea', ph: 'Ej: La luz exterior se enciende sola. Estaciona frente al portón.' },
     ] },
     { title: 'Formas de llegar', fields: [
       { path: 'como_llegar.opciones', type: 'list', itemTitle: 'desde', itemSub: 'tiempo', add: 'Agregar forma de llegar', empty: 'Explica cómo llegar desde el aeropuerto, el terminal o en auto.', item: [
@@ -98,6 +105,26 @@ const SECTIONS = [
         { path: 'tiempo', label: 'Tiempo aproximado', type: 'text', ph: 'Ej: 35 min' },
         { path: 'detalle', label: 'Cómo hacerlo', type: 'textarea', ph: 'Paso a paso, con precios si los sabes.' },
       ] },
+    ] },
+    { title: 'Taxi de confianza', help: 'Lo más útil para moverse de noche. El huésped puede llamar con un toque.', fields: [
+      { path: 'taxi', type: 'list', itemTitle: 'nombre', itemSub: 'telefono', add: 'Agregar taxi', item: [
+        { path: 'nombre', label: 'Nombre', type: 'text', ph: 'Ej: Radio Taxi Lago' },
+        { path: 'telefono', label: 'Teléfono', type: 'tel', ph: '+56 9 1234 5678' },
+        { path: 'nota', label: 'Nota', type: 'textarea', ph: 'Ej: Al centro ~$8.000. De noche pídelo con anticipación.' },
+      ] },
+    ] },
+    { title: 'Buses', help: 'Solo las líneas que de verdad sirven desde la cabaña (2 o 3 como máximo).', fields: [
+      { path: 'transporte_publico.lineas', type: 'list', itemTitle: 'nombre', itemSub: 'precio', add: 'Agregar línea', item: [
+        { path: 'nombre', label: 'Nombre', type: 'text', ph: 'Ej: Minibús a Ensenada' },
+        { path: 'para', label: 'Adónde va', type: 'text' },
+        { path: 'donde', label: 'Dónde se toma', type: 'textarea' },
+        { path: 'mapa', label: 'Punto para Google Maps', type: 'text', ph: 'Ej: San Bernardo con Walker Martínez, Puerto Varas' },
+        { path: 'frecuencia', label: 'Cada cuánto pasa', type: 'text' },
+        { path: 'precio', label: 'Precio', type: 'text' },
+        { path: 'consejo', label: 'Consejo', type: 'textarea' },
+      ] },
+      { path: 'transporte_publico.consejos', label: 'Consejos', type: 'strings', add: 'Agregar consejo' },
+      { path: 'transporte_publico.aviso', label: 'Aviso', type: 'text', ph: 'Ej: Precios referenciales.' },
     ] },
   ] },
   { id: 'casa', icon: 'door', title: 'La casa', desc: 'Equipos, estufa y reglas', groups: [
@@ -136,7 +163,7 @@ const SECTIONS = [
       ] },
     ] },
   ] },
-  { id: 'explorar', icon: 'compass', title: 'Explorar', desc: 'Clima, panoramas y tours', groups: [
+  { id: 'explorar', icon: 'compass', title: 'Qué hacer', desc: 'Panoramas, tours y consejos de temporada', groups: [
     { title: 'Panoramas si llueve', fields: [
       { path: 'panoramas.lluvia', type: 'list', itemTitle: 'nombre', add: 'Agregar panorama', item: [
         { path: 'nombre', label: 'Panorama', type: 'text' }, { path: 'nota', label: 'Consejo', type: 'textarea' }, { path: 'foto', label: 'Foto (opcional)', type: 'image' },
@@ -152,16 +179,27 @@ const SECTIONS = [
         { path: 'nombre', label: 'Nombre', type: 'text' }, { path: 'duracion', label: 'Duración', type: 'text', ph: 'Ej: Medio día' }, { path: 'nota', label: 'Consejo', type: 'textarea' }, { path: 'foto', label: 'Foto (opcional)', type: 'image' },
       ] },
     ] },
+    { title: 'Consejos de temporada', help: 'Se muestran solo en los meses que marques (sin meses = todo el año). Es el toque local que más se agradece.', fields: [
+      { path: 'temporada', type: 'list', itemTitle: 'cuando', add: 'Agregar consejo', item: [
+        { path: 'cuando', label: 'Cuándo', type: 'text', ph: 'Ej: Diciembre a febrero' },
+        { path: 'meses', label: 'Meses', type: 'months' },
+        { path: 'texto', label: 'Consejo', type: 'textarea', ph: 'Ej: Llegan los tábanos: usa ropa clara.' },
+      ] },
+    ] },
     { title: 'Clima en vivo', help: 'Ubicación de la cabaña para mostrar el clima. En Google Maps, mantén presionado sobre la cabaña y copia los dos números que aparecen.', fields: [
       { path: 'coordenadas.lat', label: 'Latitud', type: 'number', ph: '-41.3195', half: true },
       { path: 'coordenadas.lon', label: 'Longitud', type: 'number', ph: '-72.9854', half: true },
     ] },
   ] },
-  { id: 'comer', icon: 'fork', title: 'Comer y comprar', desc: 'Restaurantes y almacenes', groups: [
+  { id: 'comer', icon: 'fork', title: 'Comer', desc: 'Restaurantes y almacenes', groups: [
     { title: 'Restaurantes', fields: [
       { path: 'restaurantes', type: 'list', itemTitle: 'nombre', itemSub: 'distancia', add: 'Agregar restaurante', item: [
         { path: 'nombre', label: 'Nombre', type: 'text' }, { path: 'tipo', label: 'Tipo de comida', type: 'text', ph: 'Ej: Pescados y mariscos' },
-        { path: 'distancia', label: 'Distancia', type: 'text', ph: 'Ej: 10 min en auto' }, { path: 'nota', label: 'Tu recomendación', type: 'textarea' }, { path: 'foto', label: 'Foto (opcional)', type: 'image' },
+        { path: 'distancia', label: 'Distancia', type: 'text', ph: 'Ej: 10 min en auto' },
+        { path: 'horario', label: 'Horario', type: 'text', ph: 'Ej: 13:00–23:00 · cierra lunes' },
+        { path: 'precio', label: 'Precio', type: 'choice', options: [['$', '$ económico'], ['$$', '$$ medio'], ['$$$', '$$$ alto']] },
+        { path: 'reserva', label: 'Reserva', type: 'choice', options: [['si', 'Necesaria'], ['recomendada', 'Recomendada'], ['no', 'No hace falta']] },
+        { path: 'nota', label: 'Tu recomendación', type: 'textarea', ph: 'Ej: Pide el curanto en olla.' }, { path: 'foto', label: 'Foto (opcional)', type: 'image' },
       ] },
     ] },
     { title: 'Cerca de la cabaña', fields: [
@@ -170,23 +208,6 @@ const SECTIONS = [
         { path: 'nombre', label: 'Nombre', type: 'text' }, { path: 'distancia', label: 'Distancia', type: 'text' }, { path: 'horario', label: 'Horario', type: 'text', ph: 'Ej: 08:30–22:00' },
       ] },
     ] },
-  ] },
-  { id: 'moverse', icon: 'bus', title: 'Moverse', desc: 'Buses, minibuses y colectivos', groups: [
-    { title: 'Aviso', fields: [
-      { path: 'transporte_publico.aviso', label: 'Aviso general', type: 'textarea', ph: 'Ej: Los precios son referenciales.' },
-    ] },
-    { title: 'Líneas de transporte', fields: [
-      { path: 'transporte_publico.lineas', type: 'list', itemTitle: 'nombre', itemSub: 'precio', add: 'Agregar línea', item: [
-        { path: 'nombre', label: 'Nombre', type: 'text', ph: 'Ej: Minibús a Ensenada' },
-        { path: 'para', label: 'Adónde va', type: 'text' },
-        { path: 'donde', label: 'Dónde se toma', type: 'textarea' },
-        { path: 'mapa', label: 'Punto para Google Maps', type: 'text', ph: 'Ej: San Bernardo con Walker Martínez, Puerto Varas' },
-        { path: 'frecuencia', label: 'Cada cuánto pasa', type: 'text' },
-        { path: 'precio', label: 'Precio', type: 'text' },
-        { path: 'consejo', label: 'Consejo', type: 'textarea' },
-      ] },
-    ] },
-    { title: 'Consejos', fields: [{ path: 'transporte_publico.consejos', type: 'strings', add: 'Agregar consejo' }] },
   ] },
   { id: 'salida', icon: 'check', title: 'Tu salida', desc: 'Check-out y reseñas', groups: [
     { title: 'Al irse', fields: [
@@ -200,7 +221,7 @@ const SECTIONS = [
       ] },
     ] },
   ] },
-  { id: 'ayuda', icon: 'sos', title: 'Ayuda', desc: 'Tu contacto y emergencias', groups: [
+  { id: 'ayuda', icon: 'sos', title: 'Ayuda', desc: 'Tu contacto, bueno saber y emergencias', groups: [
     { title: 'Tu contacto', fields: [
       { path: 'anfitrion.nombre', label: 'Tu nombre', type: 'text' },
       { path: 'anfitrion.telefono', label: 'Teléfono', type: 'tel', ph: '+56 9 1234 5678', half: true },
@@ -209,6 +230,11 @@ const SECTIONS = [
       { path: 'anfitrion.horario', label: 'Cuándo te pueden contactar', type: 'textarea' },
       { path: 'anfitrion.foto', label: 'Tu foto (opcional)', type: 'image' },
       { path: 'anfitrion.idiomas', label: 'Idiomas que hablas', type: 'strings', add: 'Agregar idioma', ph: 'Ej: English' },
+    ] },
+    { title: 'Bueno saber', help: 'Datos prácticos para extranjeros: efectivo, propina, enchufes, agua, señal… Cortos.', fields: [
+      { path: 'bueno_saber', type: 'list', itemTitle: 'tema', add: 'Agregar dato', item: [
+        { path: 'tema', label: 'Tema', type: 'text', ph: 'Ej: Enchufes' }, { path: 'texto', label: 'Texto', type: 'textarea', ph: 'Ej: Tipo C y L, 220 V.' },
+      ] },
     ] },
     { title: 'Emergencias', fields: [
       { path: 'otros.emergencias', label: 'Hospital y números útiles', type: 'textarea' },
@@ -323,12 +349,11 @@ function summary(s) {
   switch (s.id) {
     case 'basicos': return draft.wifi?.red ? `Wifi: ${draft.wifi.red} · ${n('fotos')} fotos` : 'Falta el wifi';
     case 'acceso': return draft.privado?.codigo_acceso ? 'Código configurado · crear enlace' : 'Falta el código de la puerta';
-    case 'llegar': return plural(n('como_llegar.opciones'), 'forma de llegar', 'formas de llegar');
+    case 'llegar': return `${plural(n('como_llegar.opciones'), 'forma de llegar', 'formas de llegar')} · ${n('taxi') ? 'taxi' : 'falta taxi'}`;
     case 'casa': return `${plural(n('equipos'), 'equipo', 'equipos')} · ${plural(n('reglas'), 'regla', 'reglas')}`;
     case 'extras': return plural(n('extras'), 'servicio', 'servicios');
     case 'explorar': return `${n('panoramas.lluvia') + n('panoramas.sol')} panoramas · ${n('tours')} tours`;
     case 'comer': return `${n('restaurantes')} restaurantes · ${n('servicios_cercanos')} lugares`;
-    case 'moverse': return plural(n('transporte_publico.lineas'), 'línea', 'líneas');
     case 'salida': return plural(n('checkout.lista'), 'tarea', 'tareas');
     case 'ayuda': return draft.anfitrion?.telefono || 'Falta tu teléfono';
     default: return s.desc;
@@ -444,6 +469,13 @@ function field(f, base = '') {
     return `<label class="${f.half ? 'fld half' : 'fld'}" for="${id}">${label}${help}<span class="img-field">${val ? `<img src="${esc(val)}" alt="" onerror="this.style.visibility='hidden'">` : `<span class="img-ph">${ico('image')}</span>`}<input id="${id}" data-path="${esc(path)}" type="url" value="${esc(val)}" placeholder="Enlace de la foto (https://…)"></span></label>`;
   }
 
+  if (f.type === 'months') {
+    const sel = new Set(Array.isArray(v) ? v : []);
+    const M = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    return `<div class="fld">${label}<div class="multi months">${M.map((m, i) =>
+      `<button type="button" role="checkbox" aria-checked="${sel.has(i + 1)}" class="mchip${sel.has(i + 1) ? ' on' : ''}" data-month="${esc(path)}" data-val="${i + 1}">${m}</button>`).join('')}</div><small class="help">${sel.size ? '' : 'Sin meses marcados: se muestra todo el año.'}</small></div>`;
+  }
+
   if (f.type === 'multi') {
     const sel = new Set(Array.isArray(v) ? v : []);
     return `<div class="fld">${label}${help}<div class="multi">${f.options.map(([val, lab]) =>
@@ -510,6 +542,12 @@ document.addEventListener('click', (e) => {
   const tog = e.target.closest('[data-toggle]');
   if (tog) { const k = tog.dataset.toggle; open.has(k) ? open.delete(k) : open.add(k); return rerender(); }
 
+  const mo = e.target.closest('[data-month]');
+  if (mo) {
+    const list = arr(mo.dataset.month), val = +mo.dataset.val, i = list.indexOf(val);
+    i >= 0 ? list.splice(i, 1) : list.push(val); list.sort((x, y) => x - y);
+    setDirty(true); return rerender();
+  }
   const mc = e.target.closest('[data-multi]');
   if (mc) {
     const list = arr(mc.dataset.multi), i = list.indexOf(mc.dataset.val);

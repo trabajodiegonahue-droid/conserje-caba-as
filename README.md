@@ -16,25 +16,31 @@ vercel.json      ← /cabana/:slug → plantilla
 
 ## Qué incluye cada página
 
-| Sección | Campo del JSON |
+**La portada muestra solo lo justo según el momento de la estadía** (con el enlace personal del huésped):
+
+| Momento | Qué se ve arriba | Campos |
+|---|---|---|
+| Antes de llegar | Consejos prácticos + botón "Cómo llegar" | `antes_de_llegar` |
+| Día de llegada | Primeros pasos + "si llegas de noche" | `primeros_pasos`, `como_llegar.noche` |
+| Durante | Clima, un panorama según el clima, dónde comer hoy, consejo de temporada | `panoramas`, `restaurantes`, `temporada` |
+| Último día | Hora de salida + lista para marcar + valoración | `checkout` |
+
+Sin enlace personal se muestra "Durante". Debajo hay 6 apartados:
+
+| Apartado | Campos del JSON |
 |---|---|
-| Portada, fotos, wifi, horarios | `nombre`, `lugar`, `descripcion`, `fotos`, `wifi`, `checkin`, `checkout` |
-| Carta de bienvenida y comodidades | `bienvenida`, `comodidades`, `anfitrion.foto`, `anfitrion.idiomas` |
-| Código de la puerta (privado) | `privado.codigo_acceso`, `privado.nota_acceso` |
-| Cómo llegar (aeropuerto, bus, auto) + botón Maps | `como_llegar` |
-| Moverse: minibuses, buses y colectivos (dónde se toman, adónde van, precio) | `transporte_publico` |
-| La casa: tinaja, parrilla, TV, calefón… | `equipos`, `donde_esta`, `otros`, `reglas` |
-| Estufa paso a paso | `estufa` |
-| Servicios extra con botón "Pedir" por WhatsApp | `extras` |
-| Hoy: clima en vivo (Open-Meteo, gratis) + panoramas si llueve / si hay sol | `coordenadas`, `panoramas` |
-| Restaurantes, tours | `restaurantes`, `tours` |
-| Cerca: supermercado, farmacia, bencinera, cajero | `servicios_cercanos` |
-| Antes de irte: checklist + reseñas | `checkout.lista`, `resenas` |
-| Ayuda: anfitrión, reportar problema, imprevistos, 131/132/133 | `anfitrion`, `imprevistos` |
+| Llegar y moverse | `checkin`, `antes_de_llegar`, `como_llegar` (opciones, referencia, noche), `taxi`, `transporte_publico` |
+| La casa | `fotos`, `estufa`, `equipos`, `donde_esta`, `otros`, `reglas`, `comodidades` |
+| Comer | `restaurantes` (con `horario`, `precio` $/$$/$$$, `reserva`), `servicios_cercanos` |
+| Qué hacer | clima en vivo (`coordenadas`), `panoramas` (lluvia / sol), `tours`, `temporada` (con `meses`) |
+| Extras | `extras` (botón "Pedir" por WhatsApp) |
+| Ayuda | `anfitrion`, números de emergencia, `bueno_saber`, `imprevistos` |
 
-Cualquier campo que no pongas simplemente no aparece. El chat (Gemini) lee **todo** el JSON, así que cualquier dato que agregues ya lo puede responder.
+También: `bienvenida` (mensaje corto del anfitrión), `wifi` con QR, y `privado.codigo_acceso` (ver abajo).
 
-> En la demo, los enlaces de `resenas` son de ejemplo: reemplázalos por el enlace real de tu ficha de Google o Airbnb.
+Cualquier campo que no pongas simplemente no aparece. El chat (Gemini) lee todo el JSON menos la parte `privado`.
+
+> En la demo, los restaurantes, almacenes y taxi son ficticios, y los enlaces de `resenas` son de ejemplo.
 
 ## Enlaces personales para cada huésped
 

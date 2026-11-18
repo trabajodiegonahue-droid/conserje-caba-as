@@ -194,3 +194,4 @@ body.adm { background: var(--mist); }
 .lg-btns .tb { background: rgba(255,255,255,.08); color: #f3efe6; border-color: rgba(255,255,255,.14); text-decoration: none; }
 .lg-btns .tb.wa { background: #25d366; color: #0b2e17; border-color: #25d366; }
 .linkgen .help { color: rgba(243,239,230,.6); }
+.months { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; } .months .mchip { justify-content: center; padding: 8px 0; }

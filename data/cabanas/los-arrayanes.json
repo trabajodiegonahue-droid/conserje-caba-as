@@ -6,7 +6,7 @@
   "fotos": [
     "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?auto=format&fit=crop&w=1400&q=70"
   ],
-  "bienvenida": "Qué alegría recibirlos. Esta cabaña la construimos con madera nativa pensando en días de lluvia junto a la estufa y mañanas despejadas mirando el Osorno. Aquí encontrarán todo lo que necesitan; y si falta algo, me escriben a cualquier hora. ¡Disfruten el sur!",
+  "bienvenida": "Qué alegría recibirlos. Esta cabaña la hicimos para días de lluvia junto a la estufa y mañanas mirando el Osorno: si algo les falta, escríbanme a cualquier hora.",
   "comodidades": [
     "wifi",
     "estufa",
@@ -87,19 +87,28 @@
       "nombre": "Fogón del Lago (ficticio)",
       "tipo": "Carnes y cocina sureña",
       "distancia": "5 min en auto",
-      "nota": "Pide el curanto en olla. Reserva el fin de semana."
+      "nota": "Pide el curanto en olla. Reserva el fin de semana.",
+      "horario": "13:00–23:00 · cierra lunes",
+      "precio": "$$$",
+      "reserva": "recomendada"
     },
     {
       "nombre": "Café Kuchen Haus (ficticio)",
       "tipo": "Café y pastelería alemana",
       "distancia": "10 min en auto, centro de Puerto Varas",
-      "nota": "Ideal para once: kuchen de murta y café."
+      "nota": "Ideal para once: kuchen de murta y café.",
+      "horario": "09:00–20:00",
+      "precio": "$",
+      "reserva": "no"
     },
     {
       "nombre": "Mar y Volcán (ficticio)",
       "tipo": "Pescados y mariscos",
       "distancia": "12 min en auto, costanera",
-      "nota": "Salmón a la mantequilla y vista al lago al atardecer."
+      "nota": "Salmón a la mantequilla y vista al lago al atardecer.",
+      "horario": "12:30–22:30",
+      "precio": "$$",
+      "reserva": "si"
     }
   ],
   "tours": [
@@ -150,7 +159,8 @@
         "tiempo": "—",
         "detalle": "Desde la costanera de Puerto Varas sigue la Ruta 225 hacia Ensenada. La entrada está a la izquierda en el km 4. Hay estacionamiento frente a la cabaña."
       }
-    ]
+    ],
+    "noche": "La luz exterior se enciende sola al acercarte. Estaciona frente al portón verde, no en la berma del camino."
   },
   "equipos": [
     {
@@ -340,7 +350,7 @@
     ]
   },
   "transporte_publico": {
-    "aviso": "Horarios y precios son referenciales (fuentes 2023–2025) y cambian por temporada. Confírmalos con el conductor o con Carolina.",
+    "aviso": "Precios referenciales: confírmalos con el conductor.",
     "lineas": [
       {
         "nombre": "Minibús a Ensenada · Saltos del Petrohué · Petrohué",
@@ -361,47 +371,90 @@
         "frecuencia": "Muy frecuente: cada 10–15 min aprox. de día.",
         "precio": "~$1.400–1.600 (feb. 2025).",
         "consejo": "Unos 30–40 min. Se paga en efectivo al subir; lleva billetes chicos."
-      },
-      {
-        "nombre": "Bus a Llanquihue y Frutillar",
-        "icono": "bus",
-        "para": "Llanquihue, Frutillar (Teatro del Lago, costanera)",
-        "donde": "Paradero de micros cerca de la Plaza de Armas y en Del Salvador con Santa Rosa (Thaebus y otros).",
-        "mapa": "Del Salvador con Santa Rosa, Puerto Varas",
-        "frecuencia": "Frecuente durante el día.",
-        "precio": "Referencial ~$1.500–2.000.",
-        "consejo": "Unos 40–50 min hasta Frutillar. Para el Teatro del Lago pide bajarte en Frutillar Bajo (la parte junto al lago)."
-      },
-      {
-        "nombre": "Colectivos dentro de Puerto Varas",
-        "icono": "car",
-        "para": "Sectores de la ciudad (centro, poblaciones, cerros)",
-        "donde": "Son autos con número y letrero en el techo que hacen rutas fijas. Se toman en la calle haciendo señas, sobre todo en el centro.",
-        "mapa": "",
-        "frecuencia": "Constante de día.",
-        "precio": "~$800–1.000 por tramo (referencial, 2023).",
-        "consejo": "Comparten el auto con otros pasajeros. Antes de subir, pregúntale al chofer si pasa por tu destino."
-      },
-      {
-        "nombre": "Buses de larga distancia",
-        "icono": "bus",
-        "para": "Santiago, Temuco, Valdivia, Osorno, Puerto Montt y más",
-        "donde": "Cruz del Sur: San Francisco 1317 (esq. García Moreno). Turbus: Del Salvador 1093.",
-        "mapa": "Terminal Cruz del Sur, San Francisco 1317, Puerto Varas",
-        "frecuencia": "Varios al día; a Santiago hay salidas nocturnas.",
-        "precio": "Compra en kupos.cl, recorrido.cl o en la boletería.",
-        "consejo": "En verano y fines de semana largos compra con anticipación."
       }
     ],
     "consejos": [
-      "Lleva efectivo y billetes chicos: en minibuses y colectivos casi nunca se paga con tarjeta.",
-      "Haz señas con la mano para que el bus se detenga y avisa al conductor dónde te bajas.",
-      "La app Moovit muestra varias líneas de la zona.",
-      "De noche hay menos buses: después de las 21:00 conviene taxi."
+      "Lleva efectivo y billetes chicos: en minibuses casi nunca se paga con tarjeta.",
+      "Después de las 21:00 casi no pasan buses: mejor taxi."
     ]
   },
   "privado": {
     "codigo_acceso": "4821",
     "nota_acceso": "Caja de seguridad gris a la derecha de la puerta principal. Gira la perilla después de marcar el código."
-  }
+  },
+  "antes_de_llegar": [
+    "Compra en el centro antes de venir: camino a la cabaña solo hay un almacén pequeño (Supermercado del Lago abre hasta las 22:00).",
+    "Los domingos el almacén Don Pepe cierra a las 14:00.",
+    "Trae chaqueta impermeable y zapatos para barro: en el sur llueve seguido, incluso en verano."
+  ],
+  "primeros_pasos": [
+    "Abre la caja de seguridad con tu código y entra.",
+    "Agua caliente: es automática; si no sale, abre la llave de gas bajo el lavaplatos.",
+    "Enciende la estufa con los pasos de \"La casa\" (hay leña y astillas listas).",
+    "Conéctate al wifi con el botón QR o copia la clave."
+  ],
+  "taxi": [
+    {
+      "nombre": "Radio Taxi Lago (ficticio)",
+      "telefono": "+56 9 8765 4321",
+      "nota": "Al centro de Puerto Varas ~$8.000. De noche pídelo con 20 minutos de anticipación."
+    }
+  ],
+  "bueno_saber": [
+    {
+      "tema": "Efectivo",
+      "texto": "En minibuses, colectivos y ferias se paga en efectivo. Hay cajeros en el centro."
+    },
+    {
+      "tema": "Propina",
+      "texto": "En restaurantes se sugiere 10%; suele venir incluida como sugerencia en la cuenta."
+    },
+    {
+      "tema": "Enchufes",
+      "texto": "Tipo C y L, 220 V. Hay un adaptador en el cajón del velador."
+    },
+    {
+      "tema": "Agua",
+      "texto": "El agua de la llave es potable."
+    },
+    {
+      "tema": "Señal",
+      "texto": "Entel y Movistar tienen buena señal en la cabaña; Claro es débil."
+    }
+  ],
+  "temporada": [
+    {
+      "cuando": "Diciembre a febrero",
+      "meses": [
+        12,
+        1,
+        2
+      ],
+      "texto": "Llegan los tábanos (colihuachos): no te asustes, no son peligrosos. Usa ropa clara y evita el pasto alto a mediodía."
+    },
+    {
+      "cuando": "Todo el año",
+      "meses": [],
+      "texto": "El lago Llanquihue es frío incluso en verano: si te bañas, entra de a poco y nunca solo."
+    },
+    {
+      "cuando": "Mayo a agosto",
+      "meses": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "texto": "Oscurece cerca de las 18:00: planea los paseos temprano y lleva linterna."
+    },
+    {
+      "cuando": "Septiembre a noviembre",
+      "meses": [
+        9,
+        10,
+        11
+      ],
+      "texto": "Primavera: días largos y cambiantes. Si amanece despejado, aprovecha ese día para subir al volcán Osorno."
+    }
+  ]
 }

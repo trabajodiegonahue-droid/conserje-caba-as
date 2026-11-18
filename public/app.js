@@ -486,7 +486,7 @@ function letterHTML() {
   return `<section class="letter reveal">
     <div class="letter-top"><div class="face">${face}</div><div><span class="label">${t.from(esc(a.nombre || ''))}</span>
       ${a.idiomas?.length ? `<small>${t.speaks} ${esc(a.idiomas.join(' · '))}</small>` : ''}</div></div>
-    <p class="letter-txt clamp3" id="letter-txt">${esc(c.bienvenida)}</p>
+    <p class="letter-txt clamp2" id="letter-txt">${esc(c.bienvenida)}</p>
     <div class="letter-foot"><button class="more" type="button" id="letter-more">${t.read}</button><span class="sign">${esc(a.nombre || '')}</span></div>
   </section>`;
 }
@@ -496,10 +496,10 @@ function amenitiesHTML() {
   const list = (cabana.comodidades || []).filter((k) => AMEN.es[k]);
   if (!list.length) return '';
   const t = T[lang], shown = amenOpen ? list : list.slice(0, 6);
-  return `<section class="amen reveal"><h2 class="sec-h">${t.offers}</h2>
+  return `<section class="blk amen-blk"><h3 class="blk-title">${t.offers}</h3><div class="amen">
     <div class="amen-grid">${shown.map((k, i) => `<div class="am" style="--i:${i}">${ico(AMEN_ICON[k] || 'check')}<span>${esc((AMEN[lang] || AMEN.es)[k])}</span></div>`).join('')}</div>
     ${list.length > 6 ? `<button class="ghost-btn" type="button" id="amen-toggle">${amenOpen ? t.seeLess : t.seeAll(list.length)}</button>` : ''}
-  </section>`;
+  </div></section>`;
 }
 
 function galleryHTML() {
@@ -532,6 +532,117 @@ document.addEventListener('click', (e) => {
 const PAGE_ICONS = { llegar: 'key', casa: 'door', extras: 'star', explorar: 'compass', comer: 'fork', moverse: 'bus', salida: 'check', ayuda: 'sos' };
 let blkIndex = 0;
 const blk = (title, html) => `<section class="blk reveal" style="--i:${blkIndex++}">${title ? `<h3 class="blk-title">${esc(title)}</h3>` : ''}${html}</section>`;
+// ═══ Textos de "lo justo en cada momento" ═══
+const T6 = {
+  es: { tabs: { llegar: 'Llegar y moverse', explorar: 'Qué hacer', comer: 'Comer' },
+    titles: { llegar: 'Llegar y <em>moverse</em>', explorar: 'Qué <em>hacer</em>', comer: 'Dónde <em>comer</em>' },
+    tileDesc: { llegar: 'Cómo llegar, buses y taxi', casa: 'Estufa, tinaja, wifi y reglas', comer: 'Restaurantes y almacenes', explorar: 'Clima, panoramas y tours', extras: 'Tinaja, desayuno, transfer…', ayuda: 'Contacto, emergencias y datos útiles' },
+    nowBefore: 'Antes de llegar', nowArrive: 'Primeros pasos', nowToday: 'Hoy', nowLast: 'Hoy es tu salida', nowAfter: 'Gracias por venir',
+    eatTonight: 'Para comer hoy', seasonTip: 'Consejo de temporada', goodToKnow: 'Bueno saber', taxi: 'Taxi', atNight: 'Si llegas de noche', howGet: 'Cómo llegar', moving: 'Buses', checkinFrom: (h) => `Check-in desde las ${h}`, checkoutUntil: (h) => `Check-out hasta las ${h}`,
+    reserve: { si: 'Con reserva', recomendada: 'Mejor reservar', no: 'Sin reserva' }, yourCheckout: 'Tu salida', checkoutList: 'Ver lista de salida', seePlan: 'Más panoramas' },
+  en: { tabs: { llegar: 'Getting here & around', explorar: 'Things to do', comer: 'Eat' },
+    titles: { llegar: 'Getting <em>around</em>', explorar: 'Things to <em>do</em>', comer: 'Where to <em>eat</em>' },
+    tileDesc: { llegar: 'Directions, buses and taxi', casa: 'Stove, hot tub, wifi and rules', comer: 'Restaurants and shops', explorar: 'Weather, ideas and tours', extras: 'Hot tub, breakfast, transfer…', ayuda: 'Contact, emergencies and tips' },
+    nowBefore: 'Before you arrive', nowArrive: 'First steps', nowToday: 'Today', nowLast: 'Check-out day', nowAfter: 'Thanks for coming',
+    eatTonight: 'To eat today', seasonTip: 'Seasonal tip', goodToKnow: 'Good to know', taxi: 'Taxi', atNight: 'Arriving at night', howGet: 'Directions', moving: 'Buses', checkinFrom: (h) => `Check-in from ${h}`, checkoutUntil: (h) => `Check-out by ${h}`,
+    reserve: { si: 'Booking needed', recomendada: 'Best to book', no: 'Walk-in' }, yourCheckout: 'Your check-out', checkoutList: 'See check-out list', seePlan: 'More ideas' },
+  pt: { tabs: { llegar: 'Chegar e se mover', explorar: 'O que fazer', comer: 'Comer' },
+    titles: { llegar: 'Chegar e se <em>mover</em>', explorar: 'O que <em>fazer</em>', comer: 'Onde <em>comer</em>' },
+    tileDesc: { llegar: 'Como chegar, ônibus e táxi', casa: 'Lareira, ofurô, wifi e regras', comer: 'Restaurantes e mercados', explorar: 'Clima, passeios e tours', extras: 'Ofurô, café da manhã, transfer…', ayuda: 'Contato, emergências e dicas' },
+    nowBefore: 'Antes de chegar', nowArrive: 'Primeiros passos', nowToday: 'Hoje', nowLast: 'Hoje é sua saída', nowAfter: 'Obrigado pela visita',
+    eatTonight: 'Para comer hoje', seasonTip: 'Dica da estação', goodToKnow: 'Bom saber', taxi: 'Táxi', atNight: 'Se chegar à noite', howGet: 'Como chegar', moving: 'Ônibus', checkinFrom: (h) => `Check-in a partir das ${h}`, checkoutUntil: (h) => `Check-out até as ${h}`,
+    reserve: { si: 'Com reserva', recomendada: 'Melhor reservar', no: 'Sem reserva' }, yourCheckout: 'Sua saída', checkoutList: 'Ver lista de saída', seePlan: 'Mais passeios' },
+  de: { tabs: { llegar: 'Anreise & Unterwegs', explorar: 'Unternehmungen', comer: 'Essen' },
+    titles: { llegar: 'Anreise & <em>Unterwegs</em>', explorar: 'Was <em>unternehmen</em>', comer: 'Wo <em>essen</em>' },
+    tileDesc: { llegar: 'Anfahrt, Busse und Taxi', casa: 'Ofen, Badefass, WLAN, Regeln', comer: 'Restaurants und Läden', explorar: 'Wetter, Ideen und Touren', extras: 'Badefass, Frühstück, Transfer…', ayuda: 'Kontakt, Notfälle, Tipps' },
+    nowBefore: 'Vor der Anreise', nowArrive: 'Erste Schritte', nowToday: 'Heute', nowLast: 'Heute ist Abreise', nowAfter: 'Danke für Ihren Besuch',
+    eatTonight: 'Heute essen', seasonTip: 'Tipp der Saison', goodToKnow: 'Gut zu wissen', taxi: 'Taxi', atNight: 'Ankunft bei Nacht', howGet: 'Anfahrt', moving: 'Busse', checkinFrom: (h) => `Check-in ab ${h}`, checkoutUntil: (h) => `Check-out bis ${h}`,
+    reserve: { si: 'Reservierung nötig', recomendada: 'Besser reservieren', no: 'Ohne Reservierung' }, yourCheckout: 'Ihre Abreise', checkoutList: 'Abreise-Liste', seePlan: 'Mehr Ideen' },
+  it: { tabs: { llegar: 'Arrivare e spostarsi', explorar: 'Cosa fare', comer: 'Mangiare' },
+    titles: { llegar: 'Arrivare e <em>spostarsi</em>', explorar: 'Cosa <em>fare</em>', comer: 'Dove <em>mangiare</em>' },
+    tileDesc: { llegar: 'Indicazioni, bus e taxi', casa: 'Stufa, vasca, wifi e regole', comer: 'Ristoranti e negozi', explorar: 'Meteo, idee e tour', extras: 'Vasca, colazione, transfer…', ayuda: 'Contatti, emergenze e info' },
+    nowBefore: 'Prima di arrivare', nowArrive: 'Primi passi', nowToday: 'Oggi', nowLast: 'Oggi è la partenza', nowAfter: 'Grazie della visita',
+    eatTonight: 'Per mangiare oggi', seasonTip: 'Consiglio di stagione', goodToKnow: 'Buono a sapersi', taxi: 'Taxi', atNight: 'Se arrivi di notte', howGet: 'Indicazioni', moving: 'Autobus', checkinFrom: (h) => `Check-in dalle ${h}`, checkoutUntil: (h) => `Check-out entro le ${h}`,
+    reserve: { si: 'Su prenotazione', recomendada: 'Meglio prenotare', no: 'Senza prenotazione' }, yourCheckout: 'La tua partenza', checkoutList: 'Lista di partenza', seePlan: 'Altre idee' },
+  fr: { tabs: { llegar: 'Venir & se déplacer', explorar: 'Que faire', comer: 'Manger' },
+    titles: { llegar: 'Venir & se <em>déplacer</em>', explorar: 'Que <em>faire</em>', comer: 'Où <em>manger</em>' },
+    tileDesc: { llegar: 'Itinéraire, bus et taxi', casa: 'Poêle, bain nordique, wifi, règles', comer: 'Restaurants et commerces', explorar: 'Météo, idées et excursions', extras: 'Bain nordique, petit-déj, transfert…', ayuda: 'Contact, urgences et infos' },
+    nowBefore: 'Avant d’arriver', nowArrive: 'Premiers pas', nowToday: 'Aujourd’hui', nowLast: 'Jour du départ', nowAfter: 'Merci de votre visite',
+    eatTonight: 'Pour manger aujourd’hui', seasonTip: 'Conseil de saison', goodToKnow: 'Bon à savoir', taxi: 'Taxi', atNight: 'Arrivée de nuit', howGet: 'Itinéraire', moving: 'Bus', checkinFrom: (h) => `Check-in dès ${h}`, checkoutUntil: (h) => `Check-out avant ${h}`,
+    reserve: { si: 'Sur réservation', recomendada: 'Mieux vaut réserver', no: 'Sans réservation' }, yourCheckout: 'Votre départ', checkoutList: 'Liste de départ', seePlan: 'Plus d’idées' },
+};
+for (const l of Object.keys(T6)) {
+  const { tabs, titles, tileDesc, ...rest } = T6[l];
+  Object.assign(T[l].tabs, tabs); Object.assign(T[l].titles, titles); Object.assign(T[l].tileDesc, tileDesc); Object.assign(T[l], rest);
+}
+Object.assign(I, { taxi: '<path d="M5 17V12l2-5h10l2 5v5"/><path d="M3 17h18v2.5H3zM5 12h14M10 4h4v3h-4z"/>', moon2: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>', bag: '<path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>', leaf: '<path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15"/><path d="M5 19c3-4 6-7 10-9"/>' });
+
+// Momento de la estadía (sin enlace personal se asume "durante")
+function phase() { return cabana.huesped ? stayStatus(cabana.huesped).phase === 'during' && dayNum(todayStr()) === dayNum(cabana.huesped.llegada) ? 'arrive' : stayStatus(cabana.huesped).phase : 'during'; }
+
+const monthTips = () => (cabana.temporada || []).filter((x) => !x.meses?.length || x.meses.includes(new Date().getMonth() + 1));
+const tel = (n) => `tel:${String(n).replace(/[^\d+]/g, '')}`;
+
+function listCard(items, icon = 'check') {
+  return `<ul class="now-list">${items.map((x, i) => `<li class="reveal" style="--i:${i}"><span>${ico(icon)}</span><p>${esc(x)}</p></li>`).join('')}</ul>`;
+}
+
+function eatCard(r, i) {
+  const t = T[lang];
+  const chips = [r.precio, r.horario && firstSentence(r.horario.split('·')[0]), r.reserva && t.reserve[r.reserva]].filter(Boolean);
+  return `<article class="pcard eat reveal" style="--i:${i}">
+    <div class="pcard-art">${cover(r.nombre, r.foto)}<span class="art-ico">${ico('fork')}</span></div>
+    <div class="pcard-body"><strong>${esc(r.nombre)}</strong><small>${esc([r.tipo, r.distancia].filter(Boolean).join(' · '))}</small>
+      ${chips.length ? `<div class="meta">${chips.map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</div>` : ''}
+      ${r.nota ? `<p>${esc(r.nota)}</p>` : ''}
+      <a class="line-map" target="_blank" rel="noopener" href="${mapsUrl(`${r.nombre.replace(/\s*\(.*\)/, '')} ${cabana.lugar?.split('·')[0] || ''}`)}">${ico('pin')}${t.maps}</a>
+    </div>
+  </article>`;
+}
+
+function checklistHTML() {
+  const t = T[lang], list = cabana.checkout?.lista || [];
+  if (!list.length) return '';
+  const done = readChecks(), n = list.filter((_, i) => done[i]).length;
+  return `<div class="panel checklist${n === list.length ? ' complete' : ''}">
+    <div class="progress">${ring(n, list.length)}<div><strong id="prog-n">${n} ${t.of} ${list.length}</strong><span id="prog-msg">${n === list.length ? t.allDone : t.ready}</span></div></div>
+    <div class="checks">${list.map((x, i) => `<label class="check"><input type="checkbox" id="chk-${i}" data-i="${i}"${done[i] ? ' checked' : ''}><span class="box">${ico('check')}</span><span>${esc(x)}</span></label>`).join('')}</div>
+  </div>`;
+}
+
+// La tarjeta "Ahora": solo lo que importa en este momento
+function nowHTML() {
+  const c = cabana, t = T[lang], ph = phase();
+  const head = (title, sub) => `<div class="now-head"><span class="now-dot"></span><h2>${title}</h2>${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
+  if (ph === 'before') {
+    return `<section class="now">${head(t.nowBefore, t.checkinFrom(c.checkin?.hora || ''))}
+      ${c.antes_de_llegar?.length ? listCard(c.antes_de_llegar, 'bag') : ''}
+      <div class="now-actions"><a class="btn wide" href="#llegar">${ico('pin')}${t.howGet}</a></div></section>`;
+  }
+  if (ph === 'arrive') {
+    return `<section class="now">${head(t.nowArrive, t.checkinFrom(c.checkin?.hora || ''))}
+      ${listCard(c.primeros_pasos || [], 'check')}
+      ${c.como_llegar?.noche ? `<p class="now-note">${ico('moon2')}<span><b>${t.atNight}.</b> ${esc(c.como_llegar.noche)}</span></p>` : ''}</section>`;
+  }
+  if (ph === 'last') {
+    return `<section class="now">${head(t.nowLast, t.checkoutUntil(c.checkout?.hora || ''))}${checklistHTML()}
+      <div class="now-actions"><a class="btn wide" href="#salida">${ico('star')}${t.rateQ}</a></div></section>`;
+  }
+  if (ph === 'after') return `<section class="now">${head(t.nowAfter, '')}${rateHTML()}</section>`;
+
+  // Durante la estadía: clima, un panorama, dónde comer y un consejo de temporada
+  const wet = weather?.current ? isWet(weather.current.weather_code) : true;
+  const plan = (c.panoramas?.[wet ? 'lluvia' : 'sol'] || [])[new Date().getDate() % Math.max(1, (c.panoramas?.[wet ? 'lluvia' : 'sol'] || []).length)];
+  const eat = (c.restaurantes || []).slice(0, 2);
+  const tip = monthTips()[0];
+  return `<section class="now">${head(t.nowToday, new Intl.DateTimeFormat(lang, { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date()).replace(/^./, (m) => m.toUpperCase()))}
+    ${weather?.current ? `<div class="now-wx"><span class="wx-anim ${WX(weather.current.weather_code)[1]}">${ico(WX(weather.current.weather_code)[1])}</span><strong>${Math.round(weather.current.temperature_2m)}°</strong><span>${esc(t.wx[WX(weather.current.weather_code)[0]])}${weather.daily?.sunset?.[0] ? ` · ${t.sunset} ${weather.daily.sunset[0].slice(11, 16)}` : ''}</span></div>` : ''}
+    ${plan ? `<a class="now-plan" href="#explorar">${cover(plan.nombre, plan.foto)}<span class="mini-shade"></span><span class="np-txt"><small>${t.suggested}</small><strong>${esc(plan.nombre)}</strong><em>${esc(firstSentence(plan.nota || ''))}</em></span></a>` : ''}
+    ${eat.length ? `<h3 class="blk-title">${t.eatTonight}</h3><div class="now-eat">${eat.map((r) => `<a href="#comer" class="ne"><strong>${esc(r.nombre.replace(/\s*\(.*\)/, ''))}</strong><small>${esc([r.tipo, r.precio].filter(Boolean).join(' · '))}</small></a>`).join('')}</div>` : ''}
+    ${tip ? `<p class="now-note">${ico('leaf')}<span><b>${t.seasonTip}.</b> ${esc(tip.texto)}</span></p>` : ''}
+  </section>`;
+}
+
 let planTab = null, routeTab = 0;
 
 function buildPages() {
@@ -539,23 +650,42 @@ function buildPages() {
   const P = {};
   const page = (fn) => { blkIndex = 0; return fn(); };
 
-  if (c.como_llegar || c.checkin) P.llegar = page(() => {
+  // Llegar y moverse
+  P.llegar = page(() => {
     const L = c.como_llegar || {}, mIco = { avion: 'plane', bus: 'bus', auto: 'car' };
-    const ops = L.opciones || [];
-    const sel = ops[Math.min(routeTab, ops.length - 1)];
+    const ops = L.opciones || [], sel = ops[Math.min(routeTab, ops.length - 1)];
+    const tp = c.transporte_publico;
     return blk('', `<div class="arrive">
         <div class="arrive-time"><span class="label">Check-in</span><strong>${esc(c.checkin?.hora || '—')}</strong></div>
-        <p>${esc(c.checkin?.instrucciones || '')}</p>
+        ${clampText(c.checkin?.instrucciones, 110)}
       </div>`)
-      + (ops.length ? blk(t.tabs.llegar, `<div class="route-pick" role="tablist">${ops.map((o, i) => `<button role="tab" class="${o === sel ? 'on' : ''}" data-route="${i}">${ico(mIco[o.modo] || 'pin')}<span>${esc(firstSentence(o.desde).replace(/\s*\(.*\)/, ''))}</span></button>`).join('')}</div>
-        <div class="route-card" key="${routeTab}">
+      + (c.antes_de_llegar?.length ? blk(t.nowBefore, `<div class="panel pad">${listCard(c.antes_de_llegar, 'bag')}</div>`) : '')
+      + (ops.length ? blk(t.howGet, `<div class="route-pick" role="tablist">${ops.map((o, i) => `<button role="tab" class="${o === sel ? 'on' : ''}" data-route="${i}">${ico(mIco[o.modo] || 'pin')}<span>${esc(firstSentence(o.desde).replace(/\s*\(.*\)/, ''))}</span></button>`).join('')}</div>
+        <div class="route-card">
           <div class="route-top"><span class="big-ico">${ico(mIco[sel.modo] || 'pin')}</span><div><strong>${esc(sel.desde)}</strong>${sel.tiempo && sel.tiempo !== '—' ? `<span class="chip">${esc(sel.tiempo)}</span>` : ''}</div></div>
-          ${clampText(sel.detalle, 160)}
-        </div>`) : '')
-      + blk('', `${L.referencia ? `<div class="landmark">${ico('pin')}<span><small>${t.reference}</small>${esc(L.referencia)}</span></div>` : ''}
-        <a class="btn wide" href="${mapsUrl(L.mapa || c.direccion || c.nombre)}" target="_blank" rel="noopener">${ico('pin')}${t.maps}</a>`);
+          ${clampText(sel.detalle, 150)}
+        </div>
+        ${L.referencia ? `<div class="landmark">${ico('pin')}<span><small>${t.reference}</small>${esc(L.referencia)}</span></div>` : ''}
+        ${L.noche ? `<div class="landmark night">${ico('moon2')}<span><small>${t.atNight}</small>${esc(L.noche)}</span></div>` : ''}
+        <a class="btn wide" href="${mapsUrl(L.mapa || c.direccion || c.nombre)}" target="_blank" rel="noopener">${ico('pin')}${t.maps}</a>`) : '')
+      + (c.taxi?.length ? blk(t.taxi, c.taxi.map((x) => `<div class="taxi"><span class="ri">${ico('taxi')}</span><div><strong>${esc(x.nombre)}</strong>${x.nota ? `<small>${esc(x.nota)}</small>` : ''}</div>${x.telefono ? `<a class="call" href="${tel(x.telefono)}">${ico('phone')}<span>${esc(x.telefono)}</span></a>` : ''}</div>`).join('')) : '')
+      + (tp?.lineas?.length ? blk(t.moving, `<div class="lines">${tp.lineas.map((l, i) => `<article class="line reveal" style="--i:${i}">
+          <header><span class="ri">${ico(l.icono || 'bus')}</span><div><strong>${esc(l.nombre)}</strong>${l.para ? `<small>${esc(l.para)}</small>` : ''}</div></header>
+          <div class="facts">
+            ${l.donde ? `<div class="fact">${ico('pin')}<span>${esc(firstSentence(l.donde))}</span></div>` : ''}
+            ${l.frecuencia ? `<div class="fact">${ico('clock')}<span>${esc(firstSentence(l.frecuencia))}</span></div>` : ''}
+            ${l.precio ? `<div class="fact money"><b>$</b><span>${esc(firstSentence(l.precio))}</span></div>` : ''}
+          </div>
+          ${(l.consejo || l.mapa) ? `<details class="line-more"><summary>${t.howCatch}${ico('chevd')}</summary>
+            ${l.consejo ? `<p class="line-tip">${ico('info')}<span>${esc(l.consejo)}</span></p>` : ''}
+            ${l.mapa ? `<a class="line-map" target="_blank" rel="noopener" href="${mapsUrl(l.mapa)}">${ico('pin')}${t.maps}</a>` : ''}
+          </details>` : ''}
+        </article>`).join('')}</div>
+        ${tp.consejos?.length ? `<ul class="rules plain small-tips">${tp.consejos.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+        ${tp.aviso ? `<p class="fine">${esc(tp.aviso)}</p>` : ''}`) : '');
   });
 
+  // La casa
   P.casa = page(() => {
     const otrosIcons = { agua_caliente: 'drop', estacionamiento: 'car', basura: 'trash' };
     const equipos = (c.equipos || []).map((e) => `<details class="dev"><summary><span class="ri">${ico(e.icono)}</span><strong>${esc(e.nombre)}</strong><span class="chev"></span></summary>
@@ -564,100 +694,77 @@ function buildPages() {
     const spots = (c.donde_esta || '').split(/\.\s+|\.$/).map((x) => x.trim()).filter(Boolean);
     const otros = Object.entries(c.otros || {}).filter(([k]) => !['emergencias', 'agua_caliente'].includes(k));
     return [
-      equipos ? blk(t.howTo, `<div class="panel devs">${equipos}</div>`) : '',
-      e ? blk(t.tabs.estufa, `<details class="dev stove"><summary><span class="ri hot">${ico('flame')}</span><strong>${esc(e.tipo || t.tabs.estufa)}<small>${(e.pasos || []).length} ${t.steps || 'pasos'}</small></strong><span class="chev"></span></summary>
+      galleryHTML(),
+      e ? blk(t.tabs.estufa, `<details class="dev stove"><summary><span class="ri hot">${ico('flame')}</span><strong>${esc(e.tipo || t.tabs.estufa)}<small>${(e.pasos || []).length} ${t.steps}</small></strong><span class="chev"></span></summary>
           <ol class="steps">${(e.pasos || []).map((p) => `<li>${esc(p)}</li>`).join('')}</ol>
           ${e.lena ? `<div class="tip">${ico('wood')}<span><strong>${t.wood}.</strong> ${esc(e.lena)}</span></div>` : ''}
         </details>${e.seguridad ? `<div class="warn">${ico('sos')}<span><strong>${t.safety}.</strong> ${esc(e.seguridad)}</span></div>` : ''}`) : '',
+      equipos ? blk(t.howTo, `<div class="panel devs">${equipos}</div>`) : '',
       spots.length ? blk(t.whereIs, `<div class="spots">${spots.map((s, i) => `<div class="spot reveal" style="--i:${i}"><span>${ico(iconFor(s))}</span><p>${esc(s)}</p></div>`).join('')}</div>`) : '',
       otros.length ? blk('', `<div class="panel">${otros.map(([k, v]) => row(otrosIcons[k] || 'info', k.replace(/_/g, ' ').replace(/^./, (m) => m.toUpperCase()), v)).join('')}</div>`) : '',
       c.reglas?.length ? blk(t.rules, `<div class="rule-grid">${c.reglas.map((r, i) => `<div class="rule reveal" style="--i:${i}"><span>${ico(iconFor(r, 'check'))}</span><p>${esc(r)}</p></div>`).join('')}</div>`) : '',
+      amenitiesHTML(),
+      blk('', `<a class="next soft" href="#salida"><span><small>${t.yourCheckout}</small><strong>${t.checkoutUntil(c.checkout?.hora || '')}</strong></span><span class="next-ico">${ico('check')}</span></a>`),
     ].join('');
   });
 
-  if (c.extras?.length) P.extras = page(() => blk('', `<div class="extra-grid">${c.extras.map((x, i) => { return `<article class="extra reveal" style="--i:${i}">
-        <div class="extra-art">${cover(x.nombre, x.foto)}<span class="art-ico">${ico(x.icono)}</span><span class="price">${esc(x.precio || '')}</span></div>
-        <div class="extra-body"><strong>${esc(x.nombre)}</strong>${clampText(x.detalle, 70)}
-        ${a.whatsapp ? `<a class="order" target="_blank" rel="noopener" href="${waUrl(a.whatsapp, `Hola ${a.nombre}, quisiera pedir: ${x.nombre} (${c.nombre}). ¡Gracias!`)}">${ico('chat')}${t.order}</a>` : ''}</div>
-      </article>`; }).join('')}</div>
-      <p class="fine">${t.orderNote}</p>`));
+  // Comer
+  if (c.restaurantes?.length || c.servicios_cercanos?.length) P.comer = page(() => {
+    const k = { supermercado: 'cart', almacen: 'shop', farmacia: 'plus', bencinera: 'fuel', cajero: 'atm' };
+    return (c.restaurantes?.length ? blk(t.restaurants, `<div class="cards-row">${c.restaurantes.map((r, i) => eatCard(r, i)).join('')}</div>`) : '')
+      + (c.servicios_cercanos?.length ? blk(t.tabs.cerca, `<div class="near-grid">${c.servicios_cercanos.map((s, i) => `<a class="near reveal" style="--i:${i}" target="_blank" rel="noopener" href="${mapsUrl(`${s.nombre} ${c.lugar?.split('·')[0] || ''}`)}">
+          <span class="near-ico">${ico(k[s.tipo] || 'pin')}</span><span class="kind">${esc(t.kinds[s.tipo] || s.tipo || '')}</span>
+          <strong>${esc(s.nombre)}</strong><small>${esc(s.distancia || '')}</small>
+          ${s.horario ? `<small class="hours">${ico('clock')}${esc(firstSentence(s.horario.split('·')[0]))}</small>` : ''}</a>`).join('')}</div>`) : '');
+  });
 
+  // Qué hacer
   if (c.panoramas || c.tours?.length) P.explorar = page(() => {
     let plans = '';
     if (c.panoramas) {
       const wet = weather?.current ? isWet(weather.current.weather_code) : true;
       const tab = planTab || (wet ? 'lluvia' : 'sol');
       plans = blk(t.tabs.hoy, `${weatherCard()}
-        <div class="seg" role="tablist">
-          ${['lluvia', 'sol'].map((k) => `<button role="tab" data-plan="${k}" class="${k === tab ? 'on' : ''}">${ico(k === 'lluvia' ? 'rain' : 'sun')}${k === 'lluvia' ? t.ifRain : t.ifSun}${(k === 'lluvia') === wet && weather?.current ? `<i>${t.suggested}</i>` : ''}</button>`).join('')}
-        </div>
+        <div class="seg" role="tablist">${['lluvia', 'sol'].map((k) => `<button role="tab" data-plan="${k}" class="${k === tab ? 'on' : ''}">${ico(k === 'lluvia' ? 'rain' : 'sun')}${k === 'lluvia' ? t.ifRain : t.ifSun}${(k === 'lluvia') === wet && weather?.current ? `<i>${t.suggested}</i>` : ''}</button>`).join('')}</div>
         <div class="cards-row">${(c.panoramas[tab] || []).map((p, i) => card(p.nombre, p.nota, tab === 'lluvia' ? 'coffee' : 'sun', '', i, p.foto)).join('')}</div>`);
     }
-    return plans + (c.tours?.length ? blk(t.tours, `<div class="panel">${c.tours.map((r) => row('compass', r.nombre, r.nota, [r.duracion])).join('')}</div>`) : '');
+    const tips = monthTips();
+    return plans
+      + (c.tours?.length ? blk(t.tours, `<div class="panel">${c.tours.map((r) => row('compass', r.nombre, r.nota, [r.duracion])).join('')}</div>`) : '')
+      + (tips.length ? blk(t.seasonTip, tips.map((x) => `<p class="now-note solo">${ico('leaf')}<span>${x.cuando ? `<b>${esc(x.cuando)}.</b> ` : ''}${esc(x.texto)}</span></p>`).join('')) : '');
   });
 
-  if (c.restaurantes?.length || c.servicios_cercanos?.length) P.comer = page(() => {
-    const k = { supermercado: 'cart', almacen: 'shop', farmacia: 'plus', bencinera: 'fuel', cajero: 'atm' };
-    return (c.restaurantes?.length ? blk(t.restaurants, `<div class="cards-row">${c.restaurantes.map((r, i) => card(r.nombre, r.nota, 'fork', [r.tipo, r.distancia].filter(Boolean).join(' · '), i, r.foto)).join('')}</div>`) : '')
-      + (c.servicios_cercanos?.length ? blk(t.tabs.cerca, `<div class="near-grid">${c.servicios_cercanos.map((s, i) => `<a class="near reveal" style="--i:${i}" target="_blank" rel="noopener" href="${mapsUrl(`${s.nombre} ${c.lugar?.split('·')[0] || ''}`)}">
-          <span class="near-ico">${ico(k[s.tipo] || 'pin')}</span>
-          <span class="kind">${esc(t.kinds[s.tipo] || s.tipo || '')}</span>
-          <strong>${esc(s.nombre)}</strong>
-          <small>${esc(s.distancia || '')}</small>
-          ${s.horario ? `<small class="hours">${ico('clock')}${esc(firstSentence(s.horario.split('·')[0]))}</small>` : ''}
-        </a>`).join('')}</div>`) : '');
-  });
+  // Extras
+  if (c.extras?.length) P.extras = page(() => blk('', `<div class="extra-grid">${c.extras.map((x, i) => `<article class="extra reveal" style="--i:${i}">
+        <div class="extra-art">${cover(x.nombre, x.foto)}<span class="art-ico">${ico(x.icono)}</span><span class="price">${esc(x.precio || '')}</span></div>
+        <div class="extra-body"><strong>${esc(x.nombre)}</strong>${clampText(x.detalle, 70)}
+        ${a.whatsapp ? `<a class="order" target="_blank" rel="noopener" href="${waUrl(a.whatsapp, `Hola ${a.nombre}, quisiera pedir: ${x.nombre} (${c.nombre}). ¡Gracias!`)}">${ico('chat')}${t.order}</a>` : ''}</div>
+      </article>`).join('')}</div><p class="fine">${t.orderNote}</p>`));
 
-  if (c.transporte_publico?.lineas?.length) P.moverse = page(() => {
-    const tp = c.transporte_publico;
-    return blk('', `${tp.aviso ? `<p class="notice">${ico('info')}<span>${esc(tp.aviso)}</span></p>` : ''}
-      <div class="lines">${tp.lineas.map((l, i) => `<article class="line reveal" style="--i:${i}">
-        <header><span class="ri">${ico(l.icono || 'bus')}</span><div><strong>${esc(l.nombre)}</strong>${l.para ? `<small>${esc(l.para)}</small>` : ''}</div></header>
-        <div class="facts">
-          ${l.donde ? `<div class="fact">${ico('pin')}<span>${esc(firstSentence(l.donde))}</span></div>` : ''}
-          ${l.frecuencia ? `<div class="fact">${ico('clock')}<span>${esc(firstSentence(l.frecuencia))}</span></div>` : ''}
-          ${l.precio ? `<div class="fact money"><b>$</b><span>${esc(firstSentence(l.precio))}</span></div>` : ''}
-        </div>
-        <details class="line-more"><summary>${t.howCatch}${ico('chevd')}</summary>
-          ${l.donde ? `<p>${esc(l.donde)}</p>` : ''}
-          ${l.consejo ? `<p class="line-tip">${ico('info')}<span>${esc(l.consejo)}</span></p>` : ''}
-          ${l.mapa ? `<a class="line-map" target="_blank" rel="noopener" href="${mapsUrl(l.mapa)}">${ico('pin')}${t.maps}</a>` : ''}
-        </details>
-      </article>`).join('')}</div>`)
-      + (tp.consejos?.length ? blk(t.tTips, `<div class="tips-row">${tp.consejos.map((x, i) => `<div class="tipcard reveal" style="--i:${i}"><b>${i + 1}</b><p>${esc(x)}</p></div>`).join('')}</div>`) : '');
-  });
-
-  P.salida = page(() => {
-    const done = readChecks(), list = c.checkout?.lista || [];
-    const n = list.filter((_, i) => done[i]).length;
-    return blk('', `<div class="arrive out">
+  // Tu salida (no es apartado del inicio: aparece en la portada el último día y desde La casa)
+  P.salida = page(() => blk('', `<div class="arrive out">
         <div class="arrive-time"><span class="label">Check-out</span><strong>${esc(c.checkout?.hora || '—')}</strong></div>
         ${clampText(c.checkout?.instrucciones, 110)}
-      </div>`)
-      + (list.length ? blk('', `<div class="panel checklist">
-          <div class="progress">${ring(n, list.length)}<div><strong id="prog-n">${n} ${t.of} ${list.length}</strong><span id="prog-msg">${n === list.length ? t.allDone : t.ready}</span></div></div>
-          <div class="checks">${list.map((x, i) => `<label class="check"><input type="checkbox" id="chk-${i}" data-i="${i}"${done[i] ? ' checked' : ''}><span class="box">${ico('check')}</span><span>${esc(x)}</span></label>`).join('')}</div>
-        </div>`) : '')
-      + ((c.resenas || c.anfitrion?.whatsapp) ? blk('', rateHTML()) : '');
-  });
+      </div>`) + blk('', checklistHTML()) + ((c.resenas || a.whatsapp) ? blk('', rateHTML()) : ''));
 
+  // Ayuda
   P.ayuda = page(() => blk('', `<div class="host">
       <div class="host-top"><span class="avatar">${esc((a.nombre || '?')[0])}</span><div><span>${t.hostRole}</span><strong>${esc(a.nombre || '')}</strong></div></div>
       ${a.horario ? `<p class="host-hours">${esc(firstSentence(a.horario))}</p>` : ''}
       <div class="host-btns">
         ${a.whatsapp ? `<a class="btn light" href="${waUrl(a.whatsapp)}" target="_blank" rel="noopener">${ico('chat')}WhatsApp</a>` : ''}
-        ${a.telefono ? `<a class="btn ghost" href="tel:${esc(a.telefono.replace(/\s/g, ''))}">${ico('phone')}${t.call}</a>` : ''}
+        ${a.telefono ? `<a class="btn ghost" href="${tel(a.telefono)}">${ico('phone')}${t.call}</a>` : ''}
       </div>
     </div>
     <div class="sos-grid">${['131', '132', '133'].map((n, i) => `<a class="reveal" style="--i:${i}" href="tel:${n}"><strong>${n}</strong><span>${t.sos[i]}</span></a>`).join('')}</div>
     ${a.whatsapp ? `<a class="report" target="_blank" rel="noopener" href="${waUrl(a.whatsapp, `Hola ${a.nombre}, tengo un problema en ${c.nombre}: `)}">
       <span class="ri">${ico('tool')}</span><span><strong>${t.report}</strong><small>${t.reportNote}</small></span>${ico('ext')}</a>` : ''}`)
+    + (c.bueno_saber?.length ? blk(t.goodToKnow, `<div class="know">${c.bueno_saber.map((x, i) => `<div class="kn reveal" style="--i:${i}"><strong>${esc(x.tema)}</strong><p>${esc(x.texto)}</p></div>`).join('')}</div>`) : '')
     + (c.imprevistos?.length ? blk(t.incidents, `<div class="panel devs">${c.imprevistos.map((x) => `<details class="dev"><summary><span class="ri">${ico(iconFor(x.situacion, 'bolt'))}</span><strong>${esc(x.situacion)}</strong><span class="chev"></span></summary><p class="dev-note" style="margin-top:0">${esc(x.que_hacer)}</p></details>`).join('')}</div>`) : ''));
 
   return P;
 }
 
-// Texto largo → 2 líneas con "Ver más"
 function clampText(text, max = 120) {
   if (!text) return '';
   if (text.length <= max) return `<p class="txt">${esc(text)}</p>`;
@@ -677,70 +784,47 @@ function ring(n, total) {
   return `<svg class="ring" viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" class="ring-bg"/><circle cx="26" cy="26" r="22" class="ring-fg" stroke-dasharray="${C}" stroke-dashoffset="${off}" data-c="${C}"/></svg>`;
 }
 
-const ORDER = ['llegar', 'casa', 'extras', 'explorar', 'comer', 'moverse', 'salida', 'ayuda'];
+const ORDER = ['llegar', 'casa', 'comer', 'explorar', 'extras', 'ayuda'];
+const PAGE_ICON2 = { llegar: 'key', casa: 'door', comer: 'fork', explorar: 'compass', extras: 'star', ayuda: 'sos', salida: 'check' };
 const route = () => decodeURIComponent(location.hash.slice(1));
 let shownRoute = null, homeY = 0;
 
 function render() {
   const c = cabana, t = T[lang];
   const pages = buildPages();
-  const r = route();
+  let r = route();
+  if (r === 'moverse') r = 'llegar';
   const onPage = !!pages[r];
 
-  // Saludo y datos del momento en la portada
+  // Portada
   const h = new Date().getHours();
   $('#greet').textContent = t.greet[h < 12 ? 0 : h < 20 ? 1 : 2] + (c.huesped?.nombre ? `, ${c.huesped.nombre}` : '');
+  const chips = [];
+  if (weather?.current) { const [cond, icon] = WX(weather.current.weather_code); chips.push(`<span class="hchip">${ico(icon)}${Math.round(weather.current.temperature_2m)}° ${esc(t.wx[cond])}</span>`); }
+  $('#hero-chips').innerHTML = chips.join('');
   $('#stay-head').innerHTML = stayHead();
   $('#stay-access').innerHTML = accessRow();
+  $('#now').innerHTML = nowHTML();
   $('#letter').innerHTML = letterHTML();
-  $('#amen').innerHTML = amenitiesHTML();
-  $('#gallery').innerHTML = galleryHTML();
-  const chips = [];
-  if (weather?.current) {
-    const [cond, icon] = WX(weather.current.weather_code);
-    chips.push(`<span class="hchip">${ico(icon)}${Math.round(weather.current.temperature_2m)}° ${esc(t.wx[cond])}</span>`);
-  }
-  const sunset = weather?.daily?.sunset?.[0];
-  if (sunset) chips.push(`<span class="hchip">${ico('sunset')}${t.sunset} ${sunset.slice(11, 16)}</span>`);
-  $('#hero-chips').innerHTML = chips.join('');
-
-  // Accesos rápidos
-  $('#actions').innerHTML = `
-    <button class="action" id="act-wifi"><span class="i">${ico('qr')}</span>${t.qr} Wi-Fi</button>
-    ${c.anfitrion?.whatsapp ? `<a class="action" href="${waUrl(c.anfitrion.whatsapp)}" target="_blank" rel="noopener"><span class="i">${ico('chat')}</span>${t.act.whatsapp}</a>` : ''}
-    <a class="action" href="${mapsUrl(c.como_llegar?.mapa || c.direccion || c.nombre)}" target="_blank" rel="noopener"><span class="i">${ico('pin')}</span>${t.act.map}</a>
-    <a class="action sos" href="#ayuda"><span class="i">${ico('sos')}</span>${t.act.sos}</a>`;
-  $('#act-wifi').onclick = openQR;
-
-  // Apartados
   $('#need').textContent = t.need;
   $('#tiles').innerHTML = ORDER.filter((id) => pages[id]).map((id, i) => {
     let desc = t.tileDesc[id];
     if (id === 'explorar' && weather?.current) desc = `${Math.round(weather.current.temperature_2m)}° · ${t.wx[WX(weather.current.weather_code)[0]]}`;
-    if (id === 'salida' && c.checkout?.hora) desc = `Check-out ${c.checkout.hora}`;
-    if (id === 'llegar' && c.checkin?.hora) desc = `Check-in ${c.checkin.hora}`;
-    return `<a class="tile reveal${id === 'ayuda' ? ' tile-help' : ''}" style="--i:${i}" href="#${id}"><span class="ti">${ico(PAGE_ICONS[id])}</span><strong>${esc(t.tabs[id])}</strong><small>${esc(desc)}</small></a>`;
+    return `<a class="tile reveal${id === 'ayuda' ? ' tile-help' : ''}" style="--i:${i}" href="#${id}"><span class="ti">${ico(PAGE_ICON2[id])}</span><strong>${esc(t.tabs[id])}</strong><small>${esc(desc)}</small></a>`;
   }).join('');
 
-  // Recomendados de hoy (según el clima) y extras destacados
-  const wet = weather?.current ? isWet(weather.current.weather_code) : true;
-  const picks = [...(c.panoramas?.[wet ? 'lluvia' : 'sol'] || []).map((p) => [p.nombre, p.nota, wet ? 'coffee' : 'sun', p.foto]), ...(c.tours || []).slice(0, 2).map((p) => [p.nombre, p.duracion, 'compass', p.foto])];
-  $('#picks').innerHTML = picks.length ? `<div class="row-head"><h2>${t.picks}</h2><a href="#explorar">${t.see} ${ico('chev')}</a></div>
-    <div class="scroller">${picks.map(([n, note, icon, foto], i) => { return `<a href="#explorar" class="mini reveal" style="--i:${i}">${cover(n, foto)}<span class="mini-shade"></span><span class="mini-ico">${ico(icon)}</span><strong>${esc(n)}</strong><small>${esc(firstSentence(note || ''))}</small></a>`; }).join('')}</div>` : '';
-  $('#special').innerHTML = c.extras?.length ? `<div class="row-head"><h2>${t.special}</h2><a href="#extras">${t.see} ${ico('chev')}</a></div>
-    <div class="scroller">${c.extras.map((x, i) => { return `<a href="#extras" class="mini extra-mini reveal" style="--i:${i}">${cover(x.nombre, x.foto)}<span class="mini-shade"></span><span class="mini-ico">${ico(x.icono)}</span><strong>${esc(x.nombre)}</strong><small class="mini-price">${esc(x.precio || '')}</small></a>`; }).join('')}</div>` : '';
-
-  // Página de apartado
+  // Página
   $('#home').hidden = onPage;
   $('#page').hidden = !onPage;
   if (onPage) {
-    $('#page-name').textContent = t.tabs[r];
+    const name = r === 'salida' ? t.yourCheckout : t.tabs[r];
+    $('#page-name').textContent = name;
     $('#page-back-label').textContent = t.back;
-    $('#page-title').innerHTML = t.titles[r] || esc(t.tabs[r]);
-    $('#page-ico').innerHTML = ico(PAGE_ICONS[r]);
+    $('#page-title').innerHTML = t.titles[r] || esc(name);
+    $('#page-ico').innerHTML = ico(PAGE_ICON2[r]);
     $('#page-body').innerHTML = pages[r];
     const list = ORDER.filter((id) => pages[id]), next = list[list.indexOf(r) + 1];
-    $('#page-next').innerHTML = next ? `<a class="next" href="#${next}"><span><small>${t.see}</small><strong>${esc(t.tabs[next])}</strong></span><span class="next-ico">${ico(PAGE_ICONS[next])}</span></a>` : '';
+    $('#page-next').innerHTML = next ? `<a class="next" href="#${next}"><span><small>${t.see}</small><strong>${esc(t.tabs[next])}</strong></span><span class="next-ico">${ico(PAGE_ICON2[next])}</span></a>` : '';
   }
 
   if (r !== shownRoute) {
