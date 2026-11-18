@@ -209,7 +209,8 @@ const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<
 
 const slug = location.pathname.split('/').filter(Boolean).pop() || new URLSearchParams(location.search).get('slug');
 let lang = pickLang();
-let cabana = null;
+let cabana = null;   // datos en el idioma elegido
+let base = null;     // datos originales (español)
 let demoMode = false;
 const history = []; // { role: 'user'|'assistant', text }
 
@@ -221,15 +222,33 @@ function pickLang() {
 
 const monogram = (name) => name.replace(/^caba[ñn]a\s+/i, '').split(/\s+/).filter((w) => w.length > 2).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
+// Aplica las traducciones guardadas ("traducciones.en": { "estufa.pasos.0": "…" })
+function localized(src, l) {
+  const tr = src?.traducciones?.[l];
+  if (l === 'es' || !tr) return src;
+  const c = structuredClone(src);
+  for (const [path, text] of Object.entries(tr)) {
+    const ks = path.split('.'); let o = c;
+    for (const k of ks.slice(0, -1)) { o = o?.[/^\d+$/.test(k) ? +k : k]; if (o == null) break; }
+    const last = ks.at(-1);
+    if (o != null && typeof o[/^\d+$/.test(last) ? +last : last] === 'string') o[/^\d+$/.test(last) ? +last : last] = text;
+  }
+  return c;
+}
+
 function setLang(l) {
   lang = l;
+  if (base) cabana = localized(base, l);
   try { localStorage.setItem('lang', l); } catch {}
   document.documentElement.lang = l;
   $('#lang').value = l;
   document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = T[l][el.dataset.i18n]; });
   $('#chat-input').placeholder = T[l].placeholder;
+  // Etiquetas para lectores de pantalla
+  document.querySelectorAll('#close-chat, #qr-close').forEach((b) => b.setAttribute('aria-label', T[l].close));
+  document.querySelector('.pagebar .back')?.setAttribute('aria-label', T[l].back);
   $('#chat-sub').textContent = demoMode ? T[l].demo : T[l].online;
-  if (cabana) { render(); renderInstall(); }
+  if (cabana) { applyStatic(); render(); renderInstall(); }
 }
 
 function row(icon, title, text, chips = []) {
@@ -534,37 +553,37 @@ let blkIndex = 0;
 const blk = (title, html) => `<section class="blk reveal" style="--i:${blkIndex++}">${title ? `<h3 class="blk-title">${esc(title)}</h3>` : ''}${html}</section>`;
 // ═══ Textos de "lo justo en cada momento" ═══
 const T6 = {
-  es: { tabs: { llegar: 'Llegar y moverse', explorar: 'Qué hacer', comer: 'Comer' },
+  es: { hostAccess: 'Acceso anfitrión', otrosLbl: { estacionamiento: 'Estacionamiento', basura: 'Basura y reciclaje', agua_caliente: 'Agua caliente' }, tabs: { llegar: 'Llegar y moverse', explorar: 'Qué hacer', comer: 'Comer' },
     titles: { llegar: 'Llegar y <em>moverse</em>', explorar: 'Qué <em>hacer</em>', comer: 'Dónde <em>comer</em>' },
     tileDesc: { llegar: 'Cómo llegar, buses y taxi', casa: 'Estufa, tinaja, wifi y reglas', comer: 'Restaurantes y almacenes', explorar: 'Clima, panoramas y tours', extras: 'Tinaja, desayuno, transfer…', ayuda: 'Contacto, emergencias y datos útiles' },
     nowBefore: 'Antes de llegar', nowArrive: 'Primeros pasos', nowToday: 'Hoy', nowLast: 'Hoy es tu salida', nowAfter: 'Gracias por venir',
     eatTonight: 'Para comer hoy', seasonTip: 'Consejo de temporada', goodToKnow: 'Bueno saber', taxi: 'Taxi', atNight: 'Si llegas de noche', howGet: 'Cómo llegar', moving: 'Buses', checkinFrom: (h) => `Check-in desde las ${h}`, checkoutUntil: (h) => `Check-out hasta las ${h}`,
     reserve: { si: 'Con reserva', recomendada: 'Mejor reservar', no: 'Sin reserva' }, yourCheckout: 'Tu salida', checkoutList: 'Ver lista de salida', seePlan: 'Más panoramas' },
-  en: { tabs: { llegar: 'Getting here & around', explorar: 'Things to do', comer: 'Eat' },
+  en: { hostAccess: 'Host login', otrosLbl: { estacionamiento: 'Parking', basura: 'Rubbish & recycling', agua_caliente: 'Hot water' }, tabs: { llegar: 'Getting here & around', explorar: 'Things to do', comer: 'Eat' },
     titles: { llegar: 'Getting <em>around</em>', explorar: 'Things to <em>do</em>', comer: 'Where to <em>eat</em>' },
     tileDesc: { llegar: 'Directions, buses and taxi', casa: 'Stove, hot tub, wifi and rules', comer: 'Restaurants and shops', explorar: 'Weather, ideas and tours', extras: 'Hot tub, breakfast, transfer…', ayuda: 'Contact, emergencies and tips' },
     nowBefore: 'Before you arrive', nowArrive: 'First steps', nowToday: 'Today', nowLast: 'Check-out day', nowAfter: 'Thanks for coming',
     eatTonight: 'To eat today', seasonTip: 'Seasonal tip', goodToKnow: 'Good to know', taxi: 'Taxi', atNight: 'Arriving at night', howGet: 'Directions', moving: 'Buses', checkinFrom: (h) => `Check-in from ${h}`, checkoutUntil: (h) => `Check-out by ${h}`,
     reserve: { si: 'Booking needed', recomendada: 'Best to book', no: 'Walk-in' }, yourCheckout: 'Your check-out', checkoutList: 'See check-out list', seePlan: 'More ideas' },
-  pt: { tabs: { llegar: 'Chegar e se mover', explorar: 'O que fazer', comer: 'Comer' },
+  pt: { hostAccess: 'Acesso do anfitrião', otrosLbl: { estacionamiento: 'Estacionamento', basura: 'Lixo e reciclagem', agua_caliente: 'Água quente' }, tabs: { llegar: 'Chegar e se mover', explorar: 'O que fazer', comer: 'Comer' },
     titles: { llegar: 'Chegar e se <em>mover</em>', explorar: 'O que <em>fazer</em>', comer: 'Onde <em>comer</em>' },
     tileDesc: { llegar: 'Como chegar, ônibus e táxi', casa: 'Lareira, ofurô, wifi e regras', comer: 'Restaurantes e mercados', explorar: 'Clima, passeios e tours', extras: 'Ofurô, café da manhã, transfer…', ayuda: 'Contato, emergências e dicas' },
     nowBefore: 'Antes de chegar', nowArrive: 'Primeiros passos', nowToday: 'Hoje', nowLast: 'Hoje é sua saída', nowAfter: 'Obrigado pela visita',
     eatTonight: 'Para comer hoje', seasonTip: 'Dica da estação', goodToKnow: 'Bom saber', taxi: 'Táxi', atNight: 'Se chegar à noite', howGet: 'Como chegar', moving: 'Ônibus', checkinFrom: (h) => `Check-in a partir das ${h}`, checkoutUntil: (h) => `Check-out até as ${h}`,
     reserve: { si: 'Com reserva', recomendada: 'Melhor reservar', no: 'Sem reserva' }, yourCheckout: 'Sua saída', checkoutList: 'Ver lista de saída', seePlan: 'Mais passeios' },
-  de: { tabs: { llegar: 'Anreise & Unterwegs', explorar: 'Unternehmungen', comer: 'Essen' },
+  de: { hostAccess: 'Gastgeber-Login', otrosLbl: { estacionamiento: 'Parken', basura: 'Müll & Recycling', agua_caliente: 'Warmwasser' }, tabs: { llegar: 'Anreise & Unterwegs', explorar: 'Unternehmungen', comer: 'Essen' },
     titles: { llegar: 'Anreise & <em>Unterwegs</em>', explorar: 'Was <em>unternehmen</em>', comer: 'Wo <em>essen</em>' },
     tileDesc: { llegar: 'Anfahrt, Busse und Taxi', casa: 'Ofen, Badefass, WLAN, Regeln', comer: 'Restaurants und Läden', explorar: 'Wetter, Ideen und Touren', extras: 'Badefass, Frühstück, Transfer…', ayuda: 'Kontakt, Notfälle, Tipps' },
     nowBefore: 'Vor der Anreise', nowArrive: 'Erste Schritte', nowToday: 'Heute', nowLast: 'Heute ist Abreise', nowAfter: 'Danke für Ihren Besuch',
     eatTonight: 'Heute essen', seasonTip: 'Tipp der Saison', goodToKnow: 'Gut zu wissen', taxi: 'Taxi', atNight: 'Ankunft bei Nacht', howGet: 'Anfahrt', moving: 'Busse', checkinFrom: (h) => `Check-in ab ${h}`, checkoutUntil: (h) => `Check-out bis ${h}`,
     reserve: { si: 'Reservierung nötig', recomendada: 'Besser reservieren', no: 'Ohne Reservierung' }, yourCheckout: 'Ihre Abreise', checkoutList: 'Abreise-Liste', seePlan: 'Mehr Ideen' },
-  it: { tabs: { llegar: 'Arrivare e spostarsi', explorar: 'Cosa fare', comer: 'Mangiare' },
+  it: { hostAccess: 'Accesso host', otrosLbl: { estacionamiento: 'Parcheggio', basura: 'Rifiuti e riciclo', agua_caliente: 'Acqua calda' }, tabs: { llegar: 'Arrivare e spostarsi', explorar: 'Cosa fare', comer: 'Mangiare' },
     titles: { llegar: 'Arrivare e <em>spostarsi</em>', explorar: 'Cosa <em>fare</em>', comer: 'Dove <em>mangiare</em>' },
     tileDesc: { llegar: 'Indicazioni, bus e taxi', casa: 'Stufa, vasca, wifi e regole', comer: 'Ristoranti e negozi', explorar: 'Meteo, idee e tour', extras: 'Vasca, colazione, transfer…', ayuda: 'Contatti, emergenze e info' },
     nowBefore: 'Prima di arrivare', nowArrive: 'Primi passi', nowToday: 'Oggi', nowLast: 'Oggi è la partenza', nowAfter: 'Grazie della visita',
     eatTonight: 'Per mangiare oggi', seasonTip: 'Consiglio di stagione', goodToKnow: 'Buono a sapersi', taxi: 'Taxi', atNight: 'Se arrivi di notte', howGet: 'Indicazioni', moving: 'Autobus', checkinFrom: (h) => `Check-in dalle ${h}`, checkoutUntil: (h) => `Check-out entro le ${h}`,
     reserve: { si: 'Su prenotazione', recomendada: 'Meglio prenotare', no: 'Senza prenotazione' }, yourCheckout: 'La tua partenza', checkoutList: 'Lista di partenza', seePlan: 'Altre idee' },
-  fr: { tabs: { llegar: 'Venir & se déplacer', explorar: 'Que faire', comer: 'Manger' },
+  fr: { hostAccess: 'Accès hôte', otrosLbl: { estacionamiento: 'Stationnement', basura: 'Déchets et recyclage', agua_caliente: 'Eau chaude' }, tabs: { llegar: 'Venir & se déplacer', explorar: 'Que faire', comer: 'Manger' },
     titles: { llegar: 'Venir & se <em>déplacer</em>', explorar: 'Que <em>faire</em>', comer: 'Où <em>manger</em>' },
     tileDesc: { llegar: 'Itinéraire, bus et taxi', casa: 'Poêle, bain nordique, wifi, règles', comer: 'Restaurants et commerces', explorar: 'Météo, idées et excursions', extras: 'Bain nordique, petit-déj, transfert…', ayuda: 'Contact, urgences et infos' },
     nowBefore: 'Avant d’arriver', nowArrive: 'Premiers pas', nowToday: 'Aujourd’hui', nowLast: 'Jour du départ', nowAfter: 'Merci de votre visite',
@@ -701,7 +720,7 @@ function buildPages() {
         </details>${e.seguridad ? `<div class="warn">${ico('sos')}<span><strong>${t.safety}.</strong> ${esc(e.seguridad)}</span></div>` : ''}`) : '',
       equipos ? blk(t.howTo, `<div class="panel devs">${equipos}</div>`) : '',
       spots.length ? blk(t.whereIs, `<div class="spots">${spots.map((s, i) => `<div class="spot reveal" style="--i:${i}"><span>${ico(iconFor(s))}</span><p>${esc(s)}</p></div>`).join('')}</div>`) : '',
-      otros.length ? blk('', `<div class="panel">${otros.map(([k, v]) => row(otrosIcons[k] || 'info', k.replace(/_/g, ' ').replace(/^./, (m) => m.toUpperCase()), v)).join('')}</div>`) : '',
+      otros.length ? blk('', `<div class="panel">${otros.map(([k, v]) => row(otrosIcons[k] || 'info', t.otrosLbl?.[k] || k.replace(/_/g, ' ').replace(/^./, (m) => m.toUpperCase()), v)).join('')}</div>`) : '',
       c.reglas?.length ? blk(t.rules, `<div class="rule-grid">${c.reglas.map((r, i) => `<div class="rule reveal" style="--i:${i}"><span>${ico(iconFor(r, 'check'))}</span><p>${esc(r)}</p></div>`).join('')}</div>`) : '',
       amenitiesHTML(),
       blk('', `<a class="next soft" href="#salida"><span><small>${t.yourCheckout}</small><strong>${t.checkoutUntil(c.checkout?.hora || '')}</strong></span><span class="next-ico">${ico('check')}</span></a>`),
@@ -979,6 +998,16 @@ function openChat() {
   setTimeout(() => $('#chat-input').focus(), 60);
 }
 
+// Textos fijos de la portada que vienen del contenido (cambian con el idioma)
+function applyStatic() {
+  document.title = `${cabana.nombre} · ${T[lang].concierge}`;
+  $('#nombre').textContent = cabana.nombre;
+  $('#descripcion').textContent = cabana.descripcion || '';
+  $('#foot-name').textContent = cabana.nombre;
+  if (cabana.lugar) $('#lugar').textContent = cabana.lugar;
+  $('#host-link').textContent = T[lang].hostAccess;
+}
+
 async function init() {
   try {
     const q = new URLSearchParams(location.search).get('g');
@@ -986,21 +1015,18 @@ async function init() {
     try { if (q) localStorage.setItem(`guest-${slug}`, q); else g = localStorage.getItem(`guest-${slug}`); } catch {}
     const r = await fetch(`/api/cabana?slug=${encodeURIComponent(slug || '')}${g ? `&g=${encodeURIComponent(g)}` : ''}`);
     if (!r.ok) throw new Error();
-    cabana = await r.json();
+    base = await r.json();
+    cabana = localized(base, lang);
   } catch {
     $('#loading').textContent = T[lang].notFound;
     return;
   }
-  const m = monogram(cabana.nombre);
-  document.title = `${cabana.nombre} · ${T[lang].concierge}`;
-  $('#nombre').textContent = cabana.nombre;
-  $('#descripcion').textContent = cabana.descripcion || '';
+  const m = monogram(base.nombre);
+  applyStatic();
   $('#mono').textContent = m;
   $('#chat-mono').textContent = m;
   $('#page-mono').textContent = m;
-  $('#foot-name').textContent = cabana.nombre;
   $('#host-link').href = `/admin?c=${encodeURIComponent(slug)}`;
-  if (cabana.lugar) $('#lugar').textContent = cabana.lugar;
   if (cabana.fotos?.[0]) $('#hero').insertAdjacentHTML('afterbegin', `<img class="hero-photo" src="${esc(cabana.fotos[0])}" alt="" onload="this.classList.add('ok')" onerror="this.remove()"><span class="hero-shade"></span>`);
   $('#wifi-red').textContent = `${cabana.wifi?.red || ''}`;
   $('#wifi-clave').textContent = cabana.wifi?.clave || '—';

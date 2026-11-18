@@ -2,6 +2,7 @@ import { checkPassword } from '../lib/auth.js';
 import { listCabanas, saveCabana, SLUG_RE } from '../lib/storage.js';
 import { getCabana } from '../lib/cabanas.js';
 import { makeToken } from '../lib/guest.js';
+import { translateCabana } from '../lib/translate.js';
 
 // POST /api/admin  { action: 'list' | 'login' | 'save' | 'create', slug, password, data }
 const MAX_BYTES = 200_000;
@@ -42,6 +43,13 @@ export default async function handler(req, res) {
       const data = await getCabana(slug);
       if (!data) return res.status(404).json({ error: 'Esa cabaña no existe.' });
       return res.status(200).json({ data });
+    }
+
+    // Traducir el contenido (se guarda después con "Guardar")
+    if (action === 'translate') {
+      const { data } = readBody(req);
+      if (!data || typeof data !== 'object') return res.status(400).json({ error: 'Faltan los datos.' });
+      return res.status(200).json(await translateCabana(data));
     }
 
     // Enlace personalizado para un huésped

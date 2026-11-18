@@ -11,7 +11,8 @@
   ],
   "functions": {
     "api/*.js": {
-      "includeFiles": "data/**"
+      "includeFiles": "data/**",
+      "maxDuration": 60
     }
   }
 }

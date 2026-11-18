@@ -9,7 +9,7 @@ const MAX_MESSAGES = 12;     // historial que se envía al modelo
 const MAX_CHARS = 1000;      // largo máximo por mensaje
 
 function buildSystemPrompt(full) {
-  const { privado, ...cabana } = full; // el código de acceso nunca va al modelo
+  const { privado, traducciones, traducciones_meta, ...cabana } = full; // sin código de acceso ni traducciones (el modelo traduce solo)
   return `Eres el conserje virtual de "${cabana.nombre}", una cabaña turística en Puerto Varas, Chile.
 Atiendes a los huéspedes de forma cálida, breve y práctica, como un buen anfitrión del sur de Chile.
 

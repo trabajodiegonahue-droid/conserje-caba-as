@@ -34,6 +34,7 @@ const I = {
   trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
   chev: '<path d="M9 5l7 7-7 7"/>',
   wifi: '<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 15.8a5 5 0 0 1 6.8 0"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.6 5.7 3.6 9s-1.1 6.3-3.6 9c-2.5-2.7-3.6-5.7-3.6-9S9.5 5.7 12 3z"/>',
   ext: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
   lock: '<rect x="5" y="10" width="14" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14.5v2.5"/>',
   image: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
@@ -70,6 +71,9 @@ const SECTIONS = [
       { path: 'wifi.red', label: 'Nombre de la red', type: 'text', ph: 'Ej: LosArrayanes_5G' },
       { path: 'wifi.clave', label: 'Clave', type: 'text', ph: 'Ej: volcan2024' },
       { path: 'wifi.nota', label: 'Qué hacer si falla', type: 'textarea', ph: 'Ej: Desenchufa el router 10 segundos.' },
+    ] },
+    { title: 'Idiomas', help: 'Tú escribes en español; Gemini traduce todo al inglés, portugués, alemán, italiano y francés. Vuelve a traducir cuando cambies textos.', fields: [
+      { type: 'translate' },
     ] },
     { title: 'Horarios', fields: [
       { path: 'checkin.hora', label: 'Check-in desde', type: 'time' },
@@ -380,7 +384,8 @@ function show(id) {
 
 function homeHTML() {
   const first = (draft.anfitrion?.nombre || '').split(' ')[0];
-  return `<div class="adm-hello">
+  const st = trState();
+  return `${st !== 'ok' ? `<div class="tr-banner"><span class="ti">${ico('globe')}</span><div><strong>${st === 'none' ? 'Tu guía solo está en español' : 'Hay textos nuevos sin traducir'}</strong><small>Tus huéspedes extranjeros los verán en español.</small></div><button type="button" class="btn-primary small" data-translate>Traducir</button></div>` : ''}<div class="adm-hello">
       <p class="eyebrow">${esc(draft.lugar || 'Panel del anfitrión')}</p>
       <h1>${first ? `Hola, <em>${esc(first)}</em>` : 'Tu <em>cabaña</em>'}</h1>
     </div>
@@ -481,6 +486,8 @@ function field(f, base = '') {
     return `<div class="fld">${label}${help}<div class="multi">${f.options.map(([val, lab]) =>
       `<button type="button" role="checkbox" aria-checked="${sel.has(val)}" class="mchip${sel.has(val) ? ' on' : ''}" data-multi="${esc(path)}" data-val="${esc(val)}">${sel.has(val) ? ico('check') : ''}${esc(lab)}</button>`).join('')}</div></div>`;
   }
+
+  if (f.type === 'translate') return translateBox();
 
   if (f.type === 'linkgen') {
     const d0 = new Date(), iso = (x) => new Date(d0.getTime() + x * 864e5).toISOString().slice(0, 10);
@@ -601,6 +608,57 @@ document.addEventListener('click', (e) => {
 });
 
 $('#adm-back').addEventListener('click', () => show(null));
+
+// ── Traducciones ──
+const SKIP_TR = new Set(['slug', 'fotos', 'foto', 'url', 'telefono', 'whatsapp', 'email', 'mapa', 'icono', 'modo', 'reserva', 'coordenadas', 'comodidades', 'hora', 'meses', 'privado', 'traducciones', 'traducciones_meta', 'red', 'clave']);
+function sourceTexts(c) {
+  const out = {};
+  const walk = (o, p) => {
+    if (Array.isArray(o)) o.forEach((v, i) => walk(v, `${p}.${i}`));
+    else if (o && typeof o === 'object') {
+      for (const [k, v] of Object.entries(o)) {
+        if (SKIP_TR.has(k)) continue;
+        if (k === 'tipo' && p.startsWith('servicios_cercanos')) continue;
+        if (k === 'precio' && p.startsWith('restaurantes')) continue;
+        walk(v, p ? `${p}.${k}` : k);
+      }
+    } else if (typeof o === 'string' && o.trim()) out[p] = o;
+  };
+  walk(c, '');
+  return out;
+}
+function textsHash(map) {
+  let h = 2166136261;
+  for (const ch of JSON.stringify(Object.entries(map).sort())) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+  return (h >>> 0).toString(36);
+}
+// 'none' = sin traducir · 'stale' = hay cambios sin traducir · 'ok'
+function trState() {
+  const m = draft?.traducciones_meta;
+  if (!m || !draft.traducciones) return 'none';
+  return m.hash === textsHash(sourceTexts(clean(draft))) ? 'ok' : 'stale';
+}
+function translateBox() {
+  const st = trState(), m = draft.traducciones_meta;
+  const flags = ['English', 'Português', 'Deutsch', 'Italiano', 'Français'];
+  return `<div class="tr-box ${st}">
+    <div class="tr-langs">${flags.map((f) => `<span class="${st === 'none' ? '' : 'on'}">${f}</span>`).join('')}</div>
+    <p>${st === 'ok' ? `${ico('check')} Traducida a 5 idiomas${m?.fecha ? ` (${m.fecha})` : ''}.` : st === 'stale' ? 'Cambiaste textos desde la última traducción.' : 'Aún no está traducida.'}</p>
+    <button type="button" class="btn-primary" data-translate>${ico('globe')}${st === 'ok' ? 'Traducir de nuevo' : 'Traducir a 5 idiomas'}</button>
+  </div>`;
+}
+async function runTranslate(btn) {
+  btn.disabled = true; const label = btn.innerHTML; btn.textContent = 'Traduciendo… (puede tardar unos segundos)';
+  try {
+    const res = await api({ action: 'translate', slug: session.slug, password: session.password, data: clean(draft) });
+    draft.traducciones = res.traducciones;
+    draft.traducciones_meta = res.traducciones_meta;
+    setDirty(true);
+    toast('Traducido a 5 idiomas. Toca Guardar para publicarlo.');
+    current ? rerender() : show(null);
+  } catch (err) { toast(err.message, 'err'); btn.disabled = false; btn.innerHTML = label; }
+}
+document.addEventListener('click', (e) => { const b = e.target.closest('[data-translate]'); if (b && !b.disabled) runTranslate(b); });
 
 async function makeLink() {
   const nombre = $('#lg-name').value.trim(), llegada = $('#lg-in').value, salida = $('#lg-out').value;

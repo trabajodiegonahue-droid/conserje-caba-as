@@ -42,6 +42,14 @@ Cualquier campo que no pongas simplemente no aparece. El chat (Gemini) lee todo 
 
 > En la demo, los restaurantes, almacenes y taxi son ficticios, y los enlaces de `resenas` son de ejemplo.
 
+## Idiomas
+
+La interfaz viene en 6 idiomas (español, inglés, portugués, alemán, italiano y francés) y se elige sola según el teléfono del huésped.
+
+**El contenido** (reglas, pasos, recomendaciones…) lo escribes en español y se traduce desde el panel: **Datos básicos → Idiomas → Traducir a 5 idiomas**. Gemini traduce todo en unos segundos, tú revisas y tocas **Guardar**. Las traducciones quedan guardadas en el JSON (`traducciones`), así la página carga rápido, no gasta cuota en cada visita y funciona sin conexión.
+
+Si después cambias un texto, el panel avisa "Hay textos nuevos sin traducir" para que vuelvas a traducir. Los nombres de negocios y calles no se traducen. El chat responde en cualquier idioma aunque no hayas traducido.
+
 ## Enlaces personales para cada huésped
 
 Desde el panel (**Acceso y huéspedes → Enviar la guía a un huésped**) escribes el nombre y las fechas y el panel crea un enlace como `/cabana/los-arrayanes?g=…`. Con ese enlace el huésped ve:
